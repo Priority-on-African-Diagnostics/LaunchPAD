@@ -33,7 +33,12 @@ def level1_mon(mod,vari):
     var = var_list[mod]
     g = g_list[mod]
     
-    mod_dir = CMIP6_base+group+dash+mod+CMIP6_type+var+CMIP6_time_mon+vari+dash+g+CMIP6_file
+    if vari == 'mrsos':
+      mod_dir = CMIP6_base+group+dash+mod+CMIP6_type+var+'/Lmon/'+vari+dash+g+CMIP6_file
+    else:
+      mod_dir = CMIP6_base+group+dash+mod+CMIP6_type+var+CMIP6_time_mon+vari+dash+g+CMIP6_file
+    
+    #mod_dir = CMIP6_base+group+dash+mod+CMIP6_type+var+CMIP6_time_mon+vari+dash+g+CMIP6_file
     
     return mod_dir
     

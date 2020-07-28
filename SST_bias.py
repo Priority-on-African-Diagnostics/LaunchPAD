@@ -109,6 +109,9 @@ def plot_SST(expt,seasons):
 
      if save_plot:
        plt.savefig(starterpng+expt+plot_file, bbox_inches='tight',dpi=100)
+ 
+     else:
+       iplt.show()
 
      return None
 
@@ -122,17 +125,18 @@ if pre_processor_experiments:
 ###############################
 #extraction control
 ###############################
-    white_list = create_whitelist()
-    white_list = white_list + obs_list
+    green_list = create_greenlist()
+    green_list = green_list + obs_list
+    pickle.dump(green_list, open(starterp+'white_list'+p_file, "wb" ))
     
-    for expt in white_list:   
-      vari=vari_list[0] #diagnostic specific
-      cube_return = load_expt(expt, vari)
-      pickle.dump(cube_return, open(starterp+expt+'_'+vari+p_file, "wb" ))
-      iris.io.save(cube_return, starternc+expt+'_'+vari+nc_file)
+    for expt in green_list:   
+      for vari in vari_list:
+          cube_return = load_expt(expt, vari)
+          pickle.dump(cube_return, open(starterp+expt+'_'+vari+p_file, "wb" ))
+          #iris.io.save(cube_return, starternc+expt+'_'+vari+nc_file)
       print('data from '+expt+' pre-processed sucessfully')
-    pickle.dump(white_list, open(starterp+'white_list'+p_file, "wb" ))
-    print('new mod list',white_list)
+    
+
 
 ###############################
 #calculation control
@@ -140,13 +144,13 @@ if pre_processor_experiments:
 
 if processor_calculations:
     vari=vari_list[0] #diagnostic specific
-    white_list =  unpickle_cubes(starterp+'white_list'+p_file)
+    green_list =  unpickle_cubes(starterp+'green_list'+p_file)
       
     print('entering CALCULATION routines')
     for obs in obs_list:
       obs_sst_cube = unpickle_cubes(starterp+obs+'_'+vari+p_file)
       obs_seas = season_all(obs_sst_cube)
-      white_list.remove(obs)
+      green_list.remove(obs)
 
     for mod in white_list:
       mod_sst_cube = unpickle_cubes(starterp+mod+'_'+vari+p_file)
@@ -156,7 +160,7 @@ if processor_calculations:
         sst_bias = calc_bias(mod_seas,obs_seas,seas)
 
         pickle.dump(sst_bias, open(starterp+mod+'_'+'sstbias_'+seas+p_file, "wb"))
-        iris.io.save(sst_bias, starternc+mod+'_'+'sstbias_'+seas+nc_file) 
+        #iris.io.save(sst_bias, starternc+mod+'_'+'sstbias_'+seas+nc_file) 
 
     print('calculation complete')
 
@@ -167,11 +171,11 @@ if processor_calculations:
 if create_plot:
 
      print('entering PLOTTING routines')
-     white_list =  unpickle_cubes(starterp+'white_list'+p_file)
+     green_list =  unpickle_cubes(starterp+'green_list'+p_file)
      for obs in obs_list:
-          white_list.remove(obs)
+          green_list.remove(obs)
 	     
-     for expt in white_list:
+     for expt in green_list:
        plot_SST(expt,seasons)
        plt.show()
        plt.clf()
