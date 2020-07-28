@@ -56,11 +56,15 @@ def load_expt(expt, vari):
 
      if expt in mod_list:
        cube_list = iris.load(sixhr_file_location(expt, vari), lat_bounds(-10, 40) & year_bounds(1983, 2012) & C_tim1)
+       print(cube_list)
+       print(expt)      
        cube = cube_concatenator(cube_list)
        cube = cube.intersection(longitude=(-25, 30))
        
      else:
        cube_list = iris.load(sixhr_file_location(expt, vari), lat_bounds(-10, 40) & lon_bounds(-25, 30) & year_bounds(1983, 2012) & C_tim1)
+       print(cube_list)
+       print(expt)
        cube = cube_concatenator(cube_list)
        
      Cube0 = cube.extract(pressure_level(expt, 70000))
@@ -150,6 +154,7 @@ if pre_processor_experiments:
 ###############################
     green_list = create_greenlist6hr(vari_list)
     green_list = green_list + obs_list
+    green_list.remove('NorESM2-MM')
     pickle.dump(green_list, open(starterp+'white_list'+p_file, "wb" )) 
     for expt in green_list:
         for vari in vari_list:

@@ -127,7 +127,7 @@ if pre_processor_experiments:
 ###############################
     green_list = create_greenlist()
     green_list = green_list + obs_list
-    pickle.dump(green_list, open(starterp+'white_list'+p_file, "wb" ))
+    pickle.dump(green_list, open(starterp+'green_list'+p_file, "wb" ))
     
     for expt in green_list:   
       for vari in vari_list:
