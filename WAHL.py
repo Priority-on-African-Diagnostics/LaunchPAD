@@ -152,9 +152,9 @@ if pre_processor_experiments:
 ###############################
 #extraction control
 ###############################
-    green_list = create_greenlist6hr(vari_list)
-    green_list = green_list + obs_list
-    green_list.remove('NorESM2-MM')
+    #green_list = create_greenlist6hr(vari_list)
+    green_list = obs_list#green_list + obs_list
+    #green_list.remove('NorESM2-MM')
     pickle.dump(green_list, open(starterp+'white_list'+p_file, "wb" )) 
     for expt in green_list:
         for vari in vari_list:

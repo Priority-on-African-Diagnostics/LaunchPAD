@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ###############################
 
-obs_list = ['ERA5']
+obs_list = ['ERA5', 'CNRM-ESM2-1']
 vari_list=['zg']
 
 #what do you want script to do?
