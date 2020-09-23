@@ -9,7 +9,7 @@
 ###############################
 
 import collections
-from config.config_find_files import *
+from config_find_files import * #config - MASS
 
 #Level 1 6hour data
 #in: mod - model, e.g. CNRM-CM6-1, vari - variable in CMIP notation, e.g. zg
@@ -33,12 +33,7 @@ def level1_mon(mod,vari):
     var = var_list[mod]
     g = g_list[mod]
     
-    if vari == 'mrsos':
-      mod_dir = CMIP6_base+group+dash+mod+CMIP6_type+var+'/Lmon/'+vari+dash+g+CMIP6_file
-    else:
-      mod_dir = CMIP6_base+group+dash+mod+CMIP6_type+var+CMIP6_time_mon+vari+dash+g+CMIP6_file
-    
-    #mod_dir = CMIP6_base+group+dash+mod+CMIP6_type+var+CMIP6_time_mon+vari+dash+g+CMIP6_file
+    mod_dir = CMIP6_base+group+dash+mod+CMIP6_type+var+CMIP6_time_mon+vari+dash+g+CMIP6_file
     
     return mod_dir
     
