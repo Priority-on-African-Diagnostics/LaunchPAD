@@ -44,6 +44,11 @@ from config.config_functions import *
 from MCT_config import *
 from windspharm.iris import VectorWind
 
+from matplotlib.ticker import ScalarFormatter
+from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
+                               AutoMinorLocator)
+from pylab import *
+
 ################################
 
 ###############################
@@ -109,12 +114,88 @@ def calc_MCT(expt):
 #Plotting function(s)
 ###############################
 
-def plot_MCT(expt):
+def plot_MCT(green_list):
 
-     xi = unpickle_cubes(starterp+expt+'_'+'_'+p_file)
-     xi2=iris.analysis.maths.multiply(xi,1e6)
+     CEDA_green = True
 
-     plt.plot(mon_names, xi2.data, label=expt)
+     fig, ax = plt.subplots()
+     NUM_COLORS = len(green_list)
+     
+     plt.rc('font', family='serif')
+     plt.rc('xtick', labelsize='x-small')
+     plt.rc('ytick', labelsize='x-small')
+
+     clist = len(green_list)
+     len_clist = int(ceil(len(green_list) /3.0))   
+     cm = plt.get_cmap('gist_rainbow', len_clist)
+        
+     colourWheel=[]
+     for i in range(len_clist):
+         rgb = cm(i)[:3] # will return rgba, we take only first 3 so we get rgb
+         colourWheel.append(str(matplotlib.colors.rgb2hex(rgb)))
+     
+     dashesStyles = [[3,1],
+            [1000,1],
+            [2,1,10,1],
+            [4, 1, 1, 1, 1, 1]]
+     
+     for j, expt in enumerate(green_list):
+         
+
+         xi = unpickle_cubes(starterp+expt+'_'+'_'+p_file)
+         xi2=iris.analysis.maths.multiply(xi,1e6)
+
+         if CEDA_green:
+             if expt not in obs_list:
+                 alphaVal = 1.0
+                 linethick = 1.5
+                 if j >= len_clist and j < 2*len_clist:
+                     k = j - len_clist
+                     dashesSty = dashesStyles[0]
+                 elif j >= 2*len_clist:
+                     k = j - 2*len_clist
+                     dashesSty = dashesStyles[2]
+                 else:
+                     k=j
+                     dashesSty = dashesStyles[1]
+                 c_o = colourWheel[k%len(colourWheel)]
+                 c_zorder=j
+
+     
+         if expt in obs_list:
+             alphaVal = 1.0
+             dashesSty = ''
+             linethick = 2.5
+             c_o = '#000000'
+             c_zorder = clist + 1
+
+         lines = plt.plot(mon_names, xi2.data,
+                linestyle = '-',
+                color= c_o,
+                dashes=dashesSty,
+                lw=linethick,
+                label=expt,
+                alpha=alphaVal, zorder = c_zorder)    
+     
+     ax.set_xlabel('')
+     plt.xlim('Jan', 'Dec')
+     ax.yaxis.set_major_formatter(ScalarFormatter())
+     ax.yaxis.major.formatter._useMathText = True
+     ax.yaxis.set_minor_locator(  AutoMinorLocator(5))
+     #ax.xaxis.set_minor_locator(  AutoMinorLocator(5))
+     ax.yaxis.set_label_coords(0.63,1.01)
+     ax.yaxis.tick_left()
+
+     nameOfPlot = 'Mozambique Channel Trough (Rondrotiana Barimalala)'
+     plt.title(nameOfPlot)
+     plt.subplots_adjust(bottom=0.1, right=0.8, top=0.9)
+     plt.legend(title='Dataset', bbox_to_anchor=(1.05, 1), loc='upper left')
+  
+     if save_plot:
+         plt.savefig(starterpng+'MCT_plot_'+plot_file, bbox_inches='tight',dpi=100)
+     else:
+         plt.show()
+     plt.clf() 
     	 
      return None
 
@@ -161,15 +242,9 @@ if processor_calculations:
 if create_plot:
     print('entering PLOTTING routine')
     green_list =  unpickle_cubes(starterp+'green_list'+p_file)
-    for expt in green_list:
-        plot_MCT(expt)
-    if save_plot:
-        plt.legend()
-            #plt.show()
-        plt.savefig(starterpng+'_MCT_plot_'+plot_file, bbox_inches='tight',dpi=100)
-    else:
-        plt.legend()
-        plt.show()
+    
+    plot_MCT(green_list)
+
     print('data plotted sucessfully')
 	 
 ###############################

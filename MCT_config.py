@@ -3,7 +3,7 @@
 obs_list = ['ERA-Interim']
 vari_list=['ua','va']
 
-pre_processor_experiments = True
+pre_processor_experiments = False
 processor_calculations = True
 create_plot = True
 save_plot = False
