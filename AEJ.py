@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+	# -*- coding: utf-8 -*-
 ###############################
 # Start of file:
 # Author(s): Tom Webb
@@ -31,12 +31,19 @@ import cartopy
 import cartopy.crs as crs
 import cartopy.feature as cfeature
 import cloudpickle as pickle
+
 from config.find_files import *
 from config.config import *
 from config.config_functions import *
 from AEJ_config import *
+
 import operator
 import xarray as xr
+
+from matplotlib.ticker import ScalarFormatter
+from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
+                               AutoMinorLocator)
+from pylab import *
 
 ###############################
 #unpickle files
@@ -52,12 +59,12 @@ def unpickle_cubes(path):
 ###############################
 
 def load_expt(expt, vari):
-     CLN = iris.load(monthly_file_location(expt, vari), lat_bounds(3, 20) & lon_bounds(14, 224) & \
-                     pressure_bounds(expt, 60000, 70000) & year_bounds(1980, 2005))
+
+     CLN = iris.load(monthly_file_location(expt, vari), lat_bounds(3, 20) & lon_bounds(14, 24) & pressure_bounds(expt, 60000, 70000) & year_bounds(1980, 2005))
      CUN = cube_concatenator(CLN)
+     
     
-     CLS = iris.load(monthly_file_location(expt, vari), lat_bounds(-20, -5) & lon_bounds(14, 24) & \
-                     year_bounds(1980, 2005) & pressure_level(expt, 60000))
+     CLS = iris.load(monthly_file_location(expt, vari), lat_bounds(-20, -5) & lon_bounds(14, 24) & year_bounds(1980, 2005) & pressure_level(expt, 60000))
      CUS = cube_concatenator(CLS)
      
      CUS = climatology(CUS.collapsed('longitude', iris.analysis.MEAN)) #south 
@@ -80,6 +87,8 @@ def calc_AEJ(expt,vari):
     return cubeN_intensity, cubeS_intensity, N_latitude, S_latitude
     
 def find_lat_int(cube):
+
+    thresh=-6.0
 
     lat = []
     xr_cube = xr.DataArray.from_iris(cube)
@@ -106,43 +115,135 @@ def find_lat_int(cube):
 #plot diagnostic
 ###############################
 
-def plot_AEJ(expt):
+def plot_AEJ(green_list):
       
-    plt.figure(figsize=(8, 6))
+    len_clist = int(ceil(len(green_list) /3.0))   
+    cm = plt.get_cmap('gist_rainbow', len_clist)
+
+    colourWheel=[]
+    for i in range(len_clist):
+        rgb = cm(i)[:3] # will return rgba, we take only first 3 so we get rgb
+        colourWheel.append(str(matplotlib.colors.rgb2hex(rgb)))
+      
+    fig, ax = plt.subplots()
+    nameOfPlot = 'African Easterly Jet (Giresse Turin)'
+    fig.suptitle(nameOfPlot, fontsize=14)
+    plt.title(nameOfPlot)
+    
+    clist = len(green_list)
+    
+    dashesStyles = [[3,1],
+            [1000,1],
+            [2,1,10,1],
+            [4, 1, 1, 1, 1, 1]]
 
     plt.subplot(2,2,1)
     plt.title('North')
-    LN = unpickle_cubes(starterp+expt+'_'+'N_latitude'+'_'+p_file) 
-    plt.plot(mon_names, LN)
+    for j, expt in enumerate( green_list):
+        LN = unpickle_cubes(starterp+expt+'_'+'N_latitude'+'_'+p_file) 
+        if expt in obs_list:
+            c_o = '#000000'
+            linethick = 2.5
+            c_zorder = clist + 1
+            dashesSty = dashesStyles[obs_list.index(expt)]
+        else:
+            c_o = colourWheel[j%len(colourWheel)]
+            linethick = 1.5
+            c_zorder = j
+            if j >= len_clist and j < 2*len_clist:
+                dashesSty = dashesStyles[0]
+            elif j >= 2*len_clist:
+                dashesSty = dashesStyles[2]
+            else:
+                dashesSty = dashesStyles[1]
+        plt.plot(mon_names, LN, linestyle = '-', color= c_o, dashes=dashesSty, lw=linethick, label=expt, zorder = c_zorder)   
     plt.ylim(0,14)
     plt.xticks(np.arange(12), mon_names, rotation=45)
-    plt.ylabel('Latitude') 
+    plt.ylabel('Latitude', fontsize=12) 
         
     plt.subplot(2,2,2)
     plt.title('South')
-    LS = unpickle_cubes(starterp+expt+'_'+'S_latitude'+'_'+p_file) 
-    plt.plot(mon_names, LS)
+    for j, expt in enumerate( green_list):
+        LS = unpickle_cubes(starterp+expt+'_'+'S_latitude'+'_'+p_file) 
+        if expt in obs_list:
+            dashesSty = dashesStyles[obs_list.index(expt)]
+            c_o = '#000000'
+            linethick = 2.5
+            c_zorder = clist + 1
+        else:
+            c_o = colourWheel[j%len(colourWheel)]
+            linethick = 1.5
+            c_zorder = j
+            if j >= len_clist and j < 2*len_clist:
+                dashesSty = dashesStyles[0]
+            elif j >= 2*len_clist:
+                dashesSty = dashesStyles[2]
+            else:
+                dashesSty = dashesStyles[1]
+        plt.plot(mon_names, LS, linestyle = '-', color= c_o, dashes=dashesSty, lw=linethick, label=expt, zorder = c_zorder)
     plt.ylim(-12,0)
     plt.xticks(np.arange(12), mon_names, rotation=45)
-    plt.ylabel('Latitude')
+
     
     plt.subplot(2,2,3) 
-    CU_N = unpickle_cubes(starterp+expt+'_'+'cubeN_intensity'+'_'+p_file)
-    qplt.plot(CU_N.coord('month'), CU_N)
+    for j, expt in enumerate( green_list):
+        CU_N = unpickle_cubes(starterp+expt+'_'+'cubeN_intensity'+'_'+p_file)
+        if expt in obs_list:
+            c_o = '#000000'
+            linethick = 2.5
+            c_zorder = clist + 1
+            dashesSty = dashesStyles[obs_list.index(expt)]
+        else:
+            c_o = colourWheel[j%len(colourWheel)]
+            linethick = 1.5
+            c_zorder = j
+            if j >= len_clist and j < 2*len_clist:
+                dashesSty = dashesStyles[0]
+            elif j >= 2*len_clist:
+                dashesSty = dashesStyles[2]
+            else:
+                dashesSty = dashesStyles[1]
+        qplt.plot(CU_N.coord('month'), CU_N, linestyle = '-', color= c_o, dashes=dashesSty, lw=linethick, label=expt, zorder = c_zorder)
     plt.ylim(-6,-16)
     plt.title(' ')
     plt.xticks(np.arange(12), mon_names, rotation=45)
-    plt.ylabel('Intensity (m/s)')    
+    plt.ylabel('Intensity (m/s)', fontsize=12)    
    
     plt.subplot(2,2,4)
-    CU_S = unpickle_cubes(starterp+expt+'_'+'cubeS_intensity'+'_'+p_file)
-    qplt.plot(CU_S.coord('month'), CU_S)
+    for j, expt in enumerate( green_list):
+        CU_S = unpickle_cubes(starterp+expt+'_'+'cubeS_intensity'+'_'+p_file)
+        if expt in obs_list:
+            c_o = '#000000'
+            linethick = 2.5
+            c_zorder = clist + 1
+            dashesSty = dashesStyles[obs_list.index(expt)]
+        else:
+            c_o = colourWheel[j%len(colourWheel)]
+            linethick = 1.5
+            c_zorder = j
+            if j >= len_clist and j < 2*len_clist:
+                dashesSty = dashesStyles[0]
+            elif j >= 2*len_clist:
+                dashesSty = dashesStyles[2]
+            else:
+                dashesSty = dashesStyles[1]
+        qplt.plot(CU_S.coord('month'), CU_S, linestyle = '-', color= c_o, dashes=dashesSty, lw=linethick, label=expt, zorder = c_zorder)
+    
     plt.ylim(-6,-16)
     plt.title(' ')
     plt.xticks(np.arange(12), mon_names, rotation=45)
-    plt.ylabel('Intensity (m/s)')
 
-    plt.subplots_adjust(wspace=0.4,hspace=0.3)
+    handles, labels = ax.get_legend_handles_labels()
+    plt.subplots_adjust(bottom=0.1, right=0.8, top=0.9)
+    plt.legend(title='Dataset', bbox_to_anchor=(1.05, 2.3), loc='upper left')
+    
+    if save_plot:
+        plt.savefig(starterpng+'AEJ_plot_'+expt+plot_file, bbox_inches='tight',dpi=100)
+
+    else:
+        iplt.show()
+	
+    return None
         
 ###############################
 #main execution
@@ -181,10 +282,8 @@ if processor_calculations:
 	    
 
             pickle.dump(cubeN_intensity, open(starterp+expt+'_'+'cubeN_intensity'+'_'+p_file, "wb"))
-            #iris.io.save(cubeN_intensity, starternc+expt+'_'+'cubeN_intensity'+'_'+nc_file) 
 	    
             pickle.dump(cubeS_intensity, open(starterp+expt+'_'+'cubeS_intensity'+'_'+p_file, "wb"))
-            #iris.io.save(cubeS_intensity, starternc+expt+'_'+'cubeS_intensity'+'_'+nc_file) 
 	    
             pickle.dump(N_latitude, open(starterp+expt+'_'+'N_latitude'+'_'+p_file, "wb"))	    
             pickle.dump(S_latitude, open(starterp+expt+'_'+'S_latitude'+'_'+p_file, "wb"))
@@ -201,17 +300,8 @@ if create_plot:
     print('entering PLOTTING routines')
 
     green_list = unpickle_cubes(starterp+'green_list'+p_file)
-    for expt in green_list:
-        print('processing model '+expt)
-	
-        plot_AEJ(expt)
-	
-        if save_plot:
-            plt.savefig(starterpng+'AEJ_plot_'+expt+plot_file, bbox_inches='tight',dpi=100)
+    plot_AEJ(green_list)
 
-        else:
-            iplt.show()
-	
     print('plotting complete')
          
 ###############################

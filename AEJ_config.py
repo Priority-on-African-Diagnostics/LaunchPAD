@@ -12,9 +12,7 @@ vari_list = ['ua']
 pre_processor_experiments = True
 processor_calculations = True
 create_plot = True
-save_plot = True
-
-thresh = -6.0
+save_plot = False
 
 #file name (.p files) note: model name superseeds this string
 p_file = '_AEJ.p'

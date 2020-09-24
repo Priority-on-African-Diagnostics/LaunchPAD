@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ###############################
-from config import * #note relative paths from execution 
-from find_files import * #remove config. here and above for mass
+from config.config import * #note relative paths from execution 
+from config.find_files import * #remove config. here and above for mass
 import os
 import iris
 import iris.coords
@@ -71,9 +71,12 @@ def create_greenlist6hr(vari_list):
 
 def pressure_min_mass_collapse(name, cube):
 
-     if name=='ERA-Interim' or name =='ERA5' or name =='ERA-Interim' or name =='MERRA2':
+     if name=='ERA-Interim' or name =='ERA5' or name =='ERA-Interim':
      
          cube = cube.collapsed('pressure_level', iris.analysis.MIN)
+	 
+     if name=='MERRA2':
+         cube = cube.collapsed('air_pressure', iris.analysis.MIN)
      
      else:
 
@@ -83,7 +86,7 @@ def pressure_min_mass_collapse(name, cube):
      
 def pressure_min_collapse(name, cube):
 
-     if name=='ERA-Interim' or name =='ERA5' or name =='ERA-Interim' or name =='MERRA2':
+     if name=='ERA-Interim' or name =='ERA5' or name =='ERA-Interim':
      
          cube = cube.collapsed('pressure_level', iris.analysis.MIN)
      
@@ -117,7 +120,7 @@ def season_all_ts(cube):
      
 def pressure_bounds(name, pressure1, pressure2):
 
-     if name=='ERA-Interim' or name =='ERA5' or name =='ERA-Interim' or name == 'MERRA2':
+     if name=='ERA-Interim' or name =='ERA5' or name =='ERA-Interim':
      
          Caip_0 = iris.Constraint(pressure_level=lambda cell: pressure1/100 <= cell <= pressure2/100)
      
@@ -129,9 +132,12 @@ def pressure_bounds(name, pressure1, pressure2):
      
 def pressure_bounds_mass(name, pressure1, pressure2):
 
-     if name=='ERA-Interim' or name =='ERA5' or name =='ERA-Interim' or name == 'MERRA2':
+     if name=='ERA-Interim' or name =='ERA5' or name =='ERA-Interim':
      
          Caip_0 = iris.Constraint(pressure_level=lambda cell: pressure1/100 <= cell <= pressure2/100)
+	 
+     elif name=='MERRA2':
+         Caip_0 = iris.Constraint(air_pressure=lambda cell: pressure1 <= cell <= pressure2)
      
      else:
 
@@ -183,7 +189,7 @@ def unit_converter(cube):
 def pressure_level(name, pressure1):
     
 
-     if name =='ERA5' or name =='ERA-Interim' or name == 'MERRA2':
+     if name =='ERA5' or name =='ERA-Interim':
          
      
          Caip_0 = iris.Constraint(pressure_level=pressure1/100)
@@ -197,10 +203,12 @@ def pressure_level(name, pressure1):
 def pressure_level_mass(name, pressure1):
   
 
-     if name =='ERA5' or name =='ERA-Interim' or name == 'MERRA2':
+     if name =='ERA5' or name =='ERA-Interim':
          
      
          Caip_0 = iris.Constraint(pressure_level=pressure1/100)
+     elif name=='MERRA2':
+         Caip_0 = iris.Constraint(air_pressure=pressure1)
      
      else:
 
