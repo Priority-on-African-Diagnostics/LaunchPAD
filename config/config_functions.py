@@ -49,6 +49,7 @@ def create_greenlist(vari_list):
     for mod in mod_list:
         for vari in vari_list:
             if not os.path.exists(level1_mon(mod,vari)):
+                print(level1_mon(mod,vari))
                 print('cannot find files for '+mod)
                 red_list.append(mod)
     
@@ -244,7 +245,7 @@ def monthly_file_location(expt, vari):
 	 
      elif expt=='MERRA2':
      
-         location = level1_obs_mon(expt)+vari+CMIP6_extn
+         location = level1_obs_mon(expt)+vari+'_'+CMIP6_extn
 
      elif expt=='HadISST':
 
