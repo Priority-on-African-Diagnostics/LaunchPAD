@@ -146,6 +146,12 @@ def pressure_bounds_mass(name, pressure1, pressure2):
 	 
      return Caip_0
      
+def time_bound_six(name):
+
+    Ctim_1 = iris.Constraint(time=lambda cell: cell.point.hour == 6)
+    
+    return Ctim_1
+     
 def mon_div(expt, cube, div_no, pressure1, pressure2):
 
      #print(cube)
@@ -224,6 +230,7 @@ def sixhr_file_location(expt, vari):
     if expt =='ERA5' or expt =='MERRA2':
         location = level1_obs_6hr(expt)+CMIP6_extn
         print(location)
+	
     else:
         location = level1_6hr(expt,vari)+CMIP6_extn 
 
