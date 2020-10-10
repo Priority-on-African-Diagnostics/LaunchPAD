@@ -38,6 +38,9 @@ from WAHL_config import *
 from config.config_functions import *
 import cf_units as unit
 
+from matplotlib import cm
+from pylab import *
+
 ###############################
 #unpickle files
 ###############################
@@ -53,8 +56,8 @@ def unpickle_cubes(path):
 ###############################
 
 def load_expt(expt, vari):
-     #time=1985 for testing, should be 2012
-     cube_list = iris.load(sixhr_file_location(expt, vari), lat_bounds(-10, 40) & year_bounds(1983, 1985) & time_bound_six(expt))
+
+     cube_list = iris.load(sixhr_file_location(expt, vari), lat_bounds(-10, 40) & year_bounds(1983, 2012) & time_bound_six(expt))
      cube = cube_concatenator(cube_list)
      cube = cube.intersection(longitude=(-25, 30),ignore_bounds=True)
      cube1 = cube.extract(pressure_level(expt,70000))
@@ -96,48 +99,48 @@ def calc_WAHL(expt, vari):
 #Plotting function(s)
 ###############################
 
-def plot_WAHL(green_list):
-    
-     for expt in green_list:
-         plt.figure(figsize=(12, 6), dpi=100)
-         Cube0 = unpickle_cubes(starterp+expt+'_'+'_'+p_file)
-         print(Cube0)
-			      
-     #iterate over monthly lat-lon slices
-         for Cube1 in Cube0.slices(['latitude','longitude']):
-     
-          #get month number (in year) from month
-              month = Cube1.coord('month').points[0]
-              mon_num = int(mon_list[month])
-              plt.subplot(4,3,mon_num)
-	  
-              cf=iplt.contourf(Cube1, 20)
-	  
-              plt.title(month)
-              plt.gca().coastlines()
-              ax = plt.axes(projection=ccrs.PlateCarree())
-              ax.add_feature(cfeature.BORDERS)
-	  
-	  #this ignores all data we have outside our domain of interest
-              plt.gca().set_extent((-25,30,-10,40))
-	  
-         colorbar_axes = plt.gcf().add_axes([0.95, 0.2, 0.005, 0.7])	  
-         colorbar = plt.colorbar(cf, colorbar_axes, orientation='vertical')
-         colorbar.set_label('m')
-     
-         plt.suptitle('WAHL @ 0600 for '+expt+' 1983-2012 (m) ')
-     
-         if save_plot:
-     
-         # Save figure to png file
-             plt.savefig(starterpng+mod+WAHL_plot_file, bbox_inches='tight',dpi=100)
-     
-     # Show the plot as the code runs
-         else:
-             iplt.show()
+def plot_WAHL(expt):
 
-     # Clear the figure (for looping)
-         plt.clf()
+     Cube0 = unpickle_cubes(starterp+expt+'_'+'_'+p_file)
+
+     cmap = cm.get_cmap('jet', 15) 
+     arr=[]
+     arr.append('#ffffff')
+     for i in range(cmap.N):
+         rgb = cmap(i)[:3] 
+         arr.append(matplotlib.colors.rgb2hex(rgb))
+	 
+     plt.figure(figsize=(6, 6))
+     clevs = np.arange(0,30,2)
+
+     for counter, Cube1 in enumerate(Cube0.slices(['latitude','longitude'])):
+         month = Cube1.coord('month').points[0]
+         
+
+         x = Cube1.coord('longitude').points
+         y = Cube1.coord('latitude').points
+      
+         plt.subplot(3,4,counter+1)
+         cf = iplt.contourf(Cube1,extend='both')
+         #cf = iplt.contourf(Cube1,clevs,colors=arr,extend='both')
+	 
+         plt.gca().coastlines()
+         plt.gca().add_feature(cfeature.BORDERS,linewidth=0.2)
+         plt.gca().set_extent((-25,30,-10,40))
+         plt.title(month)
+
+     colorbar_axes = plt.gcf().add_axes([0.25, 0.1, 0.5, 0.025])
+     colorbar = plt.colorbar(cf, colorbar_axes, orientation='horizontal')
+     plt.suptitle('WAHL @ 0600 for '+expt+' 1983-2012 (m) ') 
+
+     if save_plot:
+     
+         plt.savefig(starterpng+expt+plot_file, bbox_inches='tight',dpi=200)
+     else:
+         plt.show()
+       
+     plt.clf()	 
+     
      return None
      
 ###############################
@@ -150,8 +153,8 @@ if pre_processor_experiments:
 ###############################
 #extraction control
 ###############################
-    green_list = ['CNRM-CM6-1'] #create_greenlist6hr(vari_list)
-    green_list = green_list #+ obs_list
+    #green_list = create_greenlist6hr(vari_list)
+    green_list = obs_list #green_list + obs_list
     pickle.dump(green_list, open(starterp+'green_list'+p_file, "wb" ))
     
     for expt in green_list:   
@@ -184,8 +187,8 @@ if processor_calculations:
 if create_plot:
     print('entering PLOTTING routine')
     green_list =  unpickle_cubes(starterp+'green_list'+p_file)
-    
-    plot_WAHL(green_list)
+    for expt in green_list:    
+        plot_WAHL(expt)
 
     print('data plotted sucessfully')
 

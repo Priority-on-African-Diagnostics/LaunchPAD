@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ###############################
 
-obs_list = ['ERA5', 'MERRA2']
+obs_list = ['ERA-Interim'] #'ERA5', 'MERRA2', 
 vari_list = ['zg']#,'ts', 'pr']
 #what do you want script to do?
 pre_processor_experiments = False
@@ -18,8 +18,8 @@ nc_file = '_WAHL.nc'
 #file name (.png plot) note: model name superseeds this string
 plot_file = '_WAHL_plot.png'
 
-home_add ='/home/users/twouce/github/LaunchPAD'
+home_add ='/home/users/twouce/github/LaunchPAD/files'
 
-starterp = home_add+'/files/p/'
-starterpng = home_add+'/files/png/'
-starternc = home_add+'/files/nc/'
+starterp = home_add+'/p/'
+starterpng = home_add+'/png/'
+starternc = home_add+'/nc/'
