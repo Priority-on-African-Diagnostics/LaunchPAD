@@ -37,6 +37,9 @@ from matplotlib import patches
 import math
 from matplotlib.transforms import Bbox
 import xarray as xa
+import matplotlib.cm as cm
+import matplotlib
+
 
 ###############################
 # Unpickle files
@@ -58,7 +61,16 @@ def load_expt(expt, vari):
     cube_list = iris.load(monthly_file_location(expt, vari), lat_bounds(0, 20) & pressure_level(expt, 92500) & year_bounds(1980, 2014))         
     cube = cube_concatenator(cube_list)    
     cube = cube.intersection(longitude=(-40, 10), ignore_bounds=True)
-    return cube 
+    
+    #regrid to neutral cube
+    lat,lon = cube.coord('latitude'),cube.coord('longitude')
+    lat_min,lon_min = lat.points.min(),lon.points.min()
+    lat_max,lon_max = lat.points.max(),lon.points.max()
+    lat25 = np.arange(lat_min, lat_max, 2.5)
+    lon25 = np.arange(lon_min, lon_max, 2.5)
+    
+    result = cube.interpolate([('latitude', lat25), ('longitude', lon25)],iris.analysis.Linear())
+    return result
 
 #####################################################################
 #Calculation function(s)
@@ -68,23 +80,22 @@ def WAWJ_Analysis(expt):
   
     ua = unpickle_cubes(starterp+expt+'_'+'ua'+'_'+p_file)
     va = unpickle_cubes(starterp+expt+'_'+'va'+'_'+p_file)
+    zg = unpickle_cubes(starterp+expt+'_'+'zg'+'_'+p_file) # same processing as other values?
 
     #Step by step:1.2
     ua_clim = climatology(ua)
     va_clim = climatology(va)
+    zg_clim = climatology(zg)
     
-    return ua_clim, va_clim
+    return ua_clim, va_clim, zg_clim
     
 #####################################################################
 #Plotting function(s)
 #####################################################################
 def calc_windspeed(ua_clim, va_clim):
     
-    #ua_clim = unpickle_cubes(starterp+expt+'_'+'ua_clim'+'_'+p_file)
-    #va_clim = unpickle_cubes(starterp+expt+'_'+'va_clim'+'_'+p_file)
-    windspeed = (ua_clim ** 2 + va_clim ** 2) ** 0.5
-    
-        
+    windspeed = ua_clim*1 #are we just going to use raw ua_clim or need something more?
+          
     return windspeed
     
 def bestfit_colrow(total=1):
@@ -101,34 +112,28 @@ def bestfit_colrow(total=1):
             
     return cols, rows
     
-def get_max_zorder(ax):
-    zder = 0
-    
-    if not(ax is None):
-        axobjs = ax.get_children()
-        zder = max((obj.zorder for obj in axobjs))
-    
-    return zder
-    
 def plot_WAWJ(green_list):
 
     total_plots = mon_list[mon2] - mon_list[mon1] + 1
     cols, rows = bestfit_colrow(total_plots)
+    
+    cmap = cm.get_cmap('jet', 8) 
+    arr=[]
+    arr.append('#ffffff')
+    arr.append('#ffffff')
+    for i in range(cmap.N):
+        rgb = cmap(i)[:3] 
+        arr.append(matplotlib.colors.rgb2hex(rgb))
+    clevs = np.arange(0,10,1) #no need to use threshold because of this
 
     for expt in green_list:
         ua = unpickle_cubes(starterp+expt+'_'+'ua_clim'+'_'+p_file)
         col_no = 0
         row_no = 0
-	
-        if expt in obs_list: #keep 6 obs to 1 model ratio
-            xskip = 12
-            yskip = 12
-        else:
-            xskip = 2
-            yskip = 2
 
         fig, axs = plt.subplots(cols, rows, subplot_kw={'projection': ccrs.PlateCarree()})
-        fig.suptitle(mon1+' to '+mon2+' ' +expt+' '+'wind vector')
+        fig.suptitle('West African Westerly Jet: (Makinde Akintunde) '+mon1+' to '+mon2+' ' +expt \
+	+' '+'Wind Vector, Zonal Wind (shaded), Geopotential Height (contour), ITCZ (red line)') #how do we create red line?
 
         for mon in ua.coord('month').points:
            mon_number=mon_list[mon]
@@ -138,10 +143,12 @@ def plot_WAWJ(green_list):
 
               ua_clim = unpickle_cubes(starterp+expt+'_'+'ua_clim'+'_'+p_file)
               va_clim = unpickle_cubes(starterp+expt+'_'+'va_clim'+'_'+p_file)
+              geopot = unpickle_cubes(starterp+expt+'_'+'zg_clim'+'_'+p_file)
 
               Ctim_0 = iris.Constraint(month=mon)
               ua_clim=ua_clim.extract(Ctim_0)
               va_clim=va_clim.extract(Ctim_0)
+              geopot = geopot.extract(Ctim_0)
 
               x = ua_clim.coord('longitude').points
               y = ua_clim.coord('latitude').points
@@ -153,21 +160,13 @@ def plot_WAWJ(green_list):
 
               extent = [-40, 10, 0, 20]
               windspeed = calc_windspeed(ua_clim, va_clim)
-             # iplt.contourf(windspeed)
-              zder = 1
-              #pf.plot_contour(m_ucube, ax=current_ax, fill=True, overlay=True, shw_labels=False, shw_key=True, shw_title=False, shw_plt=False)
-              current_ax.contourf(xm, ym, windspeed.data, antialiased=True,zorder= zder)                   
-              #iplt.contour(windspeed, row=row_no, col=col_no)
-              #cp = axs[col_no, row_no].contourf(windspeed)
 
-             # if expt in obs_list:
-               #   arrow_scale = 2*scale_fact* max([xskip, yskip])
-             # else:
-                #  arrow_scale = scale_fact* max([xskip, yskip])
+              cs = current_ax.contour(xm, ym, geopot.data, 10, antialiased=True, colors='black', zorder= 4)
+              current_ax.contour(xm, ym, v, levels=(0, 100, 200), antialiased=True, zorder= 2, colors='red')
+              cf =current_ax.contourf(xm, ym, windspeed.data,clevs,colors=arr, antialiased=True,zorder= 1)                   
 
               #Step by step 1.5
-              
-              qv = axs[col_no, row_no].quiver(xm[::xskip, ::xskip], ym[::yskip, ::yskip], u[::xskip, ::xskip], v[::yskip, ::yskip], pivot='middle', units='inches', minlength=0, zorder=2)#scale=arrow_scale, minlength=0)
+              qv = axs[col_no, row_no].quiver(xm, ym, u, v, pivot='middle', units='inches', minlength=0, zorder=5)              
               axs[col_no, row_no].quiverkey(qv, 0.95, 1.05, scale_fact, r'$2 \frac{m}{s}$', labelpos='E', coordinates='axes')
               axs[col_no, row_no].set_xlabel('Longitude (°)', labelpad=20)
               axs[col_no, row_no].set_ylabel('Latitude (°)', labelpad=20)
@@ -178,12 +177,16 @@ def plot_WAWJ(green_list):
               axs[col_no, row_no].set_xlim([extent[0], extent[1]])
               axs[col_no, row_no].set_ylim([extent[2], extent[3]])
 
-              #axs[col_no, row_no].set_yticks(parallels)
-              #axs[col_no, row_no].set_yticklabels(parallels)
-              #axs[col_no, row_no].set_xticks(meridians)
-              #axs[col_no, row_no].set_xticklabels(meridians)
+              axs[col_no, row_no].set_yticks(parallels)
+              axs[col_no, row_no].set_yticklabels(parallels)
+              axs[col_no, row_no].set_xticks(meridians)
+              axs[col_no, row_no].set_xticklabels(meridians)
               axs[col_no, row_no].add_feature(cfeature.BORDERS)
               axs[col_no, row_no].add_feature(cfeature.COASTLINE)
+              axs[col_no, row_no].add_feature(cfeature.LAND, facecolor='#808080', zorder=3)
+              axs[col_no, row_no].set_extent((-40,7.5,2,18))
+	      
+              axs[col_no, row_no].clabel(cs, inline=1, fmt='%1.1f', fontsize=8)
 
               title = mon
               axs[col_no, row_no].title.set_text(title)
@@ -198,9 +201,12 @@ def plot_WAWJ(green_list):
                if row_no == rows:
                   row_no = 0
                   col_no = col_no + 1 
-            
+
+        colorbar_axes = plt.gcf().add_axes([0.95, 0.3, 0.01, 0.5])
+        colorbar = plt.colorbar(cf, colorbar_axes, orientation='vertical')
+		           
         if save_plot:
-            plt.savefig(starterpng+'_vector_plot_'+expt+plot_file, bbox_inches='tight',dpi=400)
+            plt.savefig(starterpng+'_WAWJ_'+expt+plot_file, bbox_inches='tight',dpi=400)
         else:
             plt.show() 
  
@@ -210,8 +216,8 @@ def plot_WAWJ(green_list):
 if pre_processor_experiments:
     print('entering pre-processor routine')
    
-    #green_list = create_greenlist(vari_list)
-    green_list =obs_list#+green_list
+    green_list = create_greenlist(vari_list)
+    green_list =obs_list+green_list
     pickle.dump(green_list, open(starterp+'green_list'+p_file, "wb" ))
     print('new mod list', green_list)
 
@@ -226,9 +232,10 @@ if processor_calculations:
 
     green_list = unpickle_cubes(starterp+'green_list'+p_file)
     for expt in green_list:
-        ua_clim, va_clim = WAWJ_Analysis(expt)
+        ua_clim, va_clim, gp_clim = WAWJ_Analysis(expt)
         pickle.dump(ua_clim, open(starterp+expt+'_ua_clim_'+p_file, "wb" ))
         pickle.dump(va_clim, open(starterp+expt+'_va_clim_'+p_file, "wb" ))
+        pickle.dump(gp_clim, open(starterp+expt+'_zg_clim_'+p_file, "wb" ))
        
 
 if create_plot:

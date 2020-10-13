@@ -4,9 +4,9 @@
 #OPTIONS for tracking algorithm that can be changed by the user
 
 #what observations to process for?
-obs_list = ['ERA5']
+obs_list = ['ERA5']#,'CNRM-CM6-1']
 
-vari_list=['ua','va']
+vari_list=['ua','va','zg']
 
 scale_fact = 4.5
 lon_step = 5
@@ -19,7 +19,7 @@ mon2='Nov'
 pre_processor_experiments = False
 processor_calculations = False
 create_plot=True
-save_plot=False
+save_plot=True
 
 # Figure size
 fig_width = 200
@@ -35,8 +35,8 @@ nc_file = '_WAWJ.nc'
 plot_file = '_WAWJ_plot.png'
 
 #location to write output to. Can be absolute or relative path.
-starterp = '/home/users/twouce/github/UCT/files/p/'
-starterpng = '/home/users/twouce/github/UCT/files/png/'
-starternc = '/home/users/twouce/github/UCT/files/nc/'
+starterp = '/home/users/twouce/github/LaunchPAD/DIAGNOSTICS/WAWJ/intermediary_files/'
+starterpng = '/home/users/twouce/github/LaunchPAD/DIAGNOSTICS/WAWJ/plots/'
+starternc = '/home/users/twouce/github/LaunchPAD/DIAGNOSTICS/WAWJ/intermediary_files/'
 
 jet_threshold=10
