@@ -19,7 +19,7 @@ mon2='Nov'
 pre_processor_experiments = False
 processor_calculations = False
 create_plot=True
-save_plot=True
+save_plot=False
 
 # Figure size
 fig_width = 200

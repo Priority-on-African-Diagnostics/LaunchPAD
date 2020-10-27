@@ -2,10 +2,10 @@
 ###############################
 
 obs_list = ['ERA-Interim'] #'ERA5', 'MERRA2', 
-vari_list = ['zg']#,'ts', 'pr']
+vari_list = ['zg','ts', 'pr']
 #what do you want script to do?
 pre_processor_experiments = False
-processor_calculations = True
+processor_calculations = False
 create_plot = True
 save_plot = False
 
