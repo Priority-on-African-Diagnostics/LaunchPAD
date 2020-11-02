@@ -1,3 +1,18 @@
+# African Easterly Jets components: locations and intensities
+
+**Giresse KUETE<sup>*</sup>**
+
+Wilfried POKAM
+
+<sup>*</sup> Department of Physics, University of Yaounde I, Cameroon
+ 
+giresseturin@yahoo.fr  
+
+*This document has not been published. Permission to quote from it must be obtained from the author using the above contact details.*
+
+
+
+
 # Introduction: Why is this feature/process important?
  The African Easterly Jet is a prominent feature of the mid tropospheric zonal wind that forms over central Africa. The jet is considered to play a crucial role in rainfall development over the central Africa region during September to November (Nicholson and Grist 2003). The jet presents two components. A northern component known as the African Easterly Jet North (AEJ-N) of the northern hemisphere, and a southern component known as the African Easterly Jet South (AEJ-S) of the southern hemisphere. Nicholson and Grist (2003) were the first authors to use this appellation for these two mid-level jets to distinguish them. The climatological AEJ-N is identifiable throughout the year from January when it lies at its southernmost location (3N) and move northward to its most northern location in August (13N) with maximum wind speeds attending 13 m_s in September, as it begins shifting southward towards the equator (Nicholson and Grist 2003). Characteristics of the southern component was also described by these authors, they state that AEJ-S is well defined from September to November and its core location lies between 5S and 10S with mean core speed reaching 8 m_s . While some studies have used reanalysis data to understand the dominant processes of climate variability in Central Africa by highlighting the important role of AEJ-N (Pokam et al. 2012; Dezfuli and Nicholson 2013; Nicholson and Dezfuli 2013) and AEJ-S (Jackson et al. 2009; Kuete et al. 2019), some studies on model process-based evaluation have shown that model rainfall biases are mainly related to bias in terms of location and intensity of AEJs in models (Creese and Washington 2018; Tamoffo et al. 2019).
 
