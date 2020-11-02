@@ -53,11 +53,11 @@ As noted in the diagnostic overview, African Easterly Jets are defined as monthl
 
  Step 5: extraction of core mean locations and intensities of each component 
 
-		* location and intensity of AEJ-N
+ - location and intensity of AEJ-N
 
  if for each latitude point and for each month and for the two levels 700 and 600 hPa,  the value of Un is equal to minimum value and minimum value of Un is lower or equals to -6 (-6 is threshold) then retain the latitude and intensity corresponding 
 
-		* location and intensity of AEJ-S
+ - location and intensity of AEJ-S
 
 if for each latitude point and for each month and for level 600 hPa level,  the value of Us is equal to minimum value of Us and minimum value of Us is lower or equals to -6 (-6 is threshold) then retain the latitude point and intensity corresponding
 
@@ -73,8 +73,9 @@ Step 6: plot latitude points and intensities for each month retain in step 5
 Figure 1. Latitude_time evolution of the 850 hPa surface temperature gradient (in K_m) with overlay mean locations of AEJ components core. Black solid line in the north represents AEJ-N and the red solid line in the south is the AEJ-S.
 
 
-![](AEJ_doc/kE5myD6B7cA2lpuNp5noPiIcHAD5r8aqP2E__u1Da9OOLzmx_EqDBMcJQFqeqIIezhquRhoHn_XbcUXLMAVwjYmo6vboeyYcVCarpJxieP9gfkHdzm60-mGPa7IyOw.png)
-_Figure 2: African Easterly Jet components locations (Bottom row) and intensities (Top row)._
+![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/AEJ/plots/AEJ_plot_SAM0-UNICON_AEJ_plot.png)
+
+Figure 2: African Easterly Jet components locations (Bottom row) and intensities (Top row).
 
 ## Acknowledgements
 This work uses CMIP6 model data and reanalysis data of ERA-5 and MERRA-2. We acknowledge all of the data providers. The diagnostics were designed by Giresse Kuete.
