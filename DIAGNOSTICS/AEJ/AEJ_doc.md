@@ -35,11 +35,11 @@ Step 1: load temperature data over central Africa domain (20S-20N, 10-30E) and s
 
 Step 2: calculate temperature monthly mean climatology and average over the longitude range (14-24E) 
 
-Step 3: calculate the meridional temperature gradient using gradient formula which divides the change in temperature over the entire domain by the change in latitude values between (20S-20N). 
+Step 3: calculate the meridional temperature gradient using gradient formula which divides the change in temperature over the entire domain by the change in latitude values between (20S-20N) 
 
-Step 4 plot temperature gradient values calculated in step 3
+Step 4: plot temperature gradient values calculated in step 3
 
-Step 5 plot AEJ core latitude (see Figure 2 for how to calculate)
+Step 5: plot AEJ core latitude (see Figure 2 for how to calculate)
 
 
 ### Figure 2: How to calculate and plot African Easterly jets components core mean location and intensity
