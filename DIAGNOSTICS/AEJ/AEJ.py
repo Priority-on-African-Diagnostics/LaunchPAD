@@ -1,4 +1,4 @@
-	# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 ###############################
 # Start of file:
@@ -65,6 +65,14 @@ def unpickle_cubes(path):
 #Extraction function(s)
 ###############################
 
+def load_temp(expt, vari):
+
+     CLT = iris.load(monthly_file_location(expt, vari), lat_bounds(-20, 20) & lon_bounds(14, 24) & year_bounds(1980, 2005))
+     CT = cube_concatenator(CLT)
+     CT = climatology(CT.collapsed('longitude', iris.analysis.MEAN))
+     
+     return CT
+
 def load_expt(expt, vari):
 
      CLN = iris.load(monthly_file_location(expt, vari), lat_bounds(3, 20) & lon_bounds(14, 24) & pressure_bounds(expt, 60000, 70000) & year_bounds(1980, 2005))
@@ -85,6 +93,10 @@ def load_expt(expt, vari):
 ###############################
 #calculation function(s)
 ###############################
+
+def calc_TG(expt, vari):
+     
+    return None
 
 def calc_AEJ(expt,vari):
 
@@ -121,6 +133,45 @@ def find_lat_int(cube):
 ###############################
 #plot diagnostic
 ###############################
+
+def plot_TG(green_list):
+
+    
+    cmap = cm.get_cmap('coolwarm')
+    clevs = np.arange(-5,5,1) 
+    
+    for expt in green_list:
+        LN = unpickle_cubes(starterp+expt+'_'+'N_latitude'+'_'+p_file)
+        LS = unpickle_cubes(starterp+expt+'_'+'S_latitude'+'_'+p_file)
+
+        nameOfPlot = expt+' African Easterly Jet (Giresse Turin) Temperature Gradient (K/m)'
+        plt.suptitle(nameOfPlot, fontsize=12)
+
+        cubeT = unpickle_cubes(starterp+expt+'_'+vari+'_'+p_file) 
+        cubeT.data = np.gradient(cubeT.data, axis=0)       	    
+        x = np.arange(0,12,1) 
+        y = cubeT.coord('latitude').points
+        xm, ym = np.meshgrid(x, y)
+        print(LN.data)
+         
+	
+        #iplt.plot(LN, color= 'black', zorder = 2)
+       # iplt.plot(LS, color= 'red', zorder = 2) 
+	
+        plt.ylabel('Latitude (Degrees)', fontsize=10) 
+        plt.xticks(np.arange(12), mon_names, rotation=45)    
+	    
+        cf =contourf(xm, ym, cubeT.data.T,clevs,cmap=cmap, extend='both',zorder= 1) 
+        colorbar_axes = plt.gcf().add_axes([0.91, 0.15, 0.02, 0.65])
+        colorbar = plt.colorbar(cf, colorbar_axes, orientation='vertical')
+
+        if save_plot:
+            plt.savefig(starterpng+'TG_plot_'+expt+plot_file, bbox_inches='tight',dpi=100)
+
+        else:
+            iplt.show()	
+        
+    return None
 
 def plot_AEJ(green_list):
       
@@ -259,19 +310,22 @@ if pre_processor_experiments:
     print('entering pre-processor models routine')
 
     green_list = create_greenlist(vari_list)
-    green_list =obs_list+green_list
+    green_list =obs_list#+green_list
     pickle.dump(green_list, open(starterp+'green_list'+p_file, "wb" ))
     print('new mod list', green_list)
 
     for expt in green_list:
         print(expt)
         for vari in vari_list:
-
-            CUN, CUS = load_expt(expt,vari)
-	    
-            pickle.dump(CUN, open(starterp+expt+'_'+vari+'_'+'CUN'+p_file, "wb" ))
-            pickle.dump(CUS, open(starterp+expt+'_'+vari+'_'+'CUS'+p_file, "wb" ))
-	    
+            if vari == 'ua':
+                CUN, CUS = load_expt(expt,vari)
+                pickle.dump(CUN, open(starterp+expt+'_'+vari+'_'+'CUN'+p_file, "wb" ))
+                pickle.dump(CUS, open(starterp+expt+'_'+vari+'_'+'CUS'+p_file, "wb" ))
+            if vari == 'tas':
+                CT = load_temp(expt, vari)
+                print(CT)
+                pickle.dump(CT, open(starterp+expt+'_'+vari+'_'+p_file, "wb" ))
+			    
         print('model data from '+expt+' pre-processed sucessfully')
              
 ###############################
@@ -284,16 +338,21 @@ if processor_calculations:
     green_list = unpickle_cubes(starterp+'green_list'+p_file)
     for expt in green_list:
         for vari in vari_list:
+	
+            if vari =='ua':
 	    
-            cubeN_intensity, cubeS_intensity, N_latitude, S_latitude = calc_AEJ(expt, vari)
+                cubeN_intensity, cubeS_intensity, N_latitude, S_latitude = calc_AEJ(expt, vari)
 	    
 
-            pickle.dump(cubeN_intensity, open(starterp+expt+'_'+'cubeN_intensity'+'_'+p_file, "wb"))
+                pickle.dump(cubeN_intensity, open(starterp+expt+'_'+'cubeN_intensity'+'_'+p_file, "wb"))
+                pickle.dump(cubeS_intensity, open(starterp+expt+'_'+'cubeS_intensity'+'_'+p_file, "wb"))
 	    
-            pickle.dump(cubeS_intensity, open(starterp+expt+'_'+'cubeS_intensity'+'_'+p_file, "wb"))
-	    
-            pickle.dump(N_latitude, open(starterp+expt+'_'+'N_latitude'+'_'+p_file, "wb"))	    
-            pickle.dump(S_latitude, open(starterp+expt+'_'+'S_latitude'+'_'+p_file, "wb"))
+                pickle.dump(N_latitude, open(starterp+expt+'_'+'N_latitude'+'_'+p_file, "wb"))	    
+                pickle.dump(S_latitude, open(starterp+expt+'_'+'S_latitude'+'_'+p_file, "wb"))
+		
+            if vari =='tas':
+                cubeT = calc_TG(expt,vari)
+                pickle.dump(cubeT, open(starterp+expt+'_'+'TG'+'_'+p_file, "wb"))
 
 	     
 ###############################
@@ -307,7 +366,11 @@ if create_plot:
     print('entering PLOTTING routines')
 
     green_list = unpickle_cubes(starterp+'green_list'+p_file)
-    plot_AEJ(green_list)
+    for vari in vari_list:
+        if vari=='ua':
+            plot_AEJ(green_list)
+        if vari=='tas':   
+            plot_TG(green_list)
 
     print('plotting complete')
          

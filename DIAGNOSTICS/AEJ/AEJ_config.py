@@ -20,13 +20,13 @@
 #model name list?
 obs_list = ['ERA5','MERRA2']
 
-vari_list = ['ua']  
+vari_list = ['tas', 'ua']  #'ua'
 
 #what do you want script to do?
 pre_processor_experiments = True
 processor_calculations = True
 create_plot = True
-save_plot = True
+save_plot = False
 
 #file name (.p files) note: model name superseeds this string
 p_file = '_AEJ.p'

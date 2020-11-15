@@ -165,14 +165,31 @@ def plot_WAWJ(green_list):
 
               extent = [-40, 10, 0, 20]
               windspeed = calc_windspeed(ua_clim, va_clim)
+	      
+              xskip=2
+              yskip=2
+	      	      
+              x_skp = xm
+              y_skp = ym
+              u_skp = u
+              v_skp = v
+
+              if xskip >= 1:
+                  x_skp = xm[::xskip, ::xskip]
+                  u_skp = u[::xskip, :]
+                  v_skp = v[::xskip, :]
+    
+              if yskip >= 1:
+                  y_skp = ym[::yskip, ::yskip]
+                  u_skp = u_skp[:,::yskip]
+                  v_skp = v_skp[:,::yskip]
 
               cs = current_ax.contour(xm, ym, geopot.data, 10, antialiased=True, colors='black', zorder= 4)
-              current_ax.contour(xm, ym, v, levels=(0, 100, 200), antialiased=True, zorder= 1, colors='red')
-              #cf = current_ax.contour(windspeed, levels=clevs, fill=True, overlay=True, linewidth=1.0, shw_labels=False, shw_key=True, shw_title=False, shw_plt=False)
-              cf =current_ax.contourf(xm, ym, windspeed,clevs,colors=arr, antialiased=True,zorder= 2, vmin=2, vmax=10)                   
+              current_ax.contour(xm, ym, v, levels=(0, 100, 200), antialiased=True, zorder= 2, colors='red')
+              cf =current_ax.contourf(xm, ym, windspeed,clevs,colors=arr, antialiased=True,zorder= 1, vmin=2, vmax=10)                   
 
               #Step by step 1.5
-              qv = axs[col_no, row_no].quiver(xm, ym, u, v, pivot ='middle', units='inches', minlength=0, zorder=5)              
+              qv = axs[col_no, row_no].quiver(x_skp, y_skp, u_skp, v_skp, pivot ='middle', units='inches', minlength=0,  zorder=5)#,, linewidths=1 scale=1,width=0.007, headwidth=3., headlength=4)              
               axs[col_no, row_no].quiverkey(qv, 0.95, 1.05, scale_fact, r'$2 \frac{m}{s}$', labelpos='E', coordinates='axes')
               if col_no == 2:
                   axs[col_no, row_no].set_xlabel('Longitude (°)', labelpad=20)
@@ -227,6 +244,7 @@ if pre_processor_experiments:
    
     green_list = create_greenlist(vari_list)
     green_list =obs_list+green_list
+    
     pickle.dump(green_list, open(starterp+'green_list'+p_file, "wb" ))
     print('new mod list', green_list)
 
@@ -250,6 +268,10 @@ if processor_calculations:
 if create_plot:
     print('entering plotting routine')
     green_list = unpickle_cubes(starterp+'green_list'+p_file)
+    if 'MPI-ESM1-2-HR' in green_list: #model doesn't handle plotting routine
+        green_list.remove('MPI-ESM1-2-HR')
+    if 'MPI-ESM1-2-LR' in green_list: #model doesn't handle plotting routine
+        green_list.remove('MPI-ESM1-2-LR')
 
     plot_WAWJ(green_list)
     print('Plotting complete')

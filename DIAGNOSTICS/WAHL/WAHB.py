@@ -34,7 +34,7 @@ import cloudpickle as pickle
 
 from config.find_files import *
 from config.config import *
-from WAHL_config import *
+from WAHB_config import *
 from config.config_functions import *
 import cf_units as unit
 
@@ -57,36 +57,34 @@ def unpickle_cubes(path):
 
 def load_expt(expt, vari):
 
-     cube_list = iris.load(sixhr_file_location(expt, vari), lat_bounds(-10, 40) & year_bounds(1983, 2012) & time_bound_six(expt))
+     cube_list = iris.load(monthly_file_location(expt, vari), lat_bounds(-10, 40) & year_bounds(1983, 2012))
      cube = cube_concatenator(cube_list)
      cube = cube.intersection(longitude=(-25, 30),ignore_bounds=True)
-     cube1 = cube.extract(pressure_level(expt,70000))
-     cube2 = cube.extract(pressure_level(expt,92500))
+
+     cube = unit_converter_k_to_C(cube)   
      
-     return cube1, cube2
+     return cube
 
 ###############################
 #Calculation function(s)
 ###############################
 
-def calc_WAHL(expt, vari):
+def calc_WAHB(expt, vari):
 
-     Cube1 = unpickle_cubes(starterp+expt+'_high_'+vari+p_file)
+     #Cube1 = unpickle_cubes(starterp+expt+'_high_'+vari+p_file)
      Cube2 = unpickle_cubes(starterp+expt+'_low_'+vari+p_file)
 
      #calculate difference in geopotential thickness
      #ERA5: Geopotential = geopotential height*9.80665 
-     Cube3 = Cube1 - Cube2
-     if expt=='ERA-Interim' and vari =='zg':
-         Cube3 = Cube3 / 9.80665
-     
+     #Cube3 = Cube1 - Cube2
+
      #create a new coordinate for month name
-     iris.coord_categorisation.add_month(Cube3, 'time', name='month') 
+     iris.coord_categorisation.add_month(Cube2, 'time', name='month') 
      
      #average by month = LLAT
-     Cube4 = Cube3.aggregated_by('month', iris.analysis.MEAN)
+     Cube2 = Cube2.aggregated_by('month', iris.analysis.MEAN)
 
-     result = Cube4
+     result = Cube2
      
      return result
      
@@ -108,38 +106,24 @@ def bestfit_colrow(total=1):
 #Plotting function(s)
 ###############################
 
-def plot_WAHL(expt, vari):
+def plot_WAHB(expt, vari):
 
      Cube0 = unpickle_cubes(starterp+expt+'_'+vari+'_'+p_file)
 
-     cmap_zg = cm.get_cmap('jet', 30) 
+
      cmap_hb = cm.get_cmap('jet', 8)
-     cmap_pr = cm.get_cmap('Blues', 150)
-     
-     arr_zg=[]
+
      arr_hb=[]
-     arr_pr=[]
-     
-     arr_zg.append('#ffffff')
-     arr_zg.append('#ffffff')
+
      arr_hb.append('#ffffff')
-     arr_pr.append('#ffffff')
-   
-     for i in range(cmap_zg.N):
-         rgb = cmap_zg(i)[:3] 
-         arr_zg.append(matplotlib.colors.rgb2hex(rgb))
+
 	 
      for i in range(cmap_hb.N):
          rgb = cmap_hb(i)[:3] 
          arr_hb.append(matplotlib.colors.rgb2hex(rgb))
 	 
-     for i in range(cmap_pr.N):
-         rgb = cmap_pr(i)[:3] 
-         arr_pr.append(matplotlib.colors.rgb2hex(rgb))
-	 
      plt.figure(figsize=(6, 6))
-     clevs_zg = np.arange(0,30,1)
-     clevs_pr = np.arange(0,150,1)
+
      clevs_hb = np.arange(0,9,1)
      
      cols, rows = bestfit_colrow(12)
@@ -148,21 +132,24 @@ def plot_WAHL(expt, vari):
      
      col_no = 0
      row_no = 0
- 
-     vari_line ='WAHL'
-     si_line='m'
+     
+
+     vari_line = 'WAHB'
+     si_line='Dg C'
      
      fig, axs = plt.subplots(cols, rows, subplot_kw={'projection': ccrs.PlateCarree()}, figsize=(10, 10))
-     fig.suptitle(vari_line+' @ 0600 for '+expt+' 1983-2012 '+si_line)
+     fig.suptitle(vari_line+' for '+expt+' 1983-2012 '+si_line)
 
      for counter, Cube1 in enumerate(Cube0.slices(['latitude','longitude'])):
      
-             #calculate 90th% over area (i.e. per month)
-         Cube90 = Cube1.collapsed(['longitude','latitude'], iris.analysis.PERCENTILE, percent=[90]) 
+             #calculate 50th% over area (i.e. per month)
+         Cube50 = Cube1.collapsed(['longitude','latitude'], iris.analysis.PERCENTILE, percent=[50]) 
+             
 	     #subtract from LLAT
-         Cube1 = iris.analysis.maths.subtract(Cube1, Cube90[0])
-	     #threshold of 2 m
-         Cube1.data = np.ma.masked_where(Cube1.data <= 2, Cube1.data) 
+         Cube1 = iris.analysis.maths.subtract(Cube1, Cube50[0])
+             
+         Cube1.data = np.ma.masked_where(Cube1.data <= 0.5, Cube1.data)
+        # Cube1.data = np.ma.masked_where(Cube1.data > 10, Cube1.data)
 	     
          month = Cube1.coord('month').points[0]
 	
@@ -174,7 +161,7 @@ def plot_WAHL(expt, vari):
          #plt.subplot(3,4,counter+1)
          current_ax=axs[col_no, row_no] 
 	
-         cf = current_ax.contourf(xm, ym,np.array(Cube1.data),clevs_zg,colors=arr_zg,extend='both')
+         cf = current_ax.contourf(xm, ym,np.array(Cube1.data),clevs_hb,colors=arr_hb,extend='both')
 	 
          extent = [-25, 30, -10, 40]
 	 
@@ -237,8 +224,8 @@ if pre_processor_experiments:
     
     for expt in green_list:   
       for vari in vari_list:
-          cube1, cube2 = load_expt(expt, vari)
-          pickle.dump(cube1, open(starterp+expt+'_high_'+vari+p_file, "wb" ))
+          cube2 = load_expt(expt, vari)
+         # pickle.dump(cube1, open(starterp+expt+'_high_'+vari+p_file, "wb" ))
           pickle.dump(cube2, open(starterp+expt+'_low_'+vari+p_file, "wb" ))
       print('data from '+expt+' pre-processed sucessfully')
    
@@ -252,7 +239,7 @@ if processor_calculations:
     for expt in green_list:  
         for vari in vari_list:        
 
-            cube = calc_WAHL(expt, vari)
+            cube = calc_WAHB(expt, vari)
 	    
             pickle.dump(cube, open(starterp+expt+'_'+vari+'_'+p_file, "wb"))
 
@@ -266,7 +253,7 @@ if create_plot:
     green_list =  unpickle_cubes(starterp+'green_list'+p_file)
     for expt in green_list: 
         for vari in vari_list:  
-            plot_WAHL(expt,vari)
+            plot_WAHB(expt,vari)
 
     print('data plotted sucessfully')
 

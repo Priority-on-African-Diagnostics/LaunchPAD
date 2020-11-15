@@ -1,24 +1,24 @@
 # -*- coding: utf-8 -*-
 ###############################
 
-obs_list = ['ERA-Interim']#,'ERA5', 'MERRA2']
-vari_list = ['zg']
+obs_list = ['GPCP']  
+vari_list = ['pr']
 #what do you want script to do?
 pre_processor_experiments = True
 processor_calculations = True
 create_plot = True
-save_plot = True
+save_plot = False
 
 #file name (.p files) note: model name superseeds this string
-p_file = '_WAHL.p'
+p_file = '_WAPB.p'
 
 #file name (.nc file) note: model name superseeds this string
-nc_file = '_WAHL.nc'
+nc_file = '_WAPB.nc'
 
 #file name (.png plot) note: model name superseeds this string
-plot_file = '_WAHL_plot.png'
+plot_file = '_WAPB_plot.png'
 
-home_add ='/home/users/twouce/github/LaunchPAD/DIAGNOSTICS/WAHL'
+home_add ='/home/users/twouce/github/LaunchPAD/files'
 
 starterp = home_add+'/p/'
 starterpng = home_add+'/png/'
