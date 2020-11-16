@@ -59,11 +59,11 @@ If need to reduce data size, could restrict it at this step:
 
 Part a: moisture flux bar chart
 
-	Plotting A (moisture flux) for each dataset
+*Plotting A (moisture flux) for each dataset
 
 Part b: scatter plot vertical velocity and temperature difference
 
-	Plotting B (vertical velocity) against C (temperature difference) for each dataset (scatter)
+*Plotting B (vertical velocity) against C (temperature difference) for each dataset (scatter)
 
 ### Second Figure: Moisture flux and South Atlantic High 
 	 	 	
