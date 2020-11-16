@@ -78,8 +78,8 @@ Dezfuli, A. and S. E. Nicholson, 2013: The relationship of rainfall variability 
  
 Neupane N (2016) The Congo Basin zonal overturning circulation. Adv Atmos Sci 33(6):767–782. https://doi.org/10.1007/s00376-015-5190-8
  
-	Nicholson SE, Grist JP (2003) The seasonal evolution of the atmospheric circulation over West Africa and equatorial Africa. J Clim 16(7):1013–1030. https :doi.org/10.1175/15200442(2003)016<1013:TSEOTA>2.0.CO;2
+Nicholson SE, Grist JP (2003) The seasonal evolution of the atmospheric circulation over West Africa and equatorial Africa. J Clim 16(7):1013–1030. https :doi.org/10.1175/15200442(2003)016<1013:TSEOTA>2.0.CO;2
  
-    Nicholson S.E. and A. K. Dezfuli, 2013: The relationship of rainfall variability in western equatorial Africa to the tropical oceans and atmospheric circulation. Part I: The boreal spring. J. Climate, 26, 45–65, https://doi.org/10.1175/JCLI-D-11-00653.1.
+Nicholson S.E. and A. K. Dezfuli, 2013: The relationship of rainfall variability in western equatorial Africa to the tropical oceans and atmospheric circulation. Part I: The boreal spring. J. Climate, 26, 45–65, https://doi.org/10.1175/JCLI-D-11-00653.1.
  
 Pokam, W. M., C. L. Bain, R. S. Chadwick, R. Graham, D. J. Sonwa, and F. M. Kamga, 2014: Identification of processes driving low-level westerlies in west equatorial Africa. J. Climate, 27, 4245-4262, https://doi.org/10.1175/JCLI-D-13-00490.1.
