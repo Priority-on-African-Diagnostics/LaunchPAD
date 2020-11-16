@@ -1,3 +1,17 @@
+# Low-Level Westerlies (LLWs): Strength and Drivers
+
+**Thierry Taguela<sup>*</sup>**
+
+Wilfried POKAM
+
+<sup>*</sup> Department of Physics, University of Yaounde I, Cameroon
+ 
+thierrytaguela@gmail.com  
+
+*This document has not been published. Permission to quote from it must be obtained from the author using the above contact details.*
+
+
+
 # Introduction: Why is this feature/process important?
 Low-Level Westerlies (LLWs), known as recurvature of low-level southeasterlies into south-westerlies in the South Atlantic (Creese and Washington 2018), were identified as a key feature playing a crucial role for the Central Africa regional climate (Nicholson and Grist 2003; Pokam et al. 2014). By advecting moisture from the Atlantic ocean to the Central Africa region,  their strength is related to rainfall variability in the region where wet years exhibit a distinct westerly jet during both wet seasons (Dezfuli and Nicholson 2013; Nicholson and Dezfuli 2013). In the literature, different processes are suggested as drivers of LLWs. While Nicholson and Grist (2003) suggested that the formation of equatorial westerlies is associated with the sea surface pressure associated with the South Atlantic High (SAH), Pokam et al. (2014) suggest that when they recurve into south-westerlies, their strength is driven by the land-sea thermal contrast near the equator. It was also shown that the strength of the Congo Basin Walker circulation modulates the strength of LLWs (Cook and Vizy 2016; Neupane 2016). Therefore, the ability of climate models to well simulate the strength and drivers of LLWs is important for the study of Central Africa regional climate. 
 
