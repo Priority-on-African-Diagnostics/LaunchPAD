@@ -27,6 +27,7 @@ Both CMIP6 models and reanalysis data are at monthly time scale resolution cover
 ### A) Calculate moisture flux across the coast
 
 1. Load monthly u wind and q data
+
 If need to reduce data size, could restrict it at this step:
  - Select the central Africa domain (-10°W to 40°E longitude and -25°S to 25°N latitude)
  - Select a time period (here 1980-2010), 925 hPa pressure level, and the September - November season
