@@ -6,9 +6,9 @@
 #what observations to process for?
 obs_list = ['ERA5']
 
-vari_list=['ua','va','ta', 'psl', 'uas', 'vas']
+vari_list=['ua','va','ta', 'psl']
 
-pre_processor_experiments = True
+pre_processor_experiments = False
 processor_calculations1 = True
 processor_calculations2 = False
 create_plot=False

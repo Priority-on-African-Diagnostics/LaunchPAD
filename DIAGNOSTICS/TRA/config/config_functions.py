@@ -239,9 +239,12 @@ def sixhr_file_location(expt, vari):
         location = '/gws/nopw/j04/launchpad/observations/GPCP/precip.mon.mean.nc'
         print(location)
     
-    elif expt =='ERA5' or expt =='MERRA2' or expt =='ERA-Interim':
+    elif expt =='MERRA2' or expt =='ERA-Interim':
         location = level1_obs_6hr(expt)+'/'+vari+'/'+CMIP6_extn
         print(location)
+	
+    elif expt =='ERA5':
+        location = level1_obs_6hr(expt)+'/'+vari+'/'+CMIP6_extn
 	
     else:
         location = level1_6hr(expt,vari)+CMIP6_extn 

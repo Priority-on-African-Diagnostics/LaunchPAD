@@ -5,7 +5,7 @@
 ##############################
 
 import numpy as np
-from windspharm.iris import VectorWind
+import cf
 #from scipy.io import netcdf
 from numpy import *
 from math import radians,cos,sin,sqrt,exp
@@ -43,9 +43,6 @@ from config.config import *
 from config.config_functions import *
 from TRA_config import *
 import pandas as pd
-import xarray as xr
-import operator
-import warnings
 
 ###############################
 # Unpickle files
@@ -63,11 +60,11 @@ def unpickle_cubes(path):
 
 def load_expt_t(expt):
 
-    cube_list = iris.load(sixhr_file_location(expt, 'ta'))# & 
-    cube=cube_concatenator(cube_list)
-    cube = cube.extract(year_bounds(1990, 1991))
-    cube = cube.extract(lat_bounds(-40, 0))
-    cube = cube.extract(lon_bounds(30, 90))
+    cube_list = iris.load(monthly_file_location(expt, 'ta'))[1]# &  
+    #print(cube_list)
+    #cube=cube_list[1]        
+    #cube = cube_concatenator(cube_list) 
+    cube = cube_list.extract(year_bounds(1990, 1991))
     cube = unit_converter_k_to_C(cube)
     result250 = cube.extract(pressure_level(expt,25000))
     result500 = cube.extract(pressure_level(expt,50000))
@@ -76,41 +73,28 @@ def load_expt_t(expt):
     
 def load_expt_slp(expt):
 
-    cube_list = iris.load(sixhr_file_location(expt, 'psl'))#[0] 
-    cube=cube_concatenator(cube_list) 
-    cube = cube.extract(year_bounds(1990, 1991))
-    cube = cube.extract(lat_bounds(-40, 0))
-    cube = cube.extract(lon_bounds(30, 90))
+    cube_list = iris.load(monthly_file_location(expt, 'psl'))[0] 
+  
+    cube = cube_list.extract(year_bounds(1990, 1991))
     
     return cube
     
 def load_expt_wd(expt):
-    cubeL1 = iris.load(sixhr_file_location(expt, 'ua'), year_bounds(1990, 1991)) 
-    cubeL2 = iris.load(sixhr_file_location(expt, 'va'), year_bounds(1990, 1991)) 
-
-    cube1=cube_concatenator(cubeL1)
-    cube2=cube_concatenator(cubeL2)
-    
-    cube10_uL = iris.load(sixhr_file_location(expt, 'uas'), year_bounds(1990, 1991))
-    cube10_vL = iris.load(sixhr_file_location(expt, 'uas'), year_bounds(1990, 1991))
-    cube10_u = cube_concatenator(cube10_uL)
-    cube10_v = cube_concatenator(cube10_vL)
+    cube1 = iris.load(monthly_file_location(expt, 'ua'), year_bounds(1990, 1991)) 
+    #cube1 = cube_concatenator(cube_list1)
+    cube2 = iris.load(monthly_file_location(expt, 'va'), year_bounds(1990, 1991)) 
+    cube1=cube1[0]
+    cube2=cube2[0]
+    #cube2 = cube_concatenator(cube_list2)
    
     result250 = calc_windspeed(cube1.extract(pressure_level(expt,25000)), cube2.extract(pressure_level(expt,25000)))
-    result1000 = calc_windspeed(cube10_u, cube10_v)
+    result1000 = calc_windspeed(cube1.extract(pressure_level(expt,100000)), cube2.extract(pressure_level(expt,100000)))
     result850 = calc_windspeed(cube1.extract(pressure_level(expt,85000)), cube2.extract(pressure_level(expt,85000)))
    
     u850 = cube1.extract(pressure_level(expt,85000))
     v850 = cube2.extract(pressure_level(expt,85000)) 
     pickle.dump(u850, open(starterp+expt+'_u850_'+p_file, "wb" ))
     pickle.dump(v850, open(starterp+expt+'_v850_'+p_file, "wb" ))
-    
-    result250 = result250.extract(lat_bounds(-40, 0))
-    result250 = result250.extract(lon_bounds(30, 90))
-    result850 = result850.extract(lat_bounds(-40, 0))
-    result850 = result850.extract(lon_bounds(30, 90))
-    result1000 = result1000.extract(lat_bounds(-40, 0))
-    result1000 = result1000.extract(lon_bounds(30, 90))
                   
     return result250, result850, result1000
     
@@ -126,6 +110,7 @@ def calc_windspeed(ua, va):
 ###############################
    
 def ws_thresh(res):
+  #res = (abs(lon[2]-lon[1])) * 111
 
   if(res <= 10): wspd_threshold = 17.5
   if((res > 10) and (res <= 30)): 
@@ -155,45 +140,43 @@ def ws_thresh(res):
   
 def calc_mslp(counter, value, expt, tc_id): 
 
-  slp = unpickle_cubes(starterp+expt+'_slp_'+p_file)[counter]
+  slp = unpickle_cubes(starterp+expt+'_slp_'+p_file)
+
+  ni = slp.coord('longitude').points #  list of lon coords
+  nj = slp.coord('latitude').points #  list of lat coords
+
+  mslp=1013.25
   
-  thresh = 1013.25
-  
-  if expt in ['ERA5']:
-      thresh = thresh * 100
-      
   if(counter == 0) or (tc_id == 0): #ith-1 tc_id
+    for j in nj:
+      latConstraint = iris.Constraint(latitude=j)
       
-      da = xr.DataArray.from_iris(slp)
-      mslp = da.min().values
-      coords = da.where(da==mslp, drop=True).squeeze()
-      mslp_lat = coords.latitude.values
-      mslp_lon = coords.longitude.values
-      if size(mslp_lon) > 1:
-          mslp_lon=mslp_lon[0] #if 2+ identical minima take first value 
-      if size(mslp_lat) > 1:
-          mslp_lat=mslp_lat[0] 
-      
+      for i in ni:     
+        lonContraint = iris.Constraint(longitude=i) 
+       
+        if(slp.extract(lonContraint & latConstraint)[counter].data < mslp):
+          mslp = slp.extract(lonContraint & latConstraint)[counter].data
+	  	  
+          mslp_lon = i #longitude
+          mslp_lat = j #latitude
 
   elif(tc_id == 1): #ith-1 tc_id
     
-      track_radius=4
-      max_lat = mslp_lat + track_radius
-      min_lat = mslp_lat - track_radius
-      min_lon = mslp_lon - track_radius
-      max_lon = mslp_lon + track_radius
-      
-      domain_slp = slp.extract(lon_bounds(min_lon, max_lon) & lat_bounds(min_lat, max_lat))
-      
-      da = xr.DataArray.from_iris(domain_slp)
-      mslp = da.min().values
-      coords = da.where(da==mslp, drop=True).squeeze()
-      mslp_lat = coords.latitude.values
-      mslp_lon = coords.longitude.values
-      if size(mslp_lon) > 1:
-          mslp_lon=mslp_lon[0] #if 2+ identical minima take first value 
-      if size(mslp_lat) > 1:
-          mslp_lat=mslp_lat[0]
+    track_radius=4
+    
+    dif_lat=abs(slp.coord('latitude').points[2]-cube.coord('latitude').points[1])
+    dif_lon=abs(slp.coord('longitude').points[2]-cube.coord('longitude').points[1])    
+
+    for j in range(mslp_lat - track_radius, int_mslp_lat + track_radius, diff_lat):
+        latConstraint = iris.Constraint(latitude=j)
+	
+        for i in range(mslp_lon - track_radius, mslp_lon + track_radius, diff_lon):
+            lonContraint = iris.Constraint(longitude=i)    
+
+            if(slp.extract(lonContraint & latConstraint)[counter].data < mslp):
+                mslp = slp.extract(lonContraint & latConstraint)[counter].data
+                mslp_lon = i
+                mslp_lat = j
 	  
   else:
       print('none of criteria met')
@@ -204,17 +187,16 @@ def calc_windregion(counter, mslp_lon, mslp_lat):
 
   avg_radius=3
   
-  ws250 = unpickle_cubes(starterp+expt+'_ws250_'+p_file)[counter]
-  ws850 = unpickle_cubes(starterp+expt+'_ws850_'+p_file)[counter]
+  ws250 = unpickle_cubes(starterp+expt+'_ws250_'+p_file)
+  ws850 = unpickle_cubes(starterp+expt+'_ws850_'+p_file)
 
   int_lat_lower = mslp_lat - avg_radius
   int_lat_upper = mslp_lat + avg_radius
   int_lon_lower = mslp_lon - avg_radius
   int_lon_upper = mslp_lon + avg_radius
   
-  coords = ('longitude', 'latitude')
-  avg_wspd_250 = ws250.extract(lat_bounds(int_lat_lower, int_lat_upper) & lon_bounds(int_lon_lower, int_lon_upper)).collapsed(coords, iris.analysis.MEAN).data
-  avg_wspd_850 = ws850.extract(lat_bounds(int_lat_lower, int_lat_upper) & lon_bounds(int_lon_lower, int_lon_upper)).collapsed(coords, iris.analysis.MEAN).data
+  avg_wspd_250 = ws250.extract(lat_bounds(int_lat_lower, int_lat_upper) & lon_bounds(int_lon_lower, int_lon_upper))[counter]
+  avg_wspd_850 = ws850.extract(lat_bounds(int_lat_lower, int_lat_upper) & lon_bounds(int_lon_lower, int_lon_upper))[counter]
 
   return avg_wspd_250,avg_wspd_850
   
@@ -224,84 +206,90 @@ def calc_maxwind(counter, mslp_lon, mslp_lat):
   
   slp = unpickle_cubes(starterp+expt+'_slp_'+p_file)
   
-  lat_lower = mslp_lat - wind_radius
-  lat_upper = mslp_lat + wind_radius
-  lon_lower = mslp_lon - wind_radius
-  lon_upper = mslp_lon + wind_radius
+  dif_lat=abs(slp.coord('latitude').points[2]-cube.coord('latitude').points[1])
+  dif_lon=abs(slp.coord('longitude').points[2]-cube.coord('longitude').points[1])
+  
+  int_lat_lower = mslp_lat - wind_radius
+  int_lat_upper = mslp_lat + wind_radius
+  int_lon_lower = mslp_lon - wind_radius
+  int_lon_upper = mslp_lon + wind_radius
 
   max_wspd = 0
   
-  wsp10m = unpickle_cubes(starterp+expt+'_ws1000_'+p_file)[counter]
-  
-  wsp10m.extract(lat_bounds(lat_lower, lat_upper) & lon_bounds(lon_lower, lon_upper))
-  
-  da = xr.DataArray.from_iris(wsp10m)
-  max_wspd = da.max().values
+  wsp10m = unpickle_cubes(starterp+expt+'_ws1000_'+p_file)
+
+  for j in range(int_lat_lower-wind_radius,int_lat_upper+wind_radius, diff_lat):
+    latContraint = iris.Constraint(latitude=j)
+    
+    for i in range(int_lon_lower-wind_radius,int_lon_upper+wind_radius, diff_lon):
+      lonContraint = iris.Constraint(longitude=i)
+      
+      if wspd10.extract(latContraint & lonContraint)[counter].data > max_wspd:
+          max_wspd = wspd10.extract(latContraint & lonContraint)[counter].data
 
   return max_wspd
   
 def calc_vort(counter, mslp_lon, mslp_lat):
 
-  with warnings.catch_warnings():
-      warnings.simplefilter('ignore', UserWarning)
-      u850 = unpickle_cubes(starterp+expt+'_u850_'+p_file)
-      v850 = unpickle_cubes(starterp+expt+'_v850_'+p_file)
+  u850 = unpickle_cubes(starterp+expt+'_u850_'+p_file)
+  v850 = unpickle_cubes(starterp+expt+'_wv850_'+p_file)
 
-      u=u850[counter]
-      v=v850[counter]
+  u=u850[counter]
+  v=v850[counter]
   
-  u.coord('longitude').circular = True
-  v.coord('longitude').circular = True
+  vort=cf.relative_vorticity(u,v)
   
-  w = VectorWind(u850, v850)
+  slp = unpickle_cubes(starterp+expt+'_slp_'+p_file)
   
-  vort = w.vorticity()
-  
+  dif_lat=abs(slp.coord('latitude').points[2]-cube.coord('latitude').points[1])
+  dif_lon=abs(slp.coord('longitude').points[2]-cube.coord('longitude').points[1])
 
   vort_radius=4
   
-  lat_lower = mslp_lat - vort_radius
-  lat_upper = mslp_lat + vort_radius
-  lon_lower = mslp_lon - vort_radius
-  lon_upper = mslp_lon + vort_radius
+  int_lat_lower = mslp_lat - vort_radius
+  int_lat_upper = mslp_lat + vort_radius
+  int_lon_lower = mslp_lon - vort_radius
+  int_lon_upper = mslp_lon + vort_radius
 
   vort_min=0
-  
-  vort=vort.extract(lat_bounds(lat_lower, lat_upper) & lon_bounds(lon_lower, lon_upper))
-  
-  da = xr.DataArray.from_iris(vort)
-  vort_min = da.min().values
+
+  for j in range(int_lat_lower,int_lat_upper, diff_lat):
+    for i in range(int_lon_lower,int_lon_upper, diff_lon):
+        if vort[counter,j,i] <vort_min:
+            vort_min = vort[counter,j,i]
 
   return vort_min
   
 def calc_warm_core(counter, mslp_lon, mslp_lat):
   warm_core_radius=2
-  avg_radius = 5
+  
+  slp = unpickle_cubes(starterp+expt+'_slp_'+p_file)
+
+  dif_lat=abs(slp.coord('latitude').points[2]-cube.coord('latitude').points[1])
+  dif_lon=abs(slp.coord('longitude').points[2]-cube.coord('longitude').points[1])
   
   #Creates range bounds for avg temp
-  lat_lower = mslp_lat - warm_core_radius
-  lat_upper = mslp_lat + warm_core_radius
-  lon_lower = mslp_lon - warm_core_radius
-  lon_upper = mslp_lon + warm_core_radius
-  
-  lat_lower_avg = mslp_lat - avg_radius
-  lat_upper_avg = mslp_lat + avg_radius
-  lon_lower_avg = mslp_lon - avg_radius
-  lon_upper_avg = mslp_lon + avg_radius
+  int_lat_lower = mslp_lat - warm_core_radius
+  int_lat_upper = mslp_lat + warm_core_radius
+  int_lon_lower = mslp_lon - warm_core_radius
+  int_lon_upper = mslp_lon + warm_core_radius
   
   t250 = unpickle_cubes(starterp+expt+'_t250_'+p_file)[counter]
   t500 = unpickle_cubes(starterp+expt+'_t500_'+p_file)[counter]
   
   int_avg_temp_500_250 = iris.analysis.maths.multiply(iris.analysis.maths.add(t500, t250), 0.5)
   
-  #wc_temp is max int_avg_temp_500_250
-  coords = ('longitude', 'latitude')
-  wc_temp = int_avg_temp_500_250.extract(lat_bounds(lat_lower, lat_upper) & lon_bounds(lon_lower, lon_upper)).collapsed(coords, iris.analysis.MAX).data
+  wc_temp = -100
+  for j in range(int_lat_lower,int_lat_upper, diff_lat):
+    latContraint = iris.Constraint(latitude=j)
+    for i in range(int_lon_lower,int_lon_upper, diff_lon):
+      lonContraint = iris.Constraint(longitude=i)
+      if int_avg_temp_500_250.extract(latContraint & lonContraint).data > wc_temp:
+          wc_temp = int_avg_temp_500_250.extract(latContraint & lonContraint).data
 	  
-  int_avg_temp_500_250 = int_avg_temp_500_250.extract(lat_bounds(lat_lower_avg, lat_upper_avg) & lon_bounds(lon_lower_avg, lon_upper_avg))
-  int_avg_temp_500_250 = int_avg_temp_500_250.collapsed(coords, iris.analysis.MEAN).data
-  
-  return wc_temp, int_avg_temp_500_250
+  int_avg_temp_500_250 = int_avg_temp_500_250.extract(lat_bounds(int_lat_lower, int_lat_upper) & lon_bounds(int_lon_lower, int_lon_upper))
+
+  return wc_temp, avg_temp_500_250
   
 def tstep_fail_allowance(counter):
 
@@ -314,13 +302,13 @@ def tstep_fail_allowance(counter):
   radius=4.5
   df = unpickle_cubes(starterp+expt+'_df_'+p_file)
    
-  if df.at[counter, 'tc_id'] == 0 and df.at[counter-1, 'tc_id'] == 1 and df.at[counter+1, 'tc_id'] ==1:
-      lon1_min = df.at[counter, 'mslp_lon'] - radius
-      lon1_max = df.at[counter, 'mslp_lon'] + radius
-      lat1_min = df.at[counter, 'mslp_lat'] - radius
-      lat1_max = df.at[counter, 'mslp_lat'] + radius
-      lon2 = df.at[counter, 'mslp_lon'] 
-      lat2 = df.at[counter, 'mslp_lat'] 
+  if df.loc[counter, 'tc_id'] == 0 and df.loc[counter-1, 'tc_id'] == 1 and df.loc[counter+1, 'tc_id'] ==1:
+      lon1_min = df.loc[counter, 'mslp_lon'] - radius
+      lon1_max = df.loc[counter, 'mslp_lon'] + radius
+      lat1_min = df.loc[counter, 'mslp_lat'] - radius
+      lat1_max = df.loc[counter, 'mslp_lat'] + radius
+      lon2 = df.loc[counter, 'mslp_lon'] 
+      lat2 = df.loc[counter, 'mslp_lat'] 
 
       if lon1_min <= lon2 <= lon1_max and lat1_min <= lat2 <= lat1_max:
           df.replace({'tc_id': counter}, 1)
@@ -421,14 +409,13 @@ def number_events2(counter):
 if pre_processor_experiments:
     print('entering pre-processor routine')
    
-    #green_list = create_greenlist(vari_list)
+    green_list = create_greenlist(vari_list)
     green_list =obs_list#+green_list
     
     pickle.dump(green_list, open(starterp+'green_list'+p_file, "wb" ))
     print('new mod list', green_list)
 
-    for expt in green_list: 
-
+    for expt in green_list:   
         t250,t500 = load_expt_t(expt)
         pickle.dump(t250, open(starterp+expt+'_t250_'+p_file, "wb" ))
         pickle.dump(t500, open(starterp+expt+'_t500_'+p_file, "wb" ))
@@ -461,65 +448,27 @@ if processor_calculations1:
         tc_gate=True
     
         ws250 = unpickle_cubes(starterp+expt+'_ws250_'+p_file)
+	
+        threshold = ws_thresh(abs(ws250.coord('longitude').points[2]-ws250.coord('longitude').points[1])*111)
        	
         nl=ws250.coord('time').points #time coords
 
         for counter, value in enumerate(nl):
-            if counter == 0: #on first timestep we want to record all stats
-            
-                with warnings.catch_warnings():
-                    warnings.simplefilter('ignore', UserWarning)
-
-                    mslp, mslp_lon, mslp_lat = calc_mslp(counter,value, expt, tc_id) #this will only take first mslp low it encounters  	    
-                    max_wspd = calc_maxwind(counter, mslp_lon, mslp_lat) 	    
-                    wspd_threshold = ws_thresh(abs(ws250.coord('longitude').points[2]-ws250.coord('longitude').points[1])*111) 	    
-                    vort_min = calc_vort(counter, mslp_lon, mslp_lat)     
-                    wc_temp, avg_temp_500_250 = calc_warm_core(counter, mslp_lon, mslp_lat) 
-                    avg_wspd_250, avg_wspd_850 = calc_windregion(counter, mslp_lon, mslp_lat)
-           	                      
-                if(max_wspd >= wspd_threshold):    
-                    if(vort_min <= -0.000035):         		    
-                        if(wc_temp >= (avg_temp_500_250 + 1.)):
-                        
-                            if(avg_wspd_250 < avg_wspd_850): 
-                                tc_id=1
-                                tc_gate = True
-                            else:
-                                tc_id=0
-                                tc_gate = True
-
-            else: #speeds up iteration on timesteps that will never record any stats
-                with warnings.catch_warnings():
-                    warnings.simplefilter('ignore', UserWarning)
-
-                    mslp, mslp_lon, mslp_lat = calc_mslp(counter,value, expt, tc_id) 
-                    max_wspd = calc_maxwind(counter, mslp_lon, mslp_lat) 	    
-                    wspd_threshold = ws_thresh(abs(ws250.coord('longitude').points[2]-ws250.coord('longitude').points[1])*111)
-                    if(max_wspd >= wspd_threshold):	    
-                        vort_min = calc_vort(counter, mslp_lon, mslp_lat)  
-                        if(vort_min <= -0.000035):
-                            wc_temp, avg_temp_500_250 = calc_warm_core(counter, mslp_lon, mslp_lat) 
-                            avg_wspd_250, avg_wspd_850 = calc_windregion(counter, mslp_lon, mslp_lat)   	    		    
-                            if(wc_temp >= (avg_temp_500_250 + 1.)):
-                                if(avg_wspd_250 < avg_wspd_850): 
-                                    tc_id=1
-                                    tc_gate = True
-                                else:
-                                    tc_id=0
-                                    tc_gate = True
-				
+            mslp, mslp_lon, mslp_lat = calc_mslp(counter,value, expt, tc_id) #this will only take first mslp low it encounters
+            max_wspd = calc_maxwind(counter, mslp_lon, mslp_lat)           
+            if(max_wspd >= wspd_threshold): 
+                vort_min = calc_vort(counter, mslp_lon, mslp_lat)
+                if(vort_min <= -0.000035):    
+                    wc_temp, avg_temp_500_250 = calc_warm_core(counter, mslp_lon, mslp_lat)		    
+                    if(wc_temp >= (avg_temp_500_250.data + 1)):
+                        avg_wspd_250, avg_wspd_850 = calc_windregion(counter, mslp_lon, mslp_lat)
+                        if(avg_wspd_250.data < avg_wspd_850.data): 
+                            tc_id=1
+                            tc_gate = True
+                        else:
+                            tc_id=0
+                            tc_gate = True
             if tc_gate:
-                print(mslp)
-                print(mslp_lon)
-                print(mslp_lat)
-                print(counter)
-                print(vort_min)
-                print(tc_id)
-                print(max_wspd)
-                print(wc_temp)
-                print(avg_temp_500_250)
-                print(avg_wspd_250)
-                print(avg_wspd_850)
                 df.at[counter,'tc_id'] = tc_id
                 df.at[counter,'vort_min'] = vort_min
                 df.at[counter,'mslp'] = mslp
@@ -528,14 +477,12 @@ if processor_calculations1:
                 df.at[counter,'max_wspd'] = max_wspd
                 df.at[counter,'wc_temp'] = wc_temp
             tc_gate = False 
-        
+
         pickle.dump(df, open(starterp+expt+'_df_'+p_file, "wb" )) #dataframe of all variables
 
 if processor_calculations2:	
     green_list = unpickle_cubes(starterp+'green_list'+p_file)
     for expt in green_list:
-    
-        print(expt)
     
         ws250 = unpickle_cubes(starterp+expt+'_ws250_'+p_file)
         nl=ws250.coord('time').points
@@ -543,7 +490,6 @@ if processor_calculations2:
         end_count = len(nl)
 	#must loop through all timesteps to update them before proceeding to next section
         for counter, value in enumerate(nl):
-            print(counter)
             if counter == 0 or counter == end_count: #no previous timestep or no forward timestep
                 pass
             else:
