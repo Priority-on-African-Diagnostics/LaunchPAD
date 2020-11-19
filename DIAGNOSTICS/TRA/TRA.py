@@ -153,7 +153,7 @@ def ws_thresh(res):
 	 
   return wspd_threshold 
   
-def calc_mslp(counter, value, expt, tc_id): 
+def calc_mslp1(counter, value, expt, tc_id): 
 
   slp = unpickle_cubes(starterp+expt+'_slp_'+p_file)[counter]
   
@@ -161,42 +161,45 @@ def calc_mslp(counter, value, expt, tc_id):
   
   if expt in ['ERA5']:
       thresh = thresh * 100
-      
-  if(counter == 0) or (tc_id == 0): #ith-1 tc_id
-      
-      da = xr.DataArray.from_iris(slp)
-      mslp = da.min().values
-      coords = da.where(da==mslp, drop=True).squeeze()
-      mslp_lat = coords.latitude.values
-      mslp_lon = coords.longitude.values
-      if size(mslp_lon) > 1:
-          mslp_lon=mslp_lon[0] #if 2+ identical minima take first value 
-      if size(mslp_lat) > 1:
-          mslp_lat=mslp_lat[0] 
-      
+           
+  da = xr.DataArray.from_iris(slp)
+  mslp = da.min().values
+  coords = da.where(da==mslp, drop=True).squeeze()
+  mslp_lat = coords.latitude.values
+  mslp_lon = coords.longitude.values
+  if size(mslp_lon) > 1:
+      mslp_lon=mslp_lon[0] #if 2+ identical minima take first value 
+  if size(mslp_lat) > 1:
+      mslp_lat=mslp_lat[0] 
 
-  elif(tc_id == 1): #ith-1 tc_id
+  return mslp, mslp_lon, mslp_lat
+      
+def calc_mslp2(counter, value, expt, tc_id, mslp, mslp_lon, mslp_lat):
+
+  slp = unpickle_cubes(starterp+expt+'_slp_'+p_file)[counter]
+  
+  thresh = 1013.25
+  
+  if expt in ['ERA5']:
+      thresh = thresh * 100
     
-      track_radius=4
-      max_lat = mslp_lat + track_radius
-      min_lat = mslp_lat - track_radius
-      min_lon = mslp_lon - track_radius
-      max_lon = mslp_lon + track_radius
+  track_radius=4
+  max_lat = mslp_lat + track_radius
+  min_lat = mslp_lat - track_radius
+  min_lon = mslp_lon - track_radius
+  max_lon = mslp_lon + track_radius
       
-      domain_slp = slp.extract(lon_bounds(min_lon, max_lon) & lat_bounds(min_lat, max_lat))
+  domain_slp = slp.extract(lon_bounds(min_lon, max_lon) & lat_bounds(min_lat, max_lat))
       
-      da = xr.DataArray.from_iris(domain_slp)
-      mslp = da.min().values
-      coords = da.where(da==mslp, drop=True).squeeze()
-      mslp_lat = coords.latitude.values
-      mslp_lon = coords.longitude.values
-      if size(mslp_lon) > 1:
-          mslp_lon=mslp_lon[0] #if 2+ identical minima take first value 
-      if size(mslp_lat) > 1:
-          mslp_lat=mslp_lat[0]
-	  
-  else:
-      print('none of criteria met')
+  da = xr.DataArray.from_iris(domain_slp)
+  mslp = da.min().values
+  coords = da.where(da==mslp, drop=True).squeeze()
+  mslp_lat = coords.latitude.values
+  mslp_lon = coords.longitude.values
+  if size(mslp_lon) > 1:
+      mslp_lon=mslp_lon[0] #if 2+ identical minima take first value 
+  if size(mslp_lat) > 1:
+      mslp_lat=mslp_lat[0]
     
   return mslp, mslp_lon, mslp_lat 
  
@@ -247,13 +250,20 @@ def calc_vort(counter, mslp_lon, mslp_lat):
       u850 = unpickle_cubes(starterp+expt+'_u850_'+p_file)
       v850 = unpickle_cubes(starterp+expt+'_v850_'+p_file)
 
-      u=u850[counter]
-      v=v850[counter]
+      ua=u850[counter]
+      va=v850[counter]
+
+      delta_latitude = 180/180.0
+     
+      sample_points = [('longitude', ua.coord('longitude').points),('latitude',  np.linspace(90 - 0.5 * delta_latitude,-90 + 0.5 * delta_latitude,180))]
+      ua_r = ua.interpolate(sample_points, iris.analysis.Linear())
+      va_r = va.interpolate(sample_points, iris.analysis.Linear())
   
-  u.coord('longitude').circular = True
-  v.coord('longitude').circular = True
+  #u.coord('longitude').circular = True
   
-  w = VectorWind(u850, v850)
+  #v.coord('longitude').circular = True
+  
+  w = VectorWind(ua_r, va_r)
   
   vort = w.vorticity()
   
@@ -442,6 +452,8 @@ if pre_processor_experiments:
         slp = load_expt_slp(expt)
         pickle.dump(slp, open(starterp+expt+'_slp_'+p_file, "wb" ))
 	
+    print('Pre-processor complete')
+	
 if processor_calculations1:
 
     df = pd.DataFrame(columns=['mslp','mslp_lon','mslp_lat','max_wspd','vort_min','wc_temp','tc_id','tc_event','tc_number'])
@@ -470,7 +482,10 @@ if processor_calculations1:
                 with warnings.catch_warnings():
                     warnings.simplefilter('ignore', UserWarning)
 
-                    mslp, mslp_lon, mslp_lat = calc_mslp(counter,value, expt, tc_id) #this will only take first mslp low it encounters  	    
+                    if(counter == 0) or (tc_id == 0): #ith-1 tc_id
+                        mslp, mslp_lon, mslp_lat = calc_mslp1(counter,value, expt, tc_id) #this will only take first mslp low it encounters 
+                    elif(tc_id == 1): #ith-1 tc_id
+                        mslp, mslp_lon, mslp_lat = calc_mslp2(counter,value, expt, tc_id, mslp, mslp_lon, mslp_lat) 	 	    
                     max_wspd = calc_maxwind(counter, mslp_lon, mslp_lat) 	    
                     wspd_threshold = ws_thresh(abs(ws250.coord('longitude').points[2]-ws250.coord('longitude').points[1])*111) 	    
                     vort_min = calc_vort(counter, mslp_lon, mslp_lat)     
@@ -492,7 +507,10 @@ if processor_calculations1:
                 with warnings.catch_warnings():
                     warnings.simplefilter('ignore', UserWarning)
 
-                    mslp, mslp_lon, mslp_lat = calc_mslp(counter,value, expt, tc_id) 
+                    if(counter == 0) or (tc_id == 0): #ith-1 tc_id
+                        mslp, mslp_lon, mslp_lat = calc_mslp1(counter,value, expt, tc_id) #this will only take first mslp low it encounters 
+                    elif(tc_id == 1): #ith-1 tc_id
+                        mslp, mslp_lon, mslp_lat = calc_mslp2(counter,value, expt, tc_id, mslp, mslp_lon, mslp_lat) 
                     max_wspd = calc_maxwind(counter, mslp_lon, mslp_lat) 	    
                     wspd_threshold = ws_thresh(abs(ws250.coord('longitude').points[2]-ws250.coord('longitude').points[1])*111)
                     if(max_wspd >= wspd_threshold):	    
@@ -530,6 +548,8 @@ if processor_calculations1:
             tc_gate = False 
         
         pickle.dump(df, open(starterp+expt+'_df_'+p_file, "wb" )) #dataframe of all variables
+	
+    print('calc stage 1 complete')
 
 if processor_calculations2:	
     green_list = unpickle_cubes(starterp+'green_list'+p_file)
