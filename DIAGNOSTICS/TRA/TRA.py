@@ -46,6 +46,7 @@ import pandas as pd
 import xarray as xr
 import operator
 import warnings
+from itertools import islice
 
 ###############################
 # Unpickle files
@@ -66,6 +67,10 @@ def load_expt_t(expt):
     cube_list = iris.load(sixhr_file_location(expt, 'ta'))# & 
     cube=cube_concatenator(cube_list)
     cube = cube.extract(year_bounds(1990, 1991))
+    
+    iris.coord_categorisation.add_month_number(cube, 'time', name='month_number') 
+    cube = cube.extract(iris.Constraint(month_number=3))
+    
     cube = cube.extract(lat_bounds(-40, 0))
     cube = cube.extract(lon_bounds(30, 90))
     cube = unit_converter_k_to_C(cube)
@@ -79,6 +84,9 @@ def load_expt_slp(expt):
     cube_list = iris.load(sixhr_file_location(expt, 'psl'))#[0] 
     cube=cube_concatenator(cube_list) 
     cube = cube.extract(year_bounds(1990, 1991))
+    iris.coord_categorisation.add_month_number(cube, 'time', name='month_number') 
+    cube = cube.extract(iris.Constraint(month_number=3))
+    
     cube = cube.extract(lat_bounds(-40, 0))
     cube = cube.extract(lon_bounds(30, 90))
     
@@ -91,10 +99,20 @@ def load_expt_wd(expt):
     cube1=cube_concatenator(cubeL1)
     cube2=cube_concatenator(cubeL2)
     
+    iris.coord_categorisation.add_month_number(cube1, 'time', name='month_number') 
+    cube1 = cube1.extract(iris.Constraint(month_number=3))
+    iris.coord_categorisation.add_month_number(cube2, 'time', name='month_number') 
+    cube2 = cube2.extract(iris.Constraint(month_number=3))
+    
     cube10_uL = iris.load(sixhr_file_location(expt, 'uas'), year_bounds(1990, 1991))
     cube10_vL = iris.load(sixhr_file_location(expt, 'uas'), year_bounds(1990, 1991))
     cube10_u = cube_concatenator(cube10_uL)
     cube10_v = cube_concatenator(cube10_vL)
+    
+    iris.coord_categorisation.add_month_number(cube10_u, 'time', name='month_number') 
+    cube10_u = cube10_u.extract(iris.Constraint(month_number=3))
+    iris.coord_categorisation.add_month_number(cube10_v, 'time', name='month_number') 
+    cube10_v = cube10_v.extract(iris.Constraint(month_number=3))
    
     result250 = calc_windspeed(cube1.extract(pressure_level(expt,25000)), cube2.extract(pressure_level(expt,25000)))
     result1000 = calc_windspeed(cube10_u, cube10_v)
@@ -259,10 +277,6 @@ def calc_vort(counter, mslp_lon, mslp_lat):
       ua_r = ua.interpolate(sample_points, iris.analysis.Linear())
       va_r = va.interpolate(sample_points, iris.analysis.Linear())
   
-  #u.coord('longitude').circular = True
-  
-  #v.coord('longitude').circular = True
-  
   w = VectorWind(ua_r, va_r)
   
   vort = w.vorticity()
@@ -313,7 +327,7 @@ def calc_warm_core(counter, mslp_lon, mslp_lat):
   
   return wc_temp, int_avg_temp_500_250
   
-def tstep_fail_allowance(counter):
+def tstep_fail_allowance(counter, df):
 
 #"Goal: Allowing for a single timestep failure
 #"a) Loops through all points and identifies points with a tracking ID of 0, but where the previous and following timesteps have a tracking ID of 1.
@@ -321,25 +335,24 @@ def tstep_fail_allowance(counter):
 #"c) If this point meets the above criterion, the tracking ID is changed from a 0 to a 1.
 #"This step is necessary to reduce broken tracks associated with the weakening of the system during intermittent 6-hourly intervals.
 
+  
   radius=4.5
-  df = unpickle_cubes(starterp+expt+'_df_'+p_file)
-   
-  if df.at[counter, 'tc_id'] == 0 and df.at[counter-1, 'tc_id'] == 1 and df.at[counter+1, 'tc_id'] ==1:
-      lon1_min = df.at[counter, 'mslp_lon'] - radius
-      lon1_max = df.at[counter, 'mslp_lon'] + radius
-      lat1_min = df.at[counter, 'mslp_lat'] - radius
-      lat1_max = df.at[counter, 'mslp_lat'] + radius
-      lon2 = df.at[counter, 'mslp_lon'] 
-      lat2 = df.at[counter, 'mslp_lat'] 
+  
+  if df.loc[counter, 'tc_id'] == 0 and df.loc[counter-1, 'tc_id'] == 1 and df.loc[counter+1, 'tc_id'] ==1:
+      
+      lon1_min = df.loc[counter, 'mslp_lon'] - radius
+      lon1_max = df.loc[counter, 'mslp_lon'] + radius
+      lat1_min = df.loc[counter, 'mslp_lat'] - radius
+      lat1_max = df.loc[counter, 'mslp_lat'] + radius
+      lon2 = df.loc[counter, 'mslp_lon'] 
+      lat2 = df.loc[counter, 'mslp_lat'] 
 
       if lon1_min <= lon2 <= lon1_max and lat1_min <= lat2 <= lat1_max:
           df.replace({'tc_id': counter}, 1)
-      
-  pickle.dump(df, open(starterp+expt+'_df_'+p_file, "wb" ))
-     
-  return None
+         
+  return df
   
-def assign_filter(counter):
+def assign_filter(counter, df):
 
 #"Goal: Grouping events
 #"a) Each point is then assigned a character string - ‘New’, ‘Same’ or ‘-’ based on different criteria - this is necessary for further filtering and numbering of events.
@@ -347,8 +360,6 @@ def assign_filter(counter):
 #"  i) If the current timestep (it) has a tracking ID of ‘1’, and the previous timestep (it-1) has a tracking ID of ‘0’, this indicates the start of a new event, and the timestep is assigned the string ‘New’.
 #"  ii) If the current timestep (it) has a tracking ID of ‘1’, and the previous timestep (it-1) has a tracking ID of ‘1’, this indicates the continuation of an event, and the timestep is assigned the string ‘Same’.
 #"  iii) If the current timestep (it) has a tracking ID of ‘0’, it is not associated with a TC event and is assigned the string ‘-’.
-
-  df = unpickle_cubes(starterp+expt+'_df_'+p_file)
   
   if df.loc[counter, 'tc_id'] == 1 and df.loc[counter-1, 'tc_id'] == 0:
       df.replace({'tc_event': counter}, 'New')  
@@ -357,11 +368,11 @@ def assign_filter(counter):
   elif df.loc[counter, 'tc_id'] == 0:
       df.replace({'tc_event': counter}, '-')
       
-  pickle.dump(df, open(starterp+expt+'_df_'+p_file, "wb" ))
   
-  return None
   
-def time_threshold1(counter):
+  return df
+  
+def time_threshold1(counter,df):
 
 #"Goal: Applying minimum lifetime criterion
 #"This step eliminates events that do not last for 2 days.
@@ -374,24 +385,24 @@ def time_threshold1(counter):
       if df.loc[counter+1, 'tc_event'] == '-' or df.loc[counter+2, 'tc_event'] == '-' or df.loc[counter+3, 'tc_event'] == '-' or df.loc[counter+4, 'tc_event'] == '-' or df.loc[counter+5, 'tc_event'] == '-' or df.loc[counter+6, 'tc_event'] == '-' or df.loc[counter+7, 'tc_event'] == '-':  
            df.replace({'tc_event': counter}, '-') 
 	   
-  pickle.dump(df, open(starterp+expt+'_df_'+p_file, "wb" ))
-    
-  return None 
   
-def time_threshold2(counter): 
+    
+  return df 
+  
+def time_threshold2(counter,df): 
 #"b) Next, we loop through all timesteps a second time.
 #"  i) If the current timestep (it) has been assigned the string ‘Same’ and the previous timestep (it-1) has been assigned the ‘-’ string, the current timestep (it) is changed from ‘Same’ to ‘-’. 
 #"  i) Such cases will only arise from the previous step, in which ‘New’ has been changed to ‘-’ since the event did not meet the minimum lifetime criteria.
 
-  df = unpickle_cubes(starterp+expt+'_df_'+p_file)
+
   if df.loc[counter, 'tc_event'] == 'Same' and df.loc[counter-1, 'tc_event'] == '-': 
        df.replace({'tc_event': counter}, '-') 
 
-  pickle.dump(df, open(starterp+expt+'_df_'+p_file, "wb" ))
   
-  return None
   
-def number_events1(counter, event_number):
+  return df
+  
+def number_events1(counter, event_number,df):
 
 #"Goal: Numbering events
 #"This is the final step which numbers all events.
@@ -401,28 +412,28 @@ def number_events1(counter, event_number):
 #"  ii) If the current timestep (it) does not have the character string ‘New’, the timestep is assigned an event number of 999.
 
 
-  df = unpickle_cubes(starterp+expt+'_df_'+p_file)
+
   if df.loc[counter, 'tc_event'] == 'New':
       event_number = event_number+1
       df.replace({'tc_number': counter}, event_number)
   else:
       df.replace({'tc_number': counter}, 999)
        
-  pickle.dump(df, open(starterp+expt+'_df_'+p_file, "wb" ))
   
-  return None
   
-def number_events2(counter): 
+  return df
+  
+def number_events2(counter,df): 
 #"c) We then loop through all timesteps for a second time.
 #"  i) If the current timestep (it) has the character string ‘Same’, the event number is equal to the event number of the previous timestep (it-1). i.e. event_number(it) = event_number(it-1)
 
-  df = unpickle_cubes(starterp+expt+'_df_'+p_file)
+
   if df.loc[counter, 'tc_event'] == 'Same':
       df.replace({'tc_number': counter}, df.loc[counter-1, 'tc_number'])
 
-  pickle.dump(df, open(starterp+expt+'_df_'+p_file, "wb" ))
   
-  return None	  
+  
+  return df	  
 
 ###############################
 #Execution function(s)
@@ -477,76 +488,37 @@ if processor_calculations1:
         nl=ws250.coord('time').points #time coords
 
         for counter, value in enumerate(nl):
-            if counter == 0: #on first timestep we want to record all stats
             
-                with warnings.catch_warnings():
-                    warnings.simplefilter('ignore', UserWarning)
+            with warnings.catch_warnings():
+                warnings.simplefilter('ignore', UserWarning)
 
-                    if(counter == 0) or (tc_id == 0): #ith-1 tc_id
-                        mslp, mslp_lon, mslp_lat = calc_mslp1(counter,value, expt, tc_id) #this will only take first mslp low it encounters 
-                    elif(tc_id == 1): #ith-1 tc_id
-                        mslp, mslp_lon, mslp_lat = calc_mslp2(counter,value, expt, tc_id, mslp, mslp_lon, mslp_lat) 	 	    
-                    max_wspd = calc_maxwind(counter, mslp_lon, mslp_lat) 	    
-                    wspd_threshold = ws_thresh(abs(ws250.coord('longitude').points[2]-ws250.coord('longitude').points[1])*111) 	    
-                    vort_min = calc_vort(counter, mslp_lon, mslp_lat)     
-                    wc_temp, avg_temp_500_250 = calc_warm_core(counter, mslp_lon, mslp_lat) 
-                    avg_wspd_250, avg_wspd_850 = calc_windregion(counter, mslp_lon, mslp_lat)
+                if(counter == 0) or (tc_id == 0): #ith-1 tc_id
+                    mslp, mslp_lon, mslp_lat = calc_mslp1(counter,value, expt, tc_id) 
+                elif(tc_id == 1): 
+                    mslp, mslp_lon, mslp_lat = calc_mslp2(counter,value, expt, tc_id, mslp, mslp_lon, mslp_lat) 
+		    	 	    
+                max_wspd = calc_maxwind(counter, mslp_lon, mslp_lat) 	    
+                wspd_threshold = ws_thresh(abs(ws250.coord('longitude').points[2]-ws250.coord('longitude').points[1])*111) 	    
+                vort_min = calc_vort(counter, mslp_lon, mslp_lat)     
+                wc_temp, avg_temp_500_250 = calc_warm_core(counter, mslp_lon, mslp_lat) 
+                avg_wspd_250, avg_wspd_850 = calc_windregion(counter, mslp_lon, mslp_lat)
            	                      
                 if(max_wspd >= wspd_threshold):    
                     if(vort_min <= -0.000035):         		    
                         if(wc_temp >= (avg_temp_500_250 + 1.)):
-                        
                             if(avg_wspd_250 < avg_wspd_850): 
                                 tc_id=1
-                                tc_gate = True
                             else:
                                 tc_id=0
-                                tc_gate = True
-
-            else: #speeds up iteration on timesteps that will never record any stats
-                with warnings.catch_warnings():
-                    warnings.simplefilter('ignore', UserWarning)
-
-                    if(counter == 0) or (tc_id == 0): #ith-1 tc_id
-                        mslp, mslp_lon, mslp_lat = calc_mslp1(counter,value, expt, tc_id) #this will only take first mslp low it encounters 
-                    elif(tc_id == 1): #ith-1 tc_id
-                        mslp, mslp_lon, mslp_lat = calc_mslp2(counter,value, expt, tc_id, mslp, mslp_lon, mslp_lat) 
-                    max_wspd = calc_maxwind(counter, mslp_lon, mslp_lat) 	    
-                    wspd_threshold = ws_thresh(abs(ws250.coord('longitude').points[2]-ws250.coord('longitude').points[1])*111)
-                    if(max_wspd >= wspd_threshold):	    
-                        vort_min = calc_vort(counter, mslp_lon, mslp_lat)  
-                        if(vort_min <= -0.000035):
-                            wc_temp, avg_temp_500_250 = calc_warm_core(counter, mslp_lon, mslp_lat) 
-                            avg_wspd_250, avg_wspd_850 = calc_windregion(counter, mslp_lon, mslp_lat)   	    		    
-                            if(wc_temp >= (avg_temp_500_250 + 1.)):
-                                if(avg_wspd_250 < avg_wspd_850): 
-                                    tc_id=1
-                                    tc_gate = True
-                                else:
-                                    tc_id=0
-                                    tc_gate = True
 				
-            if tc_gate:
-                print(mslp)
-                print(mslp_lon)
-                print(mslp_lat)
-                print(counter)
-                print(vort_min)
-                print(tc_id)
-                print(max_wspd)
-                print(wc_temp)
-                print(avg_temp_500_250)
-                print(avg_wspd_250)
-                print(avg_wspd_850)
-                df.at[counter,'tc_id'] = tc_id
-                df.at[counter,'vort_min'] = vort_min
-                df.at[counter,'mslp'] = mslp
-                df.at[counter,'mslp_lon'] = mslp_lon
-                df.at[counter,'mslp_lat'] = mslp_lat
-                df.at[counter,'max_wspd'] = max_wspd
-                df.at[counter,'wc_temp'] = wc_temp
-            tc_gate = False 
-        
+            df.at[counter,'tc_id'] = tc_id
+            df.at[counter,'vort_min'] = vort_min
+            df.at[counter,'mslp'] = mslp
+            df.at[counter,'mslp_lon'] = mslp_lon
+            df.at[counter,'mslp_lat'] = mslp_lat
+            df.at[counter,'max_wspd'] = max_wspd
+            df.at[counter,'wc_temp'] = wc_temp
+       
         pickle.dump(df, open(starterp+expt+'_df_'+p_file, "wb" )) #dataframe of all variables
 	
     print('calc stage 1 complete')
@@ -557,55 +529,40 @@ if processor_calculations2:
     
         print(expt)
     
-        ws250 = unpickle_cubes(starterp+expt+'_ws250_'+p_file)
-        nl=ws250.coord('time').points
-
-        end_count = len(nl)
-	#must loop through all timesteps to update them before proceeding to next section
-        for counter, value in enumerate(nl):
-            print(counter)
-            if counter == 0 or counter == end_count: #no previous timestep or no forward timestep
-                pass
-            else:
-                tstep_fail_allowance(counter)
+        df = unpickle_cubes(starterp+expt+'_df_'+p_file)
+        end_count = len(df.index)
+ 
+        for index, row in islice(df.iterrows(), 1, end_count):
+            tstep_fail_allowance(index, df)
 		
-        for counter, value in enumerate(nl):
-            if counter ==0:
-                pass
-            else:
-                assign_filter(counter)
+        for index, row in islice(df.iterrows(), 1, None):
+            assign_filter(index,df)
 		
-        for counter, value in enumerate(nl):
-            if counter >= nl-7:
-                pass
-            else:
-                time_threshold1(counter)
+        for index, row in islice(df.iterrows(), None, end_count-7):
+            time_threshold1(index,df)
 		
-        for counter, value in enumerate(nl):
-            if counter ==0:
-                pass
-            else:
-                time_threshold2(counter)
+        for index, row in islice(df.iterrows(), 1, None):
+            time_threshold2(index,df)
 
         event_number = 0		
-        for counter, value in enumerate(nl):
-            number_events1(counter, event_number)
+        for index, row in df.iterrows():
+            number_events1(index, event_number,df)
 	
-        for counter, value in enumerate(nl):
-            if counter ==0:
-                pass
-            else:
-                number_events2(counter)
+        for index, row in islice(df.iterrows(), 1, None):
+            number_events2(index,df)
+	
+        for index, row in df.iterrows():
+            if df.loc[index, 'tc_number'] == 999:
+                df.drop(index)
 
-        df = unpickle_cubes(starterp+expt+'_df_'+p_file)
-	
-        for counter, value in enumerate(nl):
-            if df.loc[counter, 'tc_number'] == 999:
-                df.drop(counter)
         pickle.dump(df, open(starterp+expt+'_df_'+p_file, "wb" ))
+
+        f = open("MODEL_output.txt","w")
+        f.write("mslp  mslp_lon  mslp_lat  max_wspd  vort_min  wc_temp  tc_id  tc_event  tc_number")
+	
 		            
         #Write output to text file
-        np.savetxt(r'MODEL_output.txt', df.values, fmt='%d')
+        np.savetxt(r'MODEL_output.txt', df.values)
 	
     print('Tracking complete for '+expt)
 

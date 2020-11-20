@@ -8,9 +8,9 @@ obs_list = ['ERA5']
 
 vari_list=['ua','va','ta', 'psl', 'uas', 'vas']
 
-pre_processor_experiments = True
-processor_calculations1 = True
-processor_calculations2 = False
+pre_processor_experiments = False
+processor_calculations1 = False
+processor_calculations2 = True
 create_plot=False
 save_plot=False
 
