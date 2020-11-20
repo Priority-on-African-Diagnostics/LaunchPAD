@@ -361,11 +361,11 @@ def assign_filter(counter, df):
 #"  ii) If the current timestep (it) has a tracking ID of ‘1’, and the previous timestep (it-1) has a tracking ID of ‘1’, this indicates the continuation of an event, and the timestep is assigned the string ‘Same’.
 #"  iii) If the current timestep (it) has a tracking ID of ‘0’, it is not associated with a TC event and is assigned the string ‘-’.
   
-  if df.loc[counter, 'tc_id'] == 1 and df.loc[counter-1, 'tc_id'] == 0:
+  if df.at[counter, 'tc_id'] == 1 and df.at[counter-1, 'tc_id'] == 0:
       df.replace({'tc_event': counter}, 'New')  
-  elif df.loc[counter, 'tc_id'] == 1 and df.loc[counter-1, 'tc_id'] == 1:
+  elif df.at[counter, 'tc_id'] == 1 and df.at[counter-1, 'tc_id'] == 1:
       df.replace({'tc_event': counter}, 'Same')   
-  elif df.loc[counter, 'tc_id'] == 0:
+  elif df.at[counter, 'tc_id'] == 0:
       df.replace({'tc_event': counter}, '-')
       
   
@@ -381,8 +381,8 @@ def time_threshold1(counter,df):
 #"  ii) If any of the following 7 timesteps contain a ‘-’ character, this indicates that the event has not spanned 2 days (8 timesteps) and the character string of the current timestep (it) is changed from ‘New’ to ‘-’.
 
   df = unpickle_cubes(starterp+expt+'_df_'+p_file)
-  if df.loc[counter, 'tc_event'] == 'New':
-      if df.loc[counter+1, 'tc_event'] == '-' or df.loc[counter+2, 'tc_event'] == '-' or df.loc[counter+3, 'tc_event'] == '-' or df.loc[counter+4, 'tc_event'] == '-' or df.loc[counter+5, 'tc_event'] == '-' or df.loc[counter+6, 'tc_event'] == '-' or df.loc[counter+7, 'tc_event'] == '-':  
+  if df.at[counter, 'tc_event'] == 'New':
+      if df.at[counter+1, 'tc_event'] == '-' or df.at[counter+2, 'tc_event'] == '-' or df.at[counter+3, 'tc_event'] == '-' or df.at[counter+4, 'tc_event'] == '-' or df.at[counter+5, 'tc_event'] == '-' or df.at[counter+6, 'tc_event'] == '-' or df.at[counter+7, 'tc_event'] == '-':  
            df.replace({'tc_event': counter}, '-') 
 	   
   
@@ -395,7 +395,7 @@ def time_threshold2(counter,df):
 #"  i) Such cases will only arise from the previous step, in which ‘New’ has been changed to ‘-’ since the event did not meet the minimum lifetime criteria.
 
 
-  if df.loc[counter, 'tc_event'] == 'Same' and df.loc[counter-1, 'tc_event'] == '-': 
+  if df.at[counter, 'tc_event'] == 'Same' and df.at[counter-1, 'tc_event'] == '-': 
        df.replace({'tc_event': counter}, '-') 
 
   
@@ -413,7 +413,7 @@ def number_events1(counter, event_number,df):
 
 
 
-  if df.loc[counter, 'tc_event'] == 'New':
+  if df.at[counter, 'tc_event'] == 'New':
       event_number = event_number+1
       df.replace({'tc_number': counter}, event_number)
   else:
@@ -428,8 +428,8 @@ def number_events2(counter,df):
 #"  i) If the current timestep (it) has the character string ‘Same’, the event number is equal to the event number of the previous timestep (it-1). i.e. event_number(it) = event_number(it-1)
 
 
-  if df.loc[counter, 'tc_event'] == 'Same':
-      df.replace({'tc_number': counter}, df.loc[counter-1, 'tc_number'])
+  if df.at[counter, 'tc_event'] == 'Same':
+      df.replace({'tc_number': counter}, df.at[counter-1, 'tc_number'])
 
   
   
@@ -468,24 +468,15 @@ if pre_processor_experiments:
 if processor_calculations1:
 
     df = pd.DataFrame(columns=['mslp','mslp_lon','mslp_lat','max_wspd','vort_min','wc_temp','tc_id','tc_event','tc_number'])
+    df = df.astype({"mslp": float, "mslp_lon": float, "mslp_lat": float, "max_wspd": float, "vort_min": float, "wc_temp": float, "tc_id": int, "tc_event": str,"tc_number": int})
 
     green_list = unpickle_cubes(starterp+'green_list'+p_file)
     for expt in green_list:
     
-        tc_id = 0 #to allow dictionary building
-        vort_min = 0 #- dictionary with default to Nan otherwise: note: not set later so can delete these
-        mslp = 0
-        mslp_lat = 0
-        mslp_lon = 0
-        max_wspd = 0
-        wc_temp = 0
-        tc_event = '-'
-        tc_number = 0
-        tc_gate=True
-    
         ws250 = unpickle_cubes(starterp+expt+'_ws250_'+p_file)
        	
         nl=ws250.coord('time').points #time coords
+        tc_id = 0
 
         for counter, value in enumerate(nl):
             
@@ -503,13 +494,8 @@ if processor_calculations1:
                 wc_temp, avg_temp_500_250 = calc_warm_core(counter, mslp_lon, mslp_lat) 
                 avg_wspd_250, avg_wspd_850 = calc_windregion(counter, mslp_lon, mslp_lat)
            	                      
-                if(max_wspd >= wspd_threshold):    
-                    if(vort_min <= -0.000035):         		    
-                        if(wc_temp >= (avg_temp_500_250 + 1.)):
-                            if(avg_wspd_250 < avg_wspd_850): 
-                                tc_id=1
-                            else:
-                                tc_id=0
+                if max_wspd >= wspd_threshold and vort_min <= -0.000035 and wc_temp >= (avg_temp_500_250 + 1.) and avg_wspd_250 < avg_wspd_850:    
+                    tc_id=1
 				
             df.at[counter,'tc_id'] = tc_id
             df.at[counter,'vort_min'] = vort_min
@@ -518,6 +504,10 @@ if processor_calculations1:
             df.at[counter,'mslp_lat'] = mslp_lat
             df.at[counter,'max_wspd'] = max_wspd
             df.at[counter,'wc_temp'] = wc_temp
+	    
+	    
+            df.at[counter,'tc_event'] = "-"
+            df.at[counter,'tc_number'] = 0
        
         pickle.dump(df, open(starterp+expt+'_df_'+p_file, "wb" )) #dataframe of all variables
 	
@@ -533,36 +523,41 @@ if processor_calculations2:
         end_count = len(df.index)
  
         for index, row in islice(df.iterrows(), 1, end_count):
+            print(df.loc[index, 'tc_number'])
+            print('ts')
             tstep_fail_allowance(index, df)
 		
         for index, row in islice(df.iterrows(), 1, None):
+  
             assign_filter(index,df)
 		
         for index, row in islice(df.iterrows(), None, end_count-7):
+       
             time_threshold1(index,df)
 		
         for index, row in islice(df.iterrows(), 1, None):
+      
+ 
             time_threshold2(index,df)
 
         event_number = 0		
         for index, row in df.iterrows():
+ 
             number_events1(index, event_number,df)
 	
         for index, row in islice(df.iterrows(), 1, None):
+
             number_events2(index,df)
 	
         for index, row in df.iterrows():
+
             if df.loc[index, 'tc_number'] == 999:
                 df.drop(index)
-
-        pickle.dump(df, open(starterp+expt+'_df_'+p_file, "wb" ))
-
-        f = open("MODEL_output.txt","w")
-        f.write("mslp  mslp_lon  mslp_lat  max_wspd  vort_min  wc_temp  tc_id  tc_event  tc_number")
-	
-		            
+		
+       pickle.dump(df, open(starterp+expt+'_df_'+p_file, "wb" ))	
+        print(df)		            
         #Write output to text file
-        np.savetxt(r'MODEL_output.txt', df.values)
+        np.savetxt(r'MODEL_output.txt', df, fmt='%s')
 	
     print('Tracking complete for '+expt)
 
