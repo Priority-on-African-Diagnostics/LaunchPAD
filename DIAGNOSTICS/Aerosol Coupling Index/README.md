@@ -25,7 +25,7 @@ Step 1: Read in monthly data for surface latent heat flux (hfls) and near surfac
 
 Step 2: The year range is set as 1985-2014 for a 40 years period of the CMIP6 historical simulations or reanalysis data as the baseline
 
-Step 3: Geographical domain for the analysis is selected to Africa, ranging from latitudes 26oS to 41oN and 20oW to 54oE longitudes 
+Step 3: Geographical domain for the analysis is selected to Africa, ranging from latitudes 26°S to 41°N and 20°W to 54°E longitudes 
 
 Step 4: The monthly data is aggregated to get the seasonal means for the standard seasons, DJF, MAM, JJA and SON
 
@@ -33,7 +33,7 @@ Step 5: The correlation between hfls and tas is obtained as well as the standard
 
 ACI = correlation (hfls,tas) x standard_devation (hfls) 
 
-whereby _hfls_ is latent heat flux (+ve) in W/m<sup>2</sup> and tas is 2 metre temperature (<sup>o</sup>C) 
+whereby _hfls_ is latent heat flux (+ve) in W/m<sup>2</sup> and tas is 2 metre temperature (°C) 
 
 ## Diagnostic Summary: what is output?
 The spatial map presents the ACI patterns over Africa for ERA5 and CMIP6 models. 
