@@ -44,7 +44,7 @@ The output of this diagnostic is a seasonal cycle of the MCT index as a line gra
 
 ![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/Mozambique%20Channel%20Trough/plots/MCT_plot__MCT_plot.png)
 
-Figure 1:Seasonal cycle of the MCT index. Strong negative values indicate strong MCT. Units are in 10-6m.s-2
+Figure 1:Seasonal cycle of the MCT index. Strong negative values indicate strong MCT. Units are in 10<sup>-6</sup>m/s<sup>2</sup>
 
 
 ## Acknowledgements
