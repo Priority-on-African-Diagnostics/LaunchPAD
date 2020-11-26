@@ -33,7 +33,7 @@ Step 5: The correlation between hfls and tas is obtained as well as the standard
 
 ACI = correlation (hfls,tas) x standard_devation (hfls) 
 
-whereby _hfls_ is latent heat flux (+ve) in W/m<sup>2</sup> and tas is 2 metre temperature (oC) 
+whereby _hfls_ is latent heat flux (+ve) in W/m<sup>2</sup> and tas is 2 metre temperature (<sup>o</sup>C) 
 
 ## Diagnostic Summary: what is output?
 The spatial map presents the ACI patterns over Africa for ERA5 and CMIP6 models. 
