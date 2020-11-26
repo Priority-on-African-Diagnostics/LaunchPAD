@@ -48,7 +48,7 @@ Figure 1:Seasonal cycle of the MCT index. Strong negative values indicate strong
 
 
 ## Acknowledgements
-The figure was designed by Rondro Barimalala, in connection with her work on the MCT (e.g. Barimalala et al. 2018, 2020). ### Tom Webb developed the code framework for the LaunchPAD project, and integrated this diagnostic into that framework.
+The figure was designed by Rondro Barimalala, in connection with her work on the MCT (e.g. Barimalala et al. 2018, 2020). Tom Webb developed the code framework for the LaunchPAD project, and integrated this diagnostic into that framework.
 
 We acknowledge the World Climate Research Programme’s Working Group on Coupled Modelling, which is responsible for CMIP, and we thank the climate modeling groups for producing and making available their model output.
 
