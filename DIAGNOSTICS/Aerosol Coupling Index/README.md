@@ -1,4 +1,4 @@
-# African Easterly Jets components: locations and intensities
+# Atmospheric Coupling Index
 
 **Anthony Mwanthi<sup>*</sup>**
 
