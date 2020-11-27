@@ -46,7 +46,6 @@ The output of this diagnostic is a seasonal cycle of the MCT index as a line gra
 
 Figure 1:Seasonal cycle of the MCT index. Strong negative values indicate strong MCT. Units are in 10<sup>-6</sup>m/s<sup>2</sup>
 
-
 ## Acknowledgements
 The figure was designed by Rondro Barimalala, in connection with her work on the MCT (e.g. Barimalala et al. 2018, 2020). Tom Webb developed the code framework for the LaunchPAD project, and integrated this diagnostic into that framework.
 
