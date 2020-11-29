@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ###############################
-from config.config import * #note relative paths from execution 
-from config.find_files import * #remove config. here and above for mass
+from config import * #note relative paths from execution 
+from find_files import * #remove config. here and above for mass
 import os
 import iris
 import iris.coords
@@ -56,6 +56,27 @@ def create_greenlist(vari_list):
     green_list = [x for x in mod_list if x not in red_list]
 
     return green_list
+
+def create_greenlist6hr(vari_list):
+    red_list=[]
+
+    for mod in mod_list:
+        for vari in vari_list:
+            if not os.path.exists(level1_mon(mod,vari)):
+                print(level1_mon(mod,vari))
+                print('cannot find files for '+mod)
+                red_list.append(mod)
+    
+    green_list = [x for x in mod_list if x not in red_list]
+
+    return green_list
+    
+    
+def time_bound_six(name):
+
+    Ctim_1 = iris.Constraint(time=lambda cell: cell.point.hour == 6)
+    
+    return Ctim_1
     
 def create_greenlist6hr(vari_list):
     red_list=[]
@@ -112,11 +133,20 @@ def season_all(cube):
      
      return cube
      
+def month_all(cube):
+
+     iris.coord_categorisation.add_month(cube, 'time', name='month')
+     cube = cube.aggregated_by(['month'],iris.analysis.MEAN)
+     
+     return cube
+     
 def season_all_ts(cube):
+     #print(cube)
 
      iris.coord_categorisation.add_season(cube, 'time', name='clim_season')
      iris.coord_categorisation.add_season_year(cube, 'time', name='season_year')
-     
+    # print(cube)
+    
      return cube
      
 def pressure_bounds(name, pressure1, pressure2):
@@ -145,12 +175,6 @@ def pressure_bounds_mass(name, pressure1, pressure2):
          Caip_0 = iris.Constraint(pressure=lambda cell: pressure1 <= cell <= pressure2)
 	 
      return Caip_0
-     
-def time_bound_six(name):
-
-    Ctim_1 = iris.Constraint(time=lambda cell: cell.point.hour == 6)
-    
-    return Ctim_1
      
 def mon_div(expt, cube, div_no, pressure1, pressure2):
 
@@ -191,6 +215,14 @@ def unit_converter(cube):
          cube.data += 273.15
          cube.units = 'K' 
 	 
+     return cube
+     
+def unit_converter_k_to_C(cube):
+
+     if cube.units == 'K':
+         cube.data -= 273.15
+         cube.units = 'C' 
+	 
      return cube  
      
 def pressure_level(name, pressure1):
@@ -219,7 +251,7 @@ def pressure_level_mass(name, pressure1):
      
      else:
 
-         Caip_0 = iris.Constraint(pressure=pressure1)
+         Caip_0 = iris.Constraint(pressure=pressure1/100)#required for TJ1 /100
 	 
      return Caip_0
      
@@ -230,7 +262,6 @@ def sixhr_file_location(expt, vari):
     if expt =='ERA5' or expt =='MERRA2':
         location = level1_obs_6hr(expt)+CMIP6_extn
         print(location)
-	
     else:
         location = level1_6hr(expt,vari)+CMIP6_extn 
 
@@ -249,6 +280,9 @@ def monthly_file_location(expt, vari):
 
      elif expt=='ERA5':  
          location = level1_obs_mon(expt)+'era5_'+vari+CMIP6_extn
+	 
+     elif expt=='GPCP':  
+         location = '/gws/nopw/j04/launchpad/observations/GPCP/precip.mon.mean.nc'
 	 
      elif expt=='MERRA2':
      
