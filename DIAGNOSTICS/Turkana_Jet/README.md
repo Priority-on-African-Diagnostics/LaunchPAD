@@ -39,16 +39,19 @@ Step 6: Filled contours for moisture flux (shading) are drawn and overlaid by th
 
 The diagnostic generates a map showing wind shears as the jet intensifies as well as where the model places the jet on the spatial map and in which direction. Moisture flux is also drawn to show the effect of the jet on the humidity field. 
 
-![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/Mozambique%20Channel%20Trough/plots/MCT_plot__MCT_plot.png)
 
+<img src="https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/54ff08ccd72c0184df2b2d82016566e2836cca0e/DIAGNOSTICS/Turkana%20Jet/plots/ERA5_TJ1_plot.png" width="350"/> <img src="https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/54ff08ccd72c0184df2b2d82016566e2836cca0e/DIAGNOSTICS/Turkana%20Jet/plots/HadGEM3-GC31-MM_TJ1_plot.png" width="350"/> 
 
-Figure: Mean monthly moisture flux at 850mb (g/Kg/m/s) (contour shading), overlaid with mean wind vector at 850mb (m/s). Wind vectors indicate winds of at least 5m/s.
+Figure: a) ERA5 and b) HadGEM3-GC31-MM mean monthly moisture flux at 850mb (g/Kg/m/s) (contour shading), overlaid with mean wind vector at 850mb (m/s). Wind vectors indicate winds of at least 5m/s.
 
 # Acknowledgements
 This diagnostic was developed by Oscar Lino (University of Nairobi). It  was formatted and programmed by Dr Ellen Dyer, to be embedded into this LaunchPAD GitHub framework designed by Dr Thomas Webb. Dr Thomas Webb also embedded  the diagnostic into the UK Met Office Auto-Assess system. The diagnostic was developed and run using the UK's JASMIN super-data-cluster. The reanalysis and CMIP 6 AMIP models were accessed courtesy of CEDA, and we acknowledge the data providers. 
 
 # References
 Flohn H. 1964. On the causes of aridity of northeastern Africa. Würzburger Geograph. Arb. 12: 1–17
+
 Indeje M, Semazzi FHM, Xie L, Ogallo LJ. 2001. Mechanistic model simulations of the East African climate using NCAR regional climate model: influence of large-scale orography on the Turkana low-level jet. J. Clim. 14: 2710–2724
+
 Nicholson, S. (2015). The Turkana low-level jet: mean climatology and association with regional aridity. International Journal of Climatology, 36(6), 2598–2614. doi:10.1002/joc.4515 
+
 Nicholson SE. 1996. A review of climate dynamics and climate variability in eastern Africa. In The Limnology, Climatology and Paleoclimatology of the East African Lakes, Johnson TC, Odada EO (eds). Gordon and Breach: Toronto, Canada, 25–56
