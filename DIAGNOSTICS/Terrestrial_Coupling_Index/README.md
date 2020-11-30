@@ -35,11 +35,12 @@ whereby mrsos  is soil moisture in m3/m3 and hfls is surface latent heat flux (+
 Different datasets and models tend to have varied soil moisture depths as summarized in  Table 1. For all the analysis, the top layer was used. This is based on model results by Zhang et al., (2011) who noted that the uppermost layer of soil moisture (10cm) had dominant control over the evolution of surface fluxes. 
 
 Table 1. Soil moisture depths considered for different data sources
-| Syntax | Description |
-| --- | ----------- |
-| Header | Title |
-| Paragraph | Text |
-
+| Data | Variable | Soil moisture depths considered |
+| --- | ----------- | --------------|
+| MERRA2 | Soil moisture (m<sup>3</sup>/m<sup>3</sup>) | 0-5cm (Other level available; 0-100cm) |
+| ERA5 | Soil moisture (m<sup>3</sup>/m<sup>3</sup>) | 0-7cm (Other levels available 7 -28cm, 28-100cm & 100-289cm) |
+| CMIP6 | Total water content (kg/m<sup>2</sup>) | Uppermost layer; 10cm |
+| MOHC models | Total water content (kg/m<sup>2</sup>) | Uppermost layer; depth defined in file |
 
 # Diagnostic Summary: what is output?
 
