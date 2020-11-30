@@ -24,10 +24,16 @@ The Terrestrial Coupling Index (TCI) is a statistical measure of the degree of s
 
 # Step-by-step method: how is it calculated? 	
 Step 1: Read in monthly data for soil moisture (mrsos) and latent heat flux (hlfs) 
+
 Step 2: The year range is set as 1985-2014 for a 40 years period of the CMIP6 historical simulations or reanalysis data as the baseline
+
+
 Step 3: Geographical domain for the analysis is selected to Africa, ranging from latitudes 26°S to 41°N and 20°W to 54°E longitudes 
+
 Step 4: The monthly data is aggregated to get the seasonal means for the standard seasons, DJF, MAM, JJA and SON
+
 Step 5: The correlation between mrsos and hfls is obtained as well as the standard deviation of mrsos. The product of the correlation and standard deviation defines the TCI.
+
 TCI = correlation (mrsos,hfls) x standard_devation (mrsos) 
 
 whereby mrsos  is soil moisture in m<sup>3</sup> and hfls is surface latent heat flux (+ve) in W/m<sup>2</sup>
@@ -53,7 +59,7 @@ The coupling patterns over Africa based on ERA5 indicates that characteristics a
 
 ![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/54ff08ccd72c0184df2b2d82016566e2836cca0e/DIAGNOSTICS/Terrestrial%20Coupling%20Index/plots/CESM2_TCI_plot.png)
 
-Figure 1: Seasonal TCI for CESM2 model in CMIP6.
+Figure 2: Seasonal TCI for CESM2 model in CMIP6.
 
 
 # Acknowledgements
