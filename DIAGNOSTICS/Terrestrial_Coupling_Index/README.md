@@ -36,7 +36,7 @@ Step 5: The correlation between mrsos and hfls is obtained as well as the standa
 
 TCI = correlation (mrsos,hfls) x standard_devation (mrsos) 
 
-whereby mrsos  is soil moisture in m<sup>3</sup> and hfls is surface latent heat flux (+ve) in W/m<sup>2</sup>
+whereby mrsos  is soil moisture in m<sup>3</sup>/m<sup>3</sup> and hfls is surface latent heat flux (+ve) in W/m<sup>2</sup>
 
 Different datasets and models tend to have varied soil moisture depths as summarized in  Table 1. For all the analysis, the top layer was used. This is based on model results by Zhang et al., (2011) who noted that the uppermost layer of soil moisture (10cm) had dominant control over the evolution of surface fluxes. 
 
