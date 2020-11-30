@@ -22,7 +22,7 @@ Step 1: Read in monthly data for horizontal vector wind components (U and V), an
 
 Step 2: The year range is set as 1985-2014 for a 40 years period of the CMIP6 historical simulations or reanalysis as the baseline
 
-Step 3: Spatial extent is chosen for East Africa, bounded by latitudes 50S to 8oN and longitudes 32oE to 43oE
+Step 3: Spatial extent is chosen for East Africa, bounded by latitudes 5°S to 8°N and longitudes 32°E to 43°E
 
 Step 4: The monthly data is aggregated to monthly climatological means, from January to December
 
@@ -40,7 +40,7 @@ Step 6: Filled contours for moisture flux (shading) are drawn and overlaid by th
 The diagnostic generates a map showing wind shears as the jet intensifies as well as where the model places the jet on the spatial map and in which direction. Moisture flux is also drawn to show the effect of the jet on the humidity field. 
 
 
-a) <img src="https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/54ff08ccd72c0184df2b2d82016566e2836cca0e/DIAGNOSTICS/Turkana%20Jet/plots/ERA5_TJ1_plot.png" width="350"/> b)  <img src="https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/54ff08ccd72c0184df2b2d82016566e2836cca0e/DIAGNOSTICS/Turkana%20Jet/plots/HadGEM3-GC31-MM_TJ1_plot.png" width="350"/> 
+a)<img src="https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/54ff08ccd72c0184df2b2d82016566e2836cca0e/DIAGNOSTICS/Turkana%20Jet/plots/ERA5_TJ1_plot.png" width="350"/>b)<img src="https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/54ff08ccd72c0184df2b2d82016566e2836cca0e/DIAGNOSTICS/Turkana%20Jet/plots/HadGEM3-GC31-MM_TJ1_plot.png" width="350"/> 
 
 Figure: a) ERA5 and b) HadGEM3-GC31-MM mean monthly moisture flux at 850mb (g/Kg/m/s) (contour shading), overlaid with mean wind vector at 850mb (m/s). Wind vectors indicate winds of at least 5m/s.
 
