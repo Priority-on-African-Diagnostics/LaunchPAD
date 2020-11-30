@@ -40,9 +40,9 @@ Step 6: Filled contours for moisture flux (shading) are drawn and overlaid by th
 The diagnostic generates a map showing wind shears as the jet intensifies as well as where the model places the jet on the spatial map and in which direction. Moisture flux is also drawn to show the effect of the jet on the humidity field. 
 
 
-a)<img src="https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/54ff08ccd72c0184df2b2d82016566e2836cca0e/DIAGNOSTICS/Turkana%20Jet/plots/ERA5_TJ1_plot.png" width="350"/>b)<img src="https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/54ff08ccd72c0184df2b2d82016566e2836cca0e/DIAGNOSTICS/Turkana%20Jet/plots/HadGEM3-GC31-MM_TJ1_plot.png" width="350"/> 
+<img src="https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/54ff08ccd72c0184df2b2d82016566e2836cca0e/DIAGNOSTICS/Turkana%20Jet/plots/ERA5_TJ1_plot.png" width="350"/><img src="https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/54ff08ccd72c0184df2b2d82016566e2836cca0e/DIAGNOSTICS/Turkana%20Jet/plots/HadGEM3-GC31-MM_TJ1_plot.png" width="350"/> 
 
-Figure: a) ERA5 and b) HadGEM3-GC31-MM mean monthly moisture flux at 850mb (g/Kg/m/s) (contour shading), overlaid with mean wind vector at 850mb (m/s). Wind vectors indicate winds of at least 5m/s.
+Figure: (Left) ERA5 and (right) HadGEM3-GC31-MM mean monthly moisture flux at 850mb (g/Kg/m/s) (contour shading), overlaid with mean wind vector at 850mb (m/s). Wind vectors indicate winds of at least 5m/s.
 
 # Acknowledgements
 This diagnostic was developed by Oscar Lino (University of Nairobi). It  was formatted and programmed by Dr Ellen Dyer, to be embedded into this LaunchPAD GitHub framework designed by Dr Thomas Webb. Dr Thomas Webb also embedded  the diagnostic into the UK Met Office Auto-Assess system. The diagnostic was developed and run using the UK's JASMIN super-data-cluster. The reanalysis and CMIP 6 AMIP models were accessed courtesy of CEDA, and we acknowledge the data providers. 
