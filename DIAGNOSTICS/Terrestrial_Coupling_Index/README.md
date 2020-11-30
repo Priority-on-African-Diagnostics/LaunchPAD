@@ -25,12 +25,12 @@ The Terrestrial Coupling Index (TCI) is a statistical measure of the degree of s
 # Step-by-step method: how is it calculated? 	
 Step 1: Read in monthly data for soil moisture (mrsos) and latent heat flux (hlfs) 
 Step 2: The year range is set as 1985-2014 for a 40 years period of the CMIP6 historical simulations or reanalysis data as the baseline
-Step 3: Geographical domain for the analysis is selected to Africa, ranging from latitudes 26oS to 41oN and 20oW to 54oE longitudes 
+Step 3: Geographical domain for the analysis is selected to Africa, ranging from latitudes 26°S to 41°N and 20°W to 54°E longitudes 
 Step 4: The monthly data is aggregated to get the seasonal means for the standard seasons, DJF, MAM, JJA and SON
 Step 5: The correlation between mrsos and hfls is obtained as well as the standard deviation of mrsos. The product of the correlation and standard deviation defines the TCI.
 TCI = correlation (mrsos,hfls) x standard_devation (mrsos) 
 
-whereby mrsos  is soil moisture in m3/m3 and hfls is surface latent heat flux (+ve) in W/m2
+whereby mrsos  is soil moisture in m<sup>3</sup> and hfls is surface latent heat flux (+ve) in W/m<sup>2</sup>
 
 Different datasets and models tend to have varied soil moisture depths as summarized in  Table 1. For all the analysis, the top layer was used. This is based on model results by Zhang et al., (2011) who noted that the uppermost layer of soil moisture (10cm) had dominant control over the evolution of surface fluxes. 
 
@@ -43,13 +43,17 @@ Table 1. Soil moisture depths considered for different data sources
 | MOHC models | Total water content (kg/m<sup>2</sup>) | Uppermost layer; depth defined in file |
 
 # Diagnostic Summary: what is output?
+The TCI is a statistical representation of a complex process involving control of surface fluxes by soil moisture. The coupling patterns over Africa based on ERA5 indicates that characteristics are variable based on region and season. Positive feedbacks are pronounced over parts of eastern, southern and extreme northwestern Africa during DJF, whereas the signal appears weaker through the other seasons. 
 
-The TCI is a statistical representation of a complex process involving control of surface fluxes by soil moisture. The coupling patterns over Africa based on ERA5 indicates that characteristics are variable based on region and season. Positive feedbacks are pronounced over parts of eastern, southern and extreme northwestern Africa during DJF, wherelse the signal appears weaker through the other seasons. 
+![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/54ff08ccd72c0184df2b2d82016566e2836cca0e/DIAGNOSTICS/Terrestrial%20Coupling%20Index/plots/ERA5_TCI_plot.png)
 
-![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/LLW/plots/llw_scatter_son_LLW_plot.png)
+Figure 1: Seasonal TCI for the ERA5 reanalysis.
 
+The coupling patterns over Africa based on ERA5 indicates that characteristics are variable based on region and season. Positive feedbacks are pronounced over parts of eastern, southern and extreme northwestern Africa during DJF, whereas the signal appears weaker through the other seasons. 
 
-Figure 1: September-November 925hPa zonal moisture inflow at the western boundary (10S-10N and 10-12.5E) of Central Africa region representing the strength of Low-Level Westerlies (LLWs). b) Scatter plot representing the September-November 850hPa vertical wind average between 5S-3N and 2W-8E over the Gulf of Guinea and the 925hPa temperature gradient between Eastern Atlantic Ocean (average between 5S-3N and 2W-8E) and the continent (average between 5S-3N and 15E-25E).
+![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/54ff08ccd72c0184df2b2d82016566e2836cca0e/DIAGNOSTICS/Terrestrial%20Coupling%20Index/plots/CESM2_TCI_plot.png)
+
+Figure 1: Seasonal TCI for CESM2 model in CMIP6.
 
 
 # Acknowledgements
