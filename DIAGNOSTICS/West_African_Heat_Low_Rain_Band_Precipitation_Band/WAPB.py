@@ -207,8 +207,8 @@ if pre_processor_experiments:
 ###############################
 #extraction control
 ###############################
-    #green_list = create_greenlist6hr(vari_list)
-    green_list = obs_list #green_list + obs_list
+    green_list = create_greenlist(vari_list)
+    green_list = green_list + obs_list
     pickle.dump(green_list, open(starterp+'green_list'+p_file, "wb" ))
     
     for expt in green_list:   

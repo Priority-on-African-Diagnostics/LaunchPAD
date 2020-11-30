@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ###############################
 
-obs_list = ['ERA-Interim']#,'ERA5', 'MERRA2']
+obs_list = ['ERA-Interim','ERA5', 'MERRA2']
 vari_list = ['zg']
 #what do you want script to do?
 pre_processor_experiments = True

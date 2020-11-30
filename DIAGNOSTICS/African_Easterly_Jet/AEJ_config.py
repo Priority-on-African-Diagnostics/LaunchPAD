@@ -20,13 +20,13 @@
 #model name list?
 obs_list = ['ERA5','MERRA2']
 
-vari_list = ['ta']#, 'ua']  #'ua'
+vari_list = ['ta', 'ua'] 
 
 #what do you want script to do?
-pre_processor_experiments = False
-processor_calculations = False
+pre_processor_experiments = True
+processor_calculations = True
 create_plot = True
-save_plot = False
+save_plot = True
 
 #file name (.p files) note: model name superseeds this string
 p_file = '_AEJ.p'
@@ -37,6 +37,6 @@ nc_file = '_AEJ.nc'
 #file name (.png plot) note: model name superseeds this string
 plot_file = '_AEJ_plot.png'
 
-starterp = '/home/users/twouce/github/LaunchPAD/DIAGNOSTICS/AEJ/intermediary_files/'
-starterpng = '/home/users/twouce/github/LaunchPAD/DIAGNOSTICS/AEJ/plots/'
-starternc = '/home/users/twouce/github/LaunchPAD/DIAGNOSTICS/AEJ/intermediary_files/'
+starterp = '/home/users/twouce/OX_backup/FIN_GIT/github/LaunchPAD/DIAGNOSTICS/African_Easterly_Jet/intermediary_files/'
+starterpng = '/home/users/twouce/OX_backup/FIN_GIT/github/LaunchPAD/DIAGNOSTICS/African_Easterly_Jet/plots/'
+starternc = '/home/users/twouce/OX_backup/FIN_GIT/github/LaunchPAD/DIAGNOSTICS/African_Easterly_Jet/intermediary_files/'

@@ -7,7 +7,7 @@ vari_list = ['pr']
 pre_processor_experiments = True
 processor_calculations = True
 create_plot = True
-save_plot = False
+save_plot = True
 
 #file name (.p files) note: model name superseeds this string
 p_file = '_WAPB.p'
@@ -18,7 +18,7 @@ nc_file = '_WAPB.nc'
 #file name (.png plot) note: model name superseeds this string
 plot_file = '_WAPB_plot.png'
 
-home_add ='/home/users/twouce/github/LaunchPAD/files'
+home_add ='/home/users/twouce/OX_backup/FIN_GIT/github/LaunchPAD/DIAGNOSTICS/West_African_Heat_Low_Rain_Band_Precipitation_Band'
 
 starterp = home_add+'/p/'
 starterpng = home_add+'/png/'

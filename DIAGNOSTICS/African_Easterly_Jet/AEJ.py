@@ -172,7 +172,8 @@ def plot_TG(green_list):
 
         else:
             iplt.show()	
-        
+    plt.clf()
+           
     return None
 
 def plot_AEJ(green_list):
@@ -302,6 +303,8 @@ def plot_AEJ(green_list):
 
     else:
         iplt.show()
+	
+    plt.clf()
 	
     return None
         

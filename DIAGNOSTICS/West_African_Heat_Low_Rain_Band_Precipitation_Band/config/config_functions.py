@@ -258,7 +258,9 @@ def monthly_file_location(expt, vari):
              location='/gws/nopw/j04/launchpad/observations/ERA-Interim/mon/ta/nc/erai_monthly_t_1979_2016_0'
          else:
              location = level1_obs_mon(expt)+vari+ERAI_extn+CMIP6_extn 
-
+     elif expt=='GPCP':
+         location = '/gws/nopw/j04/launchpad/observations/GPCP/precip.mon.mean.nc'
+	 
      elif expt=='ERA5':  
          location = level1_obs_mon(expt)+'era5_'+vari+CMIP6_extn
 	 
