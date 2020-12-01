@@ -32,7 +32,7 @@ Step 4: Then the RB calculated in the above steps is then plotted for each month
 # Diagnostic Summary: what is output?
 This figure shows the climatological migration and the intensification of the Rain Band over the West African region on  a monthly time scale for the annual cycle for the GPCP precipitation dataset for the 1983-2012 period. The RB migrates from its south-most position with low intensity in January, with an increase in intensity, it moves to the north-most position in the month of August and the maximum widths are seen in August and September months. It then transverses from this location with a reduction in intensity from month to month until it reaches the south-most position in December.
 
-![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/West_African_Heat_Low_Rain_Band_Heat_Band/png/GPCC_WAPB__WAPB_plot.png)
+![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/West_African_Heat_Low_Rain_Band_Heat_Band/png/GPCP_WARB__WAPB_plot.png)
 
 # Acknowledgements
 The figure for this diagnostic is developed by Thompson Annor. With help from Thomas Webb, Ellen Dyer and Rachel James the code for the diagnostic is developed into the LaunchPAD framework. Credit also goes to Richard Washington, who played a role as a supervisor. Finally, acknowledgement is also given to the providers of the GPCP and CMIP6 datasets.  
