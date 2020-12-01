@@ -32,7 +32,7 @@ Step 5: Select rainfall in the region (4°S-4°N, 33-42°E) for a Kenyan rainfal
 
 Step 6: Plot anomaly winds calculated in Step 3 for each model including an outline of the region used to calculate the bias metric in Step 4, and an outline of the region used to calculate the rainfall bias metric in Step 5.
 
-Step 7: Calculate the Spearman correlation between model rainfall metric (Step 5) and model zonal wind bias metric (Step 4) using all available models in the ensemble. If the correlation between model rainfall and zonal wind is significant (p-value < 0.01) then output a scatter plot of the CAF 700 hPa zonal wind metric, vs Kenyan rainfall including all available models in the ensemble. 
+Step 7: Calculate the Spearman correlation between model rainfall metric (Step 5) and model zonal wind bias metric (Step 4) using all available models in the ensemble. If the correlation between model rainfall and zonal wind is significant (p-value < 0.01) then if will be included in a scatter plot of the CAF 700 hPa zonal wind metric, vs Kenyan rainfall including all available models in the ensemble. 
 
 # Diagnostic Summary
 
