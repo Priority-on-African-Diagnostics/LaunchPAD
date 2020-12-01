@@ -73,12 +73,12 @@ Plot bar chart of A (moisture flux) on y-axis and D (SAH) on the z-axis
 
 # Diagnostic Summary: what is output?
 
-![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/LLW/plots/llw_scatter_son_LLW_plot.png)
+![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/Low_Level_Westerlies/plots/llw_scatter_son_LLW_plot.png)
 
 
 Figure 1: a) September-November 925hPa zonal moisture inflow at the western boundary (10S-10N and 10-12.5E) of Central Africa region representing the strength of Low-Level Westerlies (LLWs). b) Scatter plot representing the September-November 850hPa vertical wind average between 5S-3N and 2W-8E over the Gulf of Guinea and the 925hPa temperature gradient between Eastern Atlantic Ocean (average between 5S-3N and 2W-8E) and the continent (average between 5S-3N and 15E-25E).
 
-![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/LLW/plots/sah_mflx_son_LLW_plot.png)
+![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/Low_Level_Westerlies/plots/sah_mflx_son_LLW_plot.png)
 
 Figure 2: (blue bars) September-November 925hPa zonal moisture inflow at the western boundary (10S-10N and 10-12.5E) of Central Africa region representing the strength of Low-Level Westerlies (LLWs) and (red bars) Mean South Atlantic High (SAH): sea-level pressure average between 15S-40S and 40W-10E
 
