@@ -82,13 +82,12 @@ Step 6: plot latitude points and intensities for each month retain in step 5
 
 # Diagnostic Summary: what is output?
 
-![](AEJ_doc/H4T5dMSnKszJtnVqcSjAoR-UgcbC3Cfh0GMnTrbiEqRmEb-biSvDUgzCoMOjOsY8cltUrVIp-gft4vjw0_NoJMVLu6fLqwK2TiYTMK1iVtlo6u3yykVtq6OrsslGLg.png)
+![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/African_Easterly_Jet/plots/TG_plot_ERA5_AEJ_plot.png)
 
 
-Figure 1. Latitude_time evolution of the 850 hPa surface temperature gradient (in K_m) with overlay mean locations of AEJ components core. Black solid line in the north represents AEJ-N and the red solid line in the south is the AEJ-S.
+Figure 1. Latitude_time evolution of the 850 hPa surface temperature gradient (in K_m) with overlay mean locations of AEJ components core for the ERA5 reanalysis. Black solid line in the north represents AEJ-N and the red solid line in the south is the AEJ-S.
 
-
-![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/AEJ/plots/AEJ_plot_SAM0-UNICON_AEJ_plot.png)
+![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/African_Easterly_Jet/plots/AEJ_plot_SAM0-UNICON_AEJ_plot.png)
 
 Figure 2: African Easterly Jet components locations (Bottom row) and intensities (Top row).
 
