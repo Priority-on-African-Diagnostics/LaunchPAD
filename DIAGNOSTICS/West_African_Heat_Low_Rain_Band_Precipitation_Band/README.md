@@ -3,7 +3,7 @@ Thompson Annor<sup>**</sup>***
 
 Thomas Webb, Ellen Dyer, Rachel James, Richard Washington
 
-<sup>*</sup> University of Cape Town
+<sup>*</sup> Kwame Nkrumah University of Science and Technology
  
 tommykak@yahoo.com 
 OR
