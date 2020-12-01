@@ -15,4 +15,5 @@ West African Heat Low :
 
 West African Rain Band : 
 
-West African Heat Band: 
+West African Heat Band: https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/West_African_Heat_Low_Rain_Band_Heat_Band/README_WAHB.md
+
