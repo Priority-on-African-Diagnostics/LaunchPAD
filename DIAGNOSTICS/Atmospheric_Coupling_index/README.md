@@ -40,13 +40,13 @@ The spatial map presents the ACI patterns over Africa for ERA5 and CMIP6 models.
 
 For ERA5, the results indicate a negative feedback relationship between surface latent heat flux and temperature with varying intensities. In Southern Africa, East Africa and parts of the Sahel have quite a strong variability of latent heat flux, which yields a negative feedback with near surface temperature. Regions in the Sahara and parts of Central Africa, with weakest signal indicates a weak coupling. In regions with positive values, which also experience the least variability of latent heat variability, indicates that surface fluxes have no significant control over surface temperature. The coupling patterns indicate seasonal variability, with DJF and MAM presenting higher magnitudes over Southern and Eastern Africa, while JJA has the least signal over Africa JJA. 
 
-![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/Aerosol%20Coupling%20Index/plots/ERA5_ACI_plot.png)
+![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/Atmospheric%20Coupling%20Index/plots/ERA5_ACI_plot.png)
 
 Figure 1. Atmospheric Coupling Index over Africa based on ERA5 for the four seasons.
 
 In Figure 2, the results are presented based on the HadGEM-G31-MM model. Similar to the ERA5, there is a strong signal in Southern Africa during DJF and MAM seasons and weak signals for JJA and SON. Coupling strengths over the Sahel and East Africa are much weaker. In the majority of the rest of the continent, the relationship is very weak due to the low variability of latent heat flux. This shows that the model does not capture the variability latent heat in most of Africa except the southern regions during DJF and MAM. 
 
-![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/Aerosol%20Coupling%20Index/plots/HadGEM3-GC31-MM_ACI_plot.png)
+![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/Atmospheric%20Coupling%20Index/plots/HadGEM3-GC31-MM_ACI_plot.png)
 
 Figure 2. Atmospheric Coupling Index over Africa based on HadGEM-GC31-MM model for the four seasons.
 
