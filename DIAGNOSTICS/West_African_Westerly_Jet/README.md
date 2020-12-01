@@ -63,7 +63,7 @@ Figure 2: The climatology (1980 – 2014) of WAWJ (filled contours), the ITCZ (r
 
 
 
-# Acknowledgements
+# Acknowledgements
 The figures for this diagnostic and the threshold for locating the WAWJ are based on the understanding of the jet’s dynamics from Pu and Cook, 2010, and were developed by Akintunde I. Makinde and Prof Babatunde J. Abiodun (as supervisor). With help and coordination from Rachel James, Thomas Webb, and Ellen Dyer the code for the diagnostic which was written in Ferret, Fortran and Python was developed into the LaunchPAD framework.
 Finally, acknowledgement goes to the  European Centre for Medium-Range Weather Forecasts (ECMWF), Copernicus Data Service (CDS) (Copernicus Climate Change Service 2019) and the World Climate Research Programme (WCRP), which, through its Working Group on Coupled Modelling (WGCM), coordinated and promoted CMIP6 also the Earth System Grid Federation (ESGF) for archiving the data and providing access, and the multiple funding agencies who support CMIP6 and ESGF.
 
