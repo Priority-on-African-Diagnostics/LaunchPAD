@@ -30,7 +30,7 @@ import cloudpickle as pickle
 from config.find_files import *
 from config.config import *
 from config.config_functions import *
-from outline_config import *
+from TRA_plot_config import *
 
 ###############################
 #unpickle files
@@ -292,9 +292,7 @@ if pre_processor_experiments:
     ra_pd = read_data(obs)
     pickle.dump(ra_pd, open(obs+'_'+p_file, "wb" ))
 
-    #green_list = create_greenlist(mod_list)
-    #green_list = ['CNRM-CM6-1-HR']
-    green_list = ['ERA5']
+    green_list = create_greenlist(mod_list)
     pickle.dump(green_list, open('green_list'+p_file, "wb" ))
     print('new mod list', green_list)
 
