@@ -175,11 +175,11 @@ def plot_scatter(mon):
           pr_expt = pr_expt*1000.
         if expt == 'MERRA2':
           pr_expt = pr_expt*86400.
-        plt.scatter(pr_expt.data,caf_expt.data,c=['coral'],s=[90],\
+        plt.scatter(pr_expt.data,caf_expt.data,color=['coral'],s=[90],\
                     marker=shape[green_list.index(expt)],label=expt)
       else:
         pr_expt = pr_expt*86400.
-        plt.scatter(pr_expt.data,caf_expt.data,c=colors[green_list.index(expt)],s=[50],\
+        plt.scatter(pr_expt.data,caf_expt.data,color=colors[green_list.index(expt)],s=[50],\
                     marker=shape[green_list.index(expt)],label=expt)
         pr_list.append(pr_expt.data)
         caf_list.append(caf_expt.data)
@@ -203,9 +203,9 @@ def plot_scatter(mon):
     plt.ylabel('CAF zonal wind (m/s)')
     plt.title(mon)
 
-    if correl[1] <= 0.01:
-      plt.savefig(starterpng+'ALL_SCATTER_'+mon+plot_file, bbox_inches='tight',dpi=200)
-      plt.show()
+    #if correl[1] <= 0.01:
+    plt.savefig(starterpng+'ALL_SCATTER_'+mon+plot_file, bbox_inches='tight',dpi=200)
+    #plt.show()
     plt.clf()
 
     return None
