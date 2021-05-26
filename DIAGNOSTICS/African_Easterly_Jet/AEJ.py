@@ -119,9 +119,9 @@ def find_lat_int(cube):
     for m in xr_cube.time:
       try:
         if expt in ['ERA5','ERA-Interim']:
-          lat.append(xr_cube.latitude.where(xr_cube.sel(time=m)==xr_min.sel(time=m),drop=True).item())
+          lat.append(xr_cube.latitude.where(xr_cube.sel(time=m)==xr_min.sel(time=m),drop=True).values.item())
         else:
-          lat.append(xr_cube.lat.where(xr_cube.sel(time=m)==xr_min.sel(time=m),drop=True).item())
+          lat.append(xr_cube.lat.where(xr_cube.sel(time=m)==xr_min.sel(time=m),drop=True).values.item())
       except:
         lat.append(np.nan)
 
@@ -139,11 +139,13 @@ def plot_TG(green_list):
     
     cmap = cm.get_cmap('coolwarm')
     clevs = np.arange(-5,6,1) 
+    mon_names = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
     
     for expt in green_list:
         LN = unpickle_cubes(starterp+expt+'_'+'N_latitude'+'_'+p_file)
         LS = unpickle_cubes(starterp+expt+'_'+'S_latitude'+'_'+p_file)
 
+        fig, ax = plt.subplots()
         nameOfPlot = expt+' African Easterly Jet (Giresse Turin) Temperature Gradient (K/m)'
         plt.suptitle(nameOfPlot, fontsize=12)
 
@@ -161,7 +163,9 @@ def plot_TG(green_list):
         plt.plot(LS, color= 'red', lw=linethick, zorder = 2) 
 	
         plt.ylabel('Latitude (Degrees)', fontsize=10) 
-        plt.xticks(np.arange(12), mon_names, rotation=45)    
+        ax.set_xticks(np.arange(12))
+        ax.set_xticklabels(mon_names,rotation=45)
+        #plt.xticks(ticks=np.arange(12), labels=mon_names, rotation=45)    
 	    
         cf =contourf(xm, ym, cubeT.data.T,clevs,cmap=cmap, extend='both',zorder= 1) 
         colorbar_axes = plt.gcf().add_axes([0.91, 0.15, 0.02, 0.65])
@@ -299,7 +303,7 @@ def plot_AEJ(green_list):
     plt.legend(title='Dataset', bbox_to_anchor=(1.05, 2.3), loc='upper left')
     
     if save_plot:
-        plt.savefig(starterpng+'AEJ_plot_'+expt+plot_file, bbox_inches='tight',dpi=100)
+        plt.savefig(starterpng+'AEJ_plot_all'+plot_file, bbox_inches='tight',dpi=100)
 
     else:
         iplt.show()
@@ -315,7 +319,7 @@ if pre_processor_experiments:
     print('entering pre-processor models routine')
 
     green_list = create_greenlist(vari_list)
-    green_list =obs_list#+green_list
+    green_list =obs_list+green_list
     pickle.dump(green_list, open(starterp+'green_list'+p_file, "wb" ))
     print('new mod list', green_list)
 
