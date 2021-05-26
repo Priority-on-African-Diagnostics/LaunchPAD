@@ -18,7 +18,7 @@ nc_file = '_WAHB.nc'
 #file name (.png plot) note: model name superseeds this string
 plot_file = '_WAHB_plot.png'
 
-home_add ='/home/users/twouce/OX_backup/FIN_GIT/github/LaunchPAD/DIAGNOSTICS/West_African_Heat_Low_Rain_Band_Precipitation_Band'
+home_add ='/gws/nopw/j04/launchpad/users/edyer/testing_WAHL/DIAGNOSTICS/West_African_Heat_Low_Rain_Band_Heat_Band'
 
 starterp = home_add+'/p/'
 starterpng = home_add+'/png/'
