@@ -25,95 +25,10 @@ CMIP6_base = '/badc/cmip6/data/CMIP6/CMIP/'
 CMIP6_type = '/historical/'
 CMIP6_time_6 = '/6hrPlevPt/'
 CMIP6_time_mon = '/Amon/'
-CMIP6_time_day = '/day/' 
+CMIP6_time_day = '/day/'
 CMIP6_file = '/latest/'
 dash = '/'
 
 obs_base='/gws/nopw/j04/launchpad/observations/'
 obs_mon='/mon/'
 obs_six='/6am/'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

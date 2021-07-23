@@ -13,8 +13,8 @@ vari_list = ['ua','pr']  #std dev will be calculated for first
                             #var in this list
 
 #what do you want script to do?
-pre_processor_experiments = False
-processor_calculations = False
+pre_processor_experiments = True
+processor_calculations = True
 create_plot = True
 save_plot = True
 
@@ -55,8 +55,8 @@ nc_file = '_CAF.nc'
 #file name (.png plot) note: model name superseeds this string
 plot_file = '_CAF_plot.png'
 
-home_add ='/gws/nopw/j04/launchpad/users/edyer/testing_CAF/DIAGNOSTICS/Central_African_Easterlies'
+home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Central_African_Easterlies'
 
-starterp = home_add+'/p/'
+starterp = home_add+'/intermediary_files/'
 starterpng = home_add+'/png/'
-starternc = home_add+'/nc/'
+starternc = home_add+'/intermediary_files/'

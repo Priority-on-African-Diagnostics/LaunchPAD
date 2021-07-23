@@ -22,6 +22,6 @@ nc_file = '_tra.nc'
 #file name (.png plot) note: model name superseeds this string
 plot_file = '_tra_plot.png'
 
-starterp = '/gws/nopw/j04/launchpad/users/edyer/UCT/'#files/p/'
-starterpng = '/gws/nopw/j04/launchpad/users/edyer/UCT/'#files/png/'
-starternc = '/gws/nopw/j04/launchpad/users/edyer/UCT/'#files/nc/'
+starterp = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Tropical_Cyclone_Tracking/'#files/p/'
+starterpng = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Tropical_Cyclone_Tracking/'#files/png/'
+starternc = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Tropical_Cyclone_Tracking'#files/nc/'

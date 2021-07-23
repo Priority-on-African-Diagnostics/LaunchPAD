@@ -7,7 +7,7 @@
 obs_list = ['ERA5','MERRA2']
 
 #vari_list = ['hfls','mrsol','depth']  #std dev will be calculated for first
-#                            #var in this list
+                            #var in this list
 vari_list = ['hfls','mrsol']  #std dev will be calculated for first
                               #var in this list
 
@@ -39,8 +39,8 @@ plot_file = '_TCI_mrsol_plot.png'
 #TCI input variable
 fmod = 'mrsos_tas'
 
-home_add ='/home/users/twouce/github/LaunchPAD/DIAGNOSTICS/TCI_MRSOL'
+home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Terrestrial_Coupling_Index_mrsol'
 
-starterp = home_add+'/p/'
+starterp = home_add+'/intermediary_files/'
 starterpng = home_add+'/png/'
-starternc = home_add+'/nc/'
+starternc = home_add+'/intermediary_files/'

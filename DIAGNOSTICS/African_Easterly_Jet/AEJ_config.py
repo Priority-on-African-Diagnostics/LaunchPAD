@@ -37,6 +37,6 @@ nc_file = '_AEJ.nc'
 #file name (.png plot) note: model name superseeds this string
 plot_file = '_AEJ_plot.png'
 
-starterp = '/gws/nopw/j04/launchpad/users/edyer/testing_AEJ/DIAGNOSTICS/African_Easterly_Jet/intermediary_files/'
-starterpng = '/gws/nopw/j04/launchpad/users/edyer/testing_AEJ/DIAGNOSTICS/African_Easterly_Jet/plots/'
-starternc = '/gws/nopw/j04/launchpad/users/edyer/testing_AEJ/DIAGNOSTICS/African_Easterly_Jet/intermediary_files/'
+starterp = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/African_Easterly_Jet/intermediary_files/'
+starterpng = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/African_Easterly_Jet/plots/'
+starternc = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/African_Easterly_Jet/intermediary_files/'

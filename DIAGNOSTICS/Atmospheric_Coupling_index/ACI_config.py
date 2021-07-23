@@ -41,6 +41,6 @@ plot_file = '_ACI_plot.png'
 #ACI input variable
 fmod = 'hfls_tas'
 
-starterp = '/home/users/twouce/github/LaunchPAD/DIAGNOSTICS/ACI/intermediary_files/'
-starterpng = '/home/users/twouce/github/LaunchPAD/DIAGNOSTICS/ACI/plots/'
-starternc = '/home/users/twouce/github/LaunchPAD/DIAGNOSTICS/ACI/intermediary_files/'
+starterp = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Atmospheric_Coupling_index/intermediary_files/'
+starterpng = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Atmospheric_Coupling_index/plots/'
+starternc = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Atmospheric_Coupling_index/intermediary_files/'
