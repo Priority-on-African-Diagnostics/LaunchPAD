@@ -41,9 +41,10 @@ nc_file = '_SST.nc'
 #file name (.png plot) note: model name superseeds this string
 plot_file = '_SST_bias_plot.png'
 
-starterp = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Sea_Surface_Temperature_Bias/intermediary_files/'
-starterpng = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Sea_Surface_Temperature_Bias/plots/'
-starternc = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Sea_Surface_Temperature_Bias/intermediary_files/'
+home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/'
 
+starterp = home_add+'LaunchPAD/DIAGNOSTICS/Sea_Surface_Temperature_Bias/intermediary_files/'
+starterpng = home_add+'LaunchPAD/DIAGNOSTICS/Sea_Surface_Temperature_Bias/png/'
+starternc = home_add+'LaunchPAD/DIAGNOSTICS/Sea_Surface_Temperature_Bias/intermediary_files/'
 
 

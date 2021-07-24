@@ -32,7 +32,10 @@ nc_file = '_MCT.nc'
 #file name (.png plot) note: model name superseeds this string
 plot_file = '_MCT_plot.png'
 
-starterp = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Mozambique_Channel_Trough/intermediary_files/'
-starterpng = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Mozambique_Channel_Trough/plots/'
-starternc = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Mozambique_Channel_Trough/intermediary_files/'
+
+home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/'
+
+starterp = home_add+'LaunchPAD/DIAGNOSTICS/Mozambique_Channel_Trough/intermediary_files/'
+starterpng = home_add+'LaunchPAD/DIAGNOSTICS/Mozambique_Channel_Trough/png/'
+starternc = home_add+'LaunchPAD/DIAGNOSTICS/Mozambique_Channel_Trough/intermediary_files/'
 

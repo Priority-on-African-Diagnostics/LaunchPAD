@@ -16,6 +16,8 @@ lat_step = 2
 mon1='Mar'
 mon2='Nov'
 
+jet_threshold=10
+
 pre_processor_experiments = True
 processor_calculations = True
 create_plot=True
@@ -35,8 +37,10 @@ nc_file = '_WAWJ.nc'
 plot_file = '_WAWJ_plot.png'
 
 #location to write output to. Can be absolute or relative path.
-starterp = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/West_African_Westerly_Jet/intermediary_files/'
-starterpng = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/West_African_Westerly_Jet/plots/'
-starternc = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/West_African_Westerly_Jet/intermediary_files/'
 
-jet_threshold=10
+home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/'
+
+starterp = home_add+'LaunchPAD/DIAGNOSTICS/West_African_Westerly_Jet/intermediary_files/'
+starterpng = home_add+'LaunchPAD/DIAGNOSTICS/West_African_Westerly_Jet/png/'
+starternc = home_add+'LaunchPAD/DIAGNOSTICS/West_African_Westerly_Jet/intermediary_files/'
+

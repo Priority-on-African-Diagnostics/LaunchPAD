@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ###############################
-from .config import * #note relative paths from execution 
-from .find_files import * #remove config. here and above for mass
+from config import * #note relative paths from execution 
+from find_files import * #remove config. here and above for mass
 import os
 import iris
 import iris.coords

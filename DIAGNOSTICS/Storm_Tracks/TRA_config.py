@@ -28,7 +28,9 @@ nc_file = '_TRA.nc'
 plot_file = '_TRA_plot.png'
 
 #location to write output to. Can be absolute or relative path.
-starterp = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Storm_Tracks/intermediary_files/'
-starterpng = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Storm_Tracks/plots/'
-starternc = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Storm_Tracks/intermediary_files/'
+home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/'
+
+starterp = home_add+'LaunchPAD/DIAGNOSTICS/Storm_Tracks/intermediary_files/'
+starterpng = home_add+'LaunchPAD/DIAGNOSTICS/Storm_Tracks/png/'
+starternc = home_add+'LaunchPAD/DIAGNOSTICS/Storm_Tracks/intermediary_files/'
 

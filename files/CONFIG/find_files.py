@@ -9,7 +9,7 @@
 ###############################
 
 import collections
-from .config_find_files import *
+from config_find_files import *
 
 #Level 1 6hour data
 #in: mod - model, e.g. CNRM-CM6-1, vari - variable in CMIP notation, e.g. zg

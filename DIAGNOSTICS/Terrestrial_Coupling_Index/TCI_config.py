@@ -40,6 +40,9 @@ plot_file = '_TCI_plot.png'
 #TCI input variable
 fmod = 'mrsos_tas'
 
-starterp = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Terrestrial_Coupling_Index/intermediary_files/'
-starterpng ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Terrestrial_Coupling_Index/plots/'
-starternc = '/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/LaunchPAD/DIAGNOSTICS/Terrestrial_Coupling_Index/intermediary_files/'
+home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/'
+
+starterp = home_add+'LaunchPAD/DIAGNOSTICS/Terrestrial_Coupling_Index/intermediary_files/'
+starterpng = home_add+'LaunchPAD/DIAGNOSTICS/Terrestrial_Coupling_Index/png/'
+starternc = home_add+'LaunchPAD/DIAGNOSTICS/Terrestrial_Coupling_Index/intermediary_files/'
+

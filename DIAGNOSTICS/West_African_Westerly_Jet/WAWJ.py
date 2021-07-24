@@ -28,10 +28,6 @@ import cartopy
 import cartopy.crs as crs
 import cartopy.feature as cfeature
 import cloudpickle as pickle
-from config.find_files import *
-from config.config import *
-from config.config_functions import *
-from WAWJ_config import *
 from iris.cube import Cube
 from matplotlib import patches
 import math
@@ -40,7 +36,11 @@ import xarray as xa
 import matplotlib.cm as cm
 import matplotlib
 
-
+from WAWJ_config import *
+sys.path.insert(1,home_add+'LaunchPAD/files/CONFIG')
+from find_files import *
+from config import *
+from config_functions import *
 
 ###############################
 # Unpickle files
