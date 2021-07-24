@@ -27,10 +27,12 @@ from cartopy.mpl.geoaxes import GeoAxes
 from mpl_toolkits.axes_grid1 import AxesGrid
 from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 import cloudpickle as pickle
-from config.find_files import *
-from config.config import *
-from config.config_functions import *
+
 from TRA_plot_config import *
+sys.path.insert(1,home_add+'LaunchPAD/files/CONFIG')
+from find_files import *
+from config import *
+from config_functions import *
 
 ###############################
 #unpickle files
@@ -50,13 +52,13 @@ def read_data(expt):
 
   if pickle_or_txt == 1:
     #For pickle files:
-    pd_in  = unpickle_cubes(expt+'_df__TRA.p') 
-    print(pd_in)
+    pd_in  = unpickle_cubes(starterp+expt+'_df__TRA.p') 
     mod_pd = pd_in[['mslp','mslp_lon','mslp_lat','max_wspd','tc_event','tc_number']]
+    mod_pd = mod_pd.rename(columns={"mslp_lon": "lon", "mslp_lat": "lat","max_wspd": "max_wind"})
 
   if pickle_or_txt == 2:
     #For text files:
-    data=np.loadtxt(expt+'_tracking_output.txt',
+    data=np.loadtxt(starterp+expt+'_tracking_output.txt',
            dtype={'names': ('date','time','mslp', 'lon','lat','max_wind','vort','tc_event','tc_number'),
                   'formats': ('U10', 'U10', np.float, np.float, np.float, np.float, np.float, 'U4', np.float)})
 
@@ -70,26 +72,6 @@ def read_data(expt):
     mod_pd = pd.DataFrame(data=mod_pd)
 
   return mod_pd
-
-def reanalysis():
-
-  if pickle_or_txt == 1:
-    #For pickle files:
-    pd_in  = unpickle_cubes(obs+'_df__TRA.p') 
-    ra_pd = pd_in[['mslp_lon','mslp_lat','tc_event']]
-
-  if pickle_or_txt == 2:
-    #For text files:
-    data=np.loadtxt(obs+'_filtered_output.txt',
-                  dtype={'names': ('date','time','mslp','lon','lat','max_wind','vort','tc_event','tc_number'),
-                        'formats': ('U10','U10',np.float,np.float, np.float, np.float, np.float, 'U4', np.float)})
-    ra_pd = collections.OrderedDict()
-    ra_pd['lon'] = data['lon']
-    ra_pd['lat'] = data['lat']
-    ra_pd['tc_event'] = data['tc_event']
-    ra_pd = pd.DataFrame(data=ra_pd)
-
-  return ra_pd
 
 
 ###############################
@@ -211,13 +193,13 @@ def kde_plot(lon_data,lat_data,plt,cax=None):
 
 def plot_panels(expt):
 
-  ra_pd = unpickle_cubes(obs+'_'+p_file)
-  ra_lon_gen = unpickle_cubes('ra_lon'+p_file)
-  ra_lat_gen = unpickle_cubes('ra_lat'+p_file)
-  mod_pd = unpickle_cubes(expt+'_'+p_file)
-  mod_lon_gen = unpickle_cubes(expt+'_mod_lon'+p_file)
-  mod_lat_gen = unpickle_cubes(expt+'_mod_lat'+p_file)
-  ml_wspd = unpickle_cubes(expt+'_ml_wspd'+p_file)
+  ra_pd = unpickle_cubes(starterp+obs+'_'+p_file)
+  ra_lon_gen = unpickle_cubes(starterp+'ra_lon'+p_file)
+  ra_lat_gen = unpickle_cubes(starterp+'ra_lat'+p_file)
+  mod_pd = unpickle_cubes(starterp+expt+'_'+p_file)
+  mod_lon_gen = unpickle_cubes(starterp+expt+'_mod_lon'+p_file)
+  mod_lat_gen = unpickle_cubes(starterp+expt+'_mod_lat'+p_file)
+  ml_wspd = unpickle_cubes(starterp+expt+'_ml_wspd'+p_file)
 
   #Create plot
   projection = crs.PlateCarree()
@@ -290,15 +272,16 @@ if pre_processor_experiments:
     print('entering pre-processor routine')
    
     ra_pd = read_data(obs)
-    pickle.dump(ra_pd, open(obs+'_'+p_file, "wb" ))
+    pickle.dump(ra_pd, open(starterp+obs+'_'+p_file, "wb" ))
 
-    green_list = create_greenlist(mod_list)
-    pickle.dump(green_list, open('green_list'+p_file, "wb" ))
+    #green_list = create_greenlist(mod_list)
+    green_list = tra_mod_list
+    pickle.dump(green_list, open(starterp+'green_list'+p_file, "wb" ))
     print('new mod list', green_list)
 
     for expt in green_list:   
       mod_pd = read_data(expt)
-      pickle.dump(mod_pd, open(expt+'_'+p_file, "wb" ))
+      pickle.dump(mod_pd, open(starterp+expt+'_'+p_file, "wb" ))
   
 ###############################
 #Calculation control
@@ -306,19 +289,19 @@ if pre_processor_experiments:
 if processor_calculations:
     print('entering calculation routine')
 
-    ra_pd = unpickle_cubes(obs+'_'+p_file)
+    ra_pd = unpickle_cubes(starterp+obs+'_'+p_file)
     ra_lon_gen,ra_lat_gen=genesis_locations(ra_pd)
-    pickle.dump(ra_lon_gen, open('ra_lon'+p_file, "wb" ))
-    pickle.dump(ra_lat_gen, open('ra_lat'+p_file, "wb" ))
+    pickle.dump(ra_lon_gen, open(starterp+'ra_lon'+p_file, "wb" ))
+    pickle.dump(ra_lat_gen, open(starterp+'ra_lat'+p_file, "wb" ))
 
     green_list = unpickle_cubes(starterp+'green_list'+p_file)
     for expt in green_list:
-      mod_pd = unpickle_cubes(expt+'_'+p_file)
+      mod_pd = unpickle_cubes(starterp+expt+'_'+p_file)
       mod_lon_gen,mod_lat_gen=genesis_locations(mod_pd)
       ml_wspd=max_lifetime_wspd(mod_pd)
-      pickle.dump(mod_lon_gen, open(expt+'_mod_lon'+p_file, "wb" ))
-      pickle.dump(mod_lat_gen, open(expt+'_mod_lat'+p_file, "wb" ))
-      pickle.dump(ml_wspd, open(expt+'_ml_wspd'+p_file, "wb" ))
+      pickle.dump(mod_lon_gen, open(starterp+expt+'_mod_lon'+p_file, "wb" ))
+      pickle.dump(mod_lat_gen, open(starterp+expt+'_mod_lat'+p_file, "wb" ))
+      pickle.dump(ml_wspd, open(starterp+expt+'_ml_wspd'+p_file, "wb" ))
      
 ###############################
 #plot control

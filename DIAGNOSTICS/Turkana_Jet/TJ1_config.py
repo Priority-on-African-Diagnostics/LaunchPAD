@@ -37,6 +37,9 @@ nc_file = '_TJ1.nc'
 #file name (.png plot) note: model name superseeds this string
 plot_file = '_TJ1_plot.png'
 
-starterp = '/home/users/twouce/github/LaunchPAD/DIAGNOSTICS/TJ1/intermediary_files/'
-starterpng = '/home/users/twouce/github/LaunchPAD/DIAGNOSTICS/TJ1/plots/'
-starternc = '/home/users/twouce/github/LaunchPAD/DIAGNOSTICS/TJ1/intermediary_files/'
+home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/'
+
+starterp = home_add+'LaunchPAD/DIAGNOSTICS/Turkana_Jet/intermediary_files/'
+starterpng = home_add+'LaunchPAD/DIAGNOSTICS/Turkana_Jet/plots/'
+starternc = home_add+'LaunchPAD/DIAGNOSTICS/Turkana_Jet/intermediary_files/'
+

@@ -38,19 +38,18 @@ import cartopy
 import cartopy.crs as crs
 import cartopy.feature as cfeature
 import cloudpickle as pickle
-
-from config.find_files import *
-from config.config import *
-from config.config_functions import *
-from AEJ_config import *
-
 import operator
 import xarray as xr
-
 from matplotlib.ticker import ScalarFormatter
 from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
                                AutoMinorLocator)
 from pylab import *
+
+from AEJ_config import *
+sys.path.insert(1,home_add+'LaunchPAD/files/CONFIG')
+from find_files import *
+from config import *
+from config_functions import *
 
 ###############################
 #unpickle files

@@ -20,26 +20,5 @@ seasn = {'son': 'SON', 'mam': 'MAM', 'jja': 'JJA', 'djf': 'DJF'}
 lonC1 = 361
 lonC2 = 0
 
-#WAHL input variable
-CMIP_WAHL_out = 'zg'
-
 CMIP6_extn = '_*.nc'
 obs_extn = '.nc'
-
-#track input variables
-CMIP_psl_out = 'psl'
-
-CMIP_WAWJ_out = 'zg'
-
-multi_vari_list = ['air_temperature', 'surface_temperature','precipitation_flux','canopy_throughfall_flux'] 
-
-variable_dict = collections.OrderedDict()
-variable_dict = {'geopotential_height':'zg', 'precipitation_flux':'pr', 'lagrangian_tendency_of_air_pressure':'wap', 'air_pressure_at_sea_level':'psl','specific_humidity':'hus','x_wind':'ua','y_wind':'va','surface_upward_latent_heat_flux':'hfls','surface_temperature':'ts','air_temperature':'ta', 'air_temperature':'tas', 'Volumetric soil water layer 1':'mrsos', 'canopy_throughfall_flux':'mrsol'}
-
-stash_dict = collections.OrderedDict()
-stash_dict = {'m01s30i201':'ua'}
-
-
- 
-     
-

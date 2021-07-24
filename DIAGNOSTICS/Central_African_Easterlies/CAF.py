@@ -31,14 +31,16 @@ import collections
 import cartopy.crs as crs
 import cartopy.feature as cfeature
 import cloudpickle as pickle
-from config.find_files import *
-from config.config import *
-from config.config_functions import *
-from CAF_config import *
 from scipy.stats import spearmanr
 from numpy.polynomial.polynomial import polyfit
 from matplotlib.patches import Rectangle
 import xarray as xr
+from CAF_config import *
+#sys.path += [os.path.abspath('../../files/CONFIG')]
+sys.path.insert(1,home_add+'LaunchPAD/files/CONFIG')
+from find_files import *
+from config import *
+from config_functions import *
 ###############################
 #unpickle files
 ###############################

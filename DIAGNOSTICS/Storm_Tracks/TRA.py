@@ -37,17 +37,18 @@ import cartopy
 import cartopy.crs as crs
 import cartopy.feature as cfeature
 import cloudpickle as pickle
-
-from config.find_files import *
-from config.config import *
-from config.config_functions import *
-from TRA_config import *
 import pandas as pd
 import xarray as xr
 import operator
 import warnings
 from itertools import islice
 import datetime
+
+from TRA_config import *
+sys.path.insert(1,home_add+'LaunchPAD/files/CONFIG')
+from find_files import *
+from config import *
+from config_functions import *
 
 ###############################
 # Unpickle files

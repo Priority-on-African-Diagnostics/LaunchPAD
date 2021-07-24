@@ -8,11 +8,11 @@ obs_list = ['ERA5']
 
 vari_list=['ua','va','ta', 'psl', 'uas', 'vas']
 
-pre_processor_experiments = False
+pre_processor_experiments = True
 processor_calculations1 = True
 processor_calculations2 = True
-create_plot=False
-save_plot=False
+create_plot=True
+save_plot=True
 
 # Figure size
 fig_width = 200
@@ -28,7 +28,9 @@ nc_file = '_TRA.nc'
 plot_file = '_TRA_plot.png'
 
 #location to write output to. Can be absolute or relative path.
-starterp = '/home/users/twouce/OX_backup/FIN_GIT/github/LaunchPAD/DIAGNOSTICS/Storm_Tracks/intermediary_files/'
-starterpng = '/home/users/twouce/OX_backup/FIN_GIT/github/LaunchPAD/DIAGNOSTICS/Storm_Tracks/plots/'
-starternc = '/home/users/twouce/OX_backup/FIN_GIT/github/LaunchPAD/DIAGNOSTICS/Storm_Tracks/intermediary_files/'
+home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/'
+
+starterp = home_add+'LaunchPAD/DIAGNOSTICS/Storm_Tracks/intermediary_files/'
+starterpng = home_add+'LaunchPAD/DIAGNOSTICS/Storm_Tracks/png/'
+starternc = home_add+'LaunchPAD/DIAGNOSTICS/Storm_Tracks/intermediary_files/'
 

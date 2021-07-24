@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 ###############################
 
-obs_list = ['ERA-Interim','ERA5', 'MERRA2']
+obs_list = ['ERA-Interim','ERA5']#, 'MERRA2']
 vari_list = ['zg']
 #what do you want script to do?
 pre_processor_experiments = True
@@ -18,8 +18,9 @@ nc_file = '_WAHL.nc'
 #file name (.png plot) note: model name superseeds this string
 plot_file = '_WAHL_plot.png'
 
-home_add ='/home/users/twouce/github/LaunchPAD/DIAGNOSTICS/WAHL'
+home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/'
 
-starterp = home_add+'/p/'
-starterpng = home_add+'/png/'
-starternc = home_add+'/nc/'
+starterp = home_add+'LaunchPAD/DIAGNOSTICS/West_African_Heat_Low_Rain_Band_Heat_Band/intermediary_files/'
+starterpng = home_add+'LaunchPAD/DIAGNOSTICS/West_African_Heat_Low_Rain_Band_Heat_Band/plots/'
+starternc = home_add+'LaunchPAD/DIAGNOSTICS/West_African_Heat_Low_Rain_Band_Heat_Band/intermediary_files/'
+
