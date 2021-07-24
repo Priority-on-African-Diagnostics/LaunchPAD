@@ -44,7 +44,7 @@ plot_file = '_SST_bias_plot.png'
 home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/'
 
 starterp = home_add+'LaunchPAD/DIAGNOSTICS/Sea_Surface_Temperature_Bias/intermediary_files/'
-starterpng = home_add+'LaunchPAD/DIAGNOSTICS/Sea_Surface_Temperature_Bias/png/'
+starterpng = home_add+'LaunchPAD/DIAGNOSTICS/Sea_Surface_Temperature_Bias/plots/'
 starternc = home_add+'LaunchPAD/DIAGNOSTICS/Sea_Surface_Temperature_Bias/intermediary_files/'
 
 

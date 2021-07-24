@@ -41,6 +41,6 @@ plot_file = '_WAWJ_plot.png'
 home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/'
 
 starterp = home_add+'LaunchPAD/DIAGNOSTICS/West_African_Westerly_Jet/intermediary_files/'
-starterpng = home_add+'LaunchPAD/DIAGNOSTICS/West_African_Westerly_Jet/png/'
+starterpng = home_add+'LaunchPAD/DIAGNOSTICS/West_African_Westerly_Jet/plots/'
 starternc = home_add+'LaunchPAD/DIAGNOSTICS/West_African_Westerly_Jet/intermediary_files/'
 

@@ -40,6 +40,6 @@ plot_file = '_AEJ_plot.png'
 home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/'
 
 starterp = home_add+'LaunchPAD/DIAGNOSTICS/African_Easterly_Jet/intermediary_files/'
-starterpng = home_add+'LaunchPAD/DIAGNOSTICS/African_Easterly_Jet/png/'
+starterpng = home_add+'LaunchPAD/DIAGNOSTICS/African_Easterly_Jet/plots/'
 starternc = home_add+'LaunchPAD/DIAGNOSTICS/African_Easterly_Jet/intermediary_files/'
 

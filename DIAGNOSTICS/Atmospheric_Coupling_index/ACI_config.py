@@ -44,6 +44,6 @@ fmod = 'hfls_tas'
 home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/'
 
 starterp = home_add+'LaunchPAD/DIAGNOSTICS/Atmospheric_Coupling_index/intermediary_files/'
-starterpng = home_add+'LaunchPAD/DIAGNOSTICS/Atmospheric_Coupling_index/png/'
+starterpng = home_add+'LaunchPAD/DIAGNOSTICS/Atmospheric_Coupling_index/plots/'
 starternc = home_add+'LaunchPAD/DIAGNOSTICS/Atmospheric_Coupling_index/intermediary_files/'
 

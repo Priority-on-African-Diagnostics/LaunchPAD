@@ -58,5 +58,5 @@ plot_file = '_CAF_plot.png'
 home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/'
 
 starterp = home_add+'LaunchPAD/DIAGNOSTICS/Central_African_Easterlies/intermediary_files/'
-starterpng = home_add+'LaunchPAD/DIAGNOSTICS/Central_African_Easterlies/png/'
+starterpng = home_add+'LaunchPAD/DIAGNOSTICS/Central_African_Easterlies/plots/'
 starternc = home_add+'LaunchPAD/DIAGNOSTICS/Central_African_Easterlies/intermediary_files/'

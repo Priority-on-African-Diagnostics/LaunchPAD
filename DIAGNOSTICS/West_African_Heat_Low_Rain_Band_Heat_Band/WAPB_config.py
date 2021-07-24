@@ -21,6 +21,6 @@ plot_file = '_WAPB_plot.png'
 home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/'
 
 starterp = home_add+'LaunchPAD/DIAGNOSTICS/West_African_Heat_Low_Rain_Band_Heat_Band/intermediary_files/'
-starterpng = home_add+'LaunchPAD/DIAGNOSTICS/West_African_Heat_Low_Rain_Band_Heat_Band/png/'
+starterpng = home_add+'LaunchPAD/DIAGNOSTICS/West_African_Heat_Low_Rain_Band_Heat_Band/plots/'
 starternc = home_add+'LaunchPAD/DIAGNOSTICS/West_African_Heat_Low_Rain_Band_Heat_Band/intermediary_files/'
 

@@ -26,7 +26,7 @@ plot_file = '_tra_plot.png'
 home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/'
 
 starterp = home_add+'LaunchPAD/DIAGNOSTICS/Tropical_Cyclone_Tracking/intermediary_files/'
-starterpng = home_add+'LaunchPAD/DIAGNOSTICS/Tropical_Cyclone_Tracking/png/'
+starterpng = home_add+'LaunchPAD/DIAGNOSTICS/Tropical_Cyclone_Tracking/plots/'
 starternc = home_add+'LaunchPAD/DIAGNOSTICS/Tropical_Cyclone_Tracking/intermediary_files/'
 
 

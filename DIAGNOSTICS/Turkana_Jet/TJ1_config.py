@@ -40,6 +40,6 @@ plot_file = '_TJ1_plot.png'
 home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/'
 
 starterp = home_add+'LaunchPAD/DIAGNOSTICS/Turkana_Jet/intermediary_files/'
-starterpng = home_add+'LaunchPAD/DIAGNOSTICS/Turkana_Jet/png/'
+starterpng = home_add+'LaunchPAD/DIAGNOSTICS/Turkana_Jet/plots/'
 starternc = home_add+'LaunchPAD/DIAGNOSTICS/Turkana_Jet/intermediary_files/'
 

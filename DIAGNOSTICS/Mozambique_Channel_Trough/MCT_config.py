@@ -36,6 +36,6 @@ plot_file = '_MCT_plot.png'
 home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/'
 
 starterp = home_add+'LaunchPAD/DIAGNOSTICS/Mozambique_Channel_Trough/intermediary_files/'
-starterpng = home_add+'LaunchPAD/DIAGNOSTICS/Mozambique_Channel_Trough/png/'
+starterpng = home_add+'LaunchPAD/DIAGNOSTICS/Mozambique_Channel_Trough/plots/'
 starternc = home_add+'LaunchPAD/DIAGNOSTICS/Mozambique_Channel_Trough/intermediary_files/'
 
