@@ -48,13 +48,11 @@ preprocessors:
       start_latitude: 3
       end_latitude: 20
     extract_levels:
-      # computing min over levels can't currently be done in pre processor,
-      # must be done in diagnostic.
-      # Pre-processor should be expanded to support this operation.
       levels: [60000, 70000]
       scheme: nearest
-    # Other statistics must be calculated after pressure coordinate collapsed
-    # so must be done in diagnostic for now.
+    # Other statistics must be calculated after pressure coordinate collapsed to min
+    # so must be done in diagnostic for now as pre processor can't currently perform
+    # this operation.
     # zonal_statistics:
     #   operator: mean
     # climate_statistics:
