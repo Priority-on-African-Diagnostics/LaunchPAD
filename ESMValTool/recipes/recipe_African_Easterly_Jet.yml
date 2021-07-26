@@ -1,0 +1,103 @@
+# ESMValTool
+# recipe_African_Easterly_Jet
+---
+documentation:
+  description: |
+    African Easterly Jet recipe
+  # When recipe is made part of ESMValTool will get
+  # appropriate authors etc. added to config-references.yml
+  authors:
+    - andela_bouwe
+    #- thomas_crocker
+  # maintainer:
+  # references:
+  # projects:
+
+# Models:
+# mod_list = ['CNRM-CM6-1', 'MRI-ESM2-0', 'GISS-E2-1-G', 'MPI-ESM-1-2-HAM', 'IPSL-CM6A-LR', 'MIROC6', 'MPI-ESM1-2-HR', 'MPI-ESM1-2-LR', 'NorESM2-LM', 'TaiESM1', 'CNRM-ESM2-1', 'NorESM2-MM', 'BCC-CSM2-MR', 'BCC-ESM1', 'CAMS-CSM1-0', 'FGOALS-f3-L', 'FGOALS-g3', 'CanESM5', 'ACCESS-ESM1-5', 'ACCESS-CM2', 'INM-CM4-8', 'INM-CM5-0', 'HadGEM3-GC31-MM', 'CESM2', 'NorCPM1', 'NESM3', 'SAM0-UNICON']
+datasets:
+  - {
+      dataset: BCC-ESM1,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+
+preprocessors:
+  temp:
+    extract_region:
+      start_longitude: 14
+      end_longitude: 24
+      start_latitude: -20
+      end_latitude: 20
+    # !! Code from AEJ.py appears to exract level 850hPa, but README says 925hPa!?
+    extract_levels:
+      levels: 85000
+      scheme: nearest
+    zonal_statistics:
+      operator: mean
+    climate_statistics:
+      operator: mean
+      period: month
+
+  north_u:
+    extract_region:
+      start_longitude: 14
+      end_longitude: 24
+      start_latitude: 3
+      end_latitude: 20
+    extract_levels:
+      # computing min over levels can't currently be done in pre processor,
+      # must be done in diagnostic.
+      # Pre-processor should be expanded to support this operation.
+      levels: [60000, 70000]
+      scheme: nearest
+    # Other statistics must be calculated after pressure coordinate collapsed
+    # so must be done in diagnostic for now.
+    # zonal_statistics:
+    #   operator: mean
+    # climate_statistics:
+    #   operator: mean
+    #   period: month
+
+  south_u:
+    extract_region:
+      start_longitude: 14
+      end_longitude: 24
+      start_latitude: -20
+      end_latitude: -5
+    extract_levels:
+      levels: 60000
+      scheme: nearest
+    zonal_statistics:
+      operator: mean
+    climate_statistics:
+      operator: mean
+      period: month
+
+time: &time
+  start_year: 1980
+  end_year: 2005
+
+diagnostics:
+  AEJ_plots:
+    description: Plot of AEJ surface temperature gradient
+    variables:
+      ta:
+        <<: *time
+        mip: Amon
+        preprocessor: temp
+      uN:
+        <<: *time
+        short_name: ua
+        mip: Amon
+        preprocessor: north_u
+      uS:
+        <<: *time
+        short_name: ua
+        mip: Amon
+        preprocessor: south_u
+    scripts:
+      plot_AEJ:
+        script: /home/users/tcrocker/code/LaunchPAD/ESMValTool/diag_scripts/AEJ.py
