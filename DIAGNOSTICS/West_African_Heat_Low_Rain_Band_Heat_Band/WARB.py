@@ -64,6 +64,7 @@ def load_expt(expt, vari):
          cube = cube_concatenator(cube_list)
      cube = cube.intersection(longitude=(-25, 30),ignore_bounds=True)
      if expt != 'GPCP':
+       #conversion to mm/day	
        cube = cube*86400.0
     
      return cube
