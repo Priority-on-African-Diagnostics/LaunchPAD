@@ -98,10 +98,7 @@ def find_lat_int(cube, ds):
 
     lat = []
     xr_cube = xr.DataArray.from_iris(cube)
-    if ds in ["ERA5", "ERA-Interim"]:
-        xr_min = xr_cube.min(dim="latitude")
-    else:
-        xr_min = xr_cube.min(dim="lat")
+    xr_min = xr_cube.min(dim="lat")
     xr_min = xr_min.where(xr_min < thresh)
     for m in xr_cube.month_number:
         try:

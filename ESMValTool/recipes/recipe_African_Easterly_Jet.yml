@@ -14,7 +14,8 @@ documentation:
   # projects:
 
 datasets:
-  #- { dataset: ERA5, project: OBS6, tier: 3, type: reanaly, version: 1 }
+  - { dataset: ERA5, type: reanalysis, project: native6, version: 1, freq: mon }
+  #- { dataset: MERRA2, type: reanalysis, project: OBS, version: 1, freq: mon }
   - {
       dataset: CNRM-CM6-1,
       project: CMIP6,
