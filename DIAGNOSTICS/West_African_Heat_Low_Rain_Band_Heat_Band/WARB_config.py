@@ -3,6 +3,7 @@
 
 obs_list = ['GPCP']  
 vari_list = ['pr']
+
 #what do you want script to do?
 pre_processor_experiments = True
 processor_calculations = True
