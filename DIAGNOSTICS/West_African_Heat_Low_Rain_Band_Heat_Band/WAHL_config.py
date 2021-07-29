@@ -18,7 +18,7 @@ nc_file = '_WAHL.nc'
 #file name (.png plot) note: model name superseeds this string
 plot_file = '_WAHL_plot.png'
 
-home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/'
+home_add ='/gws/nopw/j04/launchpad/users/edyer/experiment/'
 
 starterp = home_add+'LaunchPAD/DIAGNOSTICS/West_African_Heat_Low_Rain_Band_Heat_Band/intermediary_files/'
 starterpng = home_add+'LaunchPAD/DIAGNOSTICS/West_African_Heat_Low_Rain_Band_Heat_Band/plots/'
