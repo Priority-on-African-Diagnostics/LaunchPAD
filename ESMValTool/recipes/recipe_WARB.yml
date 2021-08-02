@@ -14,7 +14,7 @@ documentation:
   # projects:
 
 datasets:
-  # Need to add GPCP as observations for comparison.
+  - { dataset: GPCP-SG, project: obs4mips, level: L3, version: v2.3, tier: 1 }
   - {
       dataset: CNRM-CM6-1,
       project: CMIP6,

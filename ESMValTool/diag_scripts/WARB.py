@@ -18,7 +18,6 @@ import numpy as np
 from esmvaltool.diag_scripts.shared import group_metadata, run_diagnostic
 
 
-obs_list = ["GPCP"]
 mon_names = {
     1: "Jan",
     2: "Feb",
