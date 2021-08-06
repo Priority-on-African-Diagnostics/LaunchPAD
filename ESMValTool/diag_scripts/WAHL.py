@@ -61,6 +61,8 @@ def prep_data(cfg):
         p925 = data.extract(iris.Constraint(pressure_level=92500))
 
         data = p700 - p925
+        # ensure longitude in range -180 to 180
+        data = data.intersection(longitude=(-180, 180))
         prepped_data[d] = data
 
     return prepped_data
