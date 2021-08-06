@@ -54,6 +54,8 @@ def prep_data(cfg):
     for d in datasets:
         # load data
         data = iris.load_cube(datasets[d][0]["filename"])
+        # ensure no seam in the middle of our data
+        data = data.intersection(longitude=(-180, 180))
         prepped_data[d] = data
 
     return prepped_data

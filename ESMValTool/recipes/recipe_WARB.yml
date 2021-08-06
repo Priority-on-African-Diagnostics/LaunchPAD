@@ -228,5 +228,5 @@ diagnostics:
         mip: Amon
         preprocessor: preproc
     scripts:
-      plot_WAHB:
+      plot_WARB:
         script: /home/users/tcrocker/code/LaunchPAD/ESMValTool/diag_scripts/WARB.py
