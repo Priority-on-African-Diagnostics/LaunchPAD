@@ -66,9 +66,9 @@ drs:
   CMIP5: BADC
   CMIP3: BADC
   CORDEX: BADC
-  OBS: BADC
+  OBS: default
   OBS6: BADC
-  obs4mips: BADC
+  obs4mips: default
   ana4mips: BADC
   native6: launchpad
 # Site-specific entries: DKRZ
