@@ -82,6 +82,7 @@ def plot_SST(data, expt):
     plt.savefig(
         config["plot_dir"] + "/" + expt + "_sst_bias.png", bbox_inches="tight", dpi=100
     )
+    plt.close()
 
 
 if __name__ == "__main__":
