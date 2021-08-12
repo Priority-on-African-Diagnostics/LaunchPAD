@@ -1,5 +1,7 @@
 # ESMValTool
 # recipe_WAHL.yml
+# This recipe won't work until ESMValCore issue #333 is resolved
+# https://github.com/ESMValGroup/ESMValCore/issues/333
 ---
 documentation:
   description: |
