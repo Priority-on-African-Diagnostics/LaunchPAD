@@ -44,10 +44,12 @@ def prep_data(cfg):
             # ensure no seam in the middle of our data
             data = data.intersection(longitude=(-180, 180))
 
-            # fix for minor rounding issue with coords in some models
+            # fix for minor rounding issue with coords in some models (CESM2, possibly others)
             data.coord("latitude").points = data.coord("latitude").points.round(10)
-            data.coord("latitude").bounds = None
             data.coord("longitude").points = data.coord("longitude").points.round(10)
+
+            # bounds aren't needed so just remove to avoid any potential issue.
+            data.coord("latitude").bounds = None
             data.coord("longitude").bounds = None
 
             prepped_data[d][v] = data
