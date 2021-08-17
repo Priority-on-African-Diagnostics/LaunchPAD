@@ -240,7 +240,7 @@ def plot_scatter(data, mon):
 
     # if correl[1] <= 0.01:
     plt.savefig(
-        config["plot_dir"] + "/ALL_SCATTER_" + str(mon) + "_CAF.png",
+        config["plot_dir"] + "/ALL_SCATTER_" + calendar.month_abbr[mon] + "_CAF.png",
         bbox_inches="tight",
         dpi=200,
     )
