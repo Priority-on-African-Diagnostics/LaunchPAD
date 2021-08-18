@@ -29,3 +29,6 @@ If you would rather only clone one or a selection of diagnostics you can. If you
 * git sparse-checkout set DIAGNOSTICS/Central_African_Easterlies/ files/CONFIG
 * git checkout master
 
+To run diagnostics on JASMIN move to the DIAGNOSTICS/*diagnostic* of your choice and alter home_add in *diagnostic*\_config.py is described above. Load the jaspy module (*load jaspy*) and run *diagnostic*.py. Figure will appear in the plots directory and any intermediary netcdf files will appear in intermediary_files. 
+
+If you are not running on JASMIN you can load any conda environment that contains modules in files/CONFIG and *diagnostic*.py before running the diagnostic. 
