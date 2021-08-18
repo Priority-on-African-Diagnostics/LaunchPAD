@@ -1,6 +1,6 @@
 # LaunchPAD: Priority on African Diagnostics
 
-LaunchPAD is the first phase of the Climate Model Evaluation Hub for Africa. The aim of this project is to create diagnostics that can be used in model evaluations for Africa. 10 early career researchers and LaunchPAD fellows created the diagnostics shared in this repository. 
+LaunchPAD is the first phase of the __Climate Model Evaluation Hub for Africa__. The aim of this project is to create diagnostics that can be used in model evaluations for Africa. 10 early career researchers and LaunchPAD fellows created the diagnostics shared in this repository. 
 
 To learn more about LaunchPAD, the fellows, and their diagnositcs take a look at our project website: https://launchpad6.home.blog 
 
@@ -14,4 +14,4 @@ All of the diagnostics use the same set of basic configuration files in files/CO
 * *find_files.py* defines absolute paths for model and observational files on JASMIN and in the LaunchPAD group work space
 * *config_functions.py* contains definitions that are used in diagnostic calculations
 
-In each diagnostic directory there is a *diagnostic*.py file which is where the diagnostic is calculated and plotted. This is the only python file you need to execute. There is also a *diagnostic*\_config.py 
+In each diagnostic directory there is a *diagnostic*.py file which is where the diagnostic is calculated and plotted. This is the only python file you need to execute. There is also a *diagnostic*\_config.py where some diagnostic specific details are defined such as variable names and the list of observational datasets to use. __This is also where you need to specify where the LaunchPAD repository will be located on JASMIN or any computer you are using. Do this by altering the home_add field (for example: home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/').__
