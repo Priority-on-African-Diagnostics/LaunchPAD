@@ -25,8 +25,11 @@ Once you have set up github on your computer (https://help.github.com/en/github/
 If you would rather only clone one or a selection of diagnostics you can. If you take this approach you must always clone the files/CONFIG area with your diagnostics of choice. Follow the steps below that show how to pull only the African Easterly Jet diagnostic:
 
 \> git clone --filter=blob:none --no-checkout  https://github.com/Priority-on-African-Diagnostics/LaunchPAD.git
+
 \> cd LaunchPAD/
+
 \> git sparse-checkout set DIAGNOSTICS/Central_African_Easterlies/ files/CONFIG
+
 \> git checkout master
 
 To run diagnostics on JASMIN move to the DIAGNOSTICS/*diagnostic* of your choice and alter home_add in *diagnostic*\_config.py is described above. Load the jaspy module (> *load jaspy*) and run *diagnostic*.py. Figure will appear in the plots directory and any intermediary netcdf files will appear in intermediary_files. 
