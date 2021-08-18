@@ -33,5 +33,6 @@ To run diagnostics on JASMIN move to the DIAGNOSTICS/*diagnostic* of your choice
 
 If you are not running on JASMIN you can load any conda environment that contains modules in files/CONFIG and *diagnostic*.py before running the diagnostic. 
 
+---------
 
-If you have any questions about the repository please get in touch with Rachel James (rachel.james@bristol.ac.uk) or Ellen Dyer (ellen.dyer@ouce.ox.ac.uk). We would be grateful to hear about any work or projects using the diagnostics in this repository. 
+*If you have any questions about the repository please get in touch with Rachel James (rachel.james@bristol.ac.uk) or Ellen Dyer (ellen.dyer@ouce.ox.ac.uk). We would be grateful to hear about any work or projects using the diagnostics in this repository.*
