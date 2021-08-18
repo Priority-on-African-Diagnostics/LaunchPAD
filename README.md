@@ -14,7 +14,4 @@ All of the diagnostics use the same set of basic configuration files in files/CO
 * *find_files.py* defines absolute paths for model and observational files on JASMIN and in the LaunchPAD group work space
 * *config_functions.py* contains definitions that are used in diagnostic calculations
 
-
-
-
-Each diagnostic also has 
+In each diagnostic directory there is a *diagnostic*.py file which is where the diagnostic is calculated and plotted. This is the only python file you need to execute. There is also a *diagnostic*\_config.py 
