@@ -14,11 +14,11 @@ All of the diagnostics use the same set of basic configuration files in files/CO
 * *find_files.py* defines absolute paths for model and observational files on JASMIN and in the LaunchPAD group work space
 * *config_functions.py* contains definitions that are used in diagnostic calculations
 
-Diagnostics are found in the DIAGNOSTICS directory. In each diagnostic directory there is a *diagnostic*.py file which is where the diagnostic is calculated and plotted. This is the only python file you need to execute. There is also a *diagnostic*\_config.py where some diagnostic specific details are defined such as variable names and the list of observational datasets to use. __This is also where you need to specify where the LaunchPAD repository will be located on JASMIN or any computer you are using. Do this by altering the home_add field__ (for example: home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/').
+Diagnostics are found in the DIAGNOSTICS directory. In each diagnostic directory there is a *diagnostic*.py file which is where the diagnostic is calculated and plotted. This is the only python file you need to execute. There is also a *diagnostic*\_config.py where some diagnostic specific details are defined such as variable names and the list of observational datasets to use. __This is also where you need to specify where the LaunchPAD repository will be located on JASMIN or any computer you are using. Do this by altering the home_add field__ 
 
 ## Cloning and running diagnostics
 
-Once you have set up github on your computer (https://help.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh) you can clone the whole LaunchPAD repository. The directory you are in when you clone the repository needs to be added to the *diagnostic*\_config.py for each diagnostic you want to run in the home_add field as described above. 
+Once you have set up github on your computer (https://help.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh) you can clone the whole LaunchPAD repository. __The directory you are in when you clone the repository needs to be added to the *diagnostic*\_config.py in the home_add field as described above. This needs to be done in the config file of each diagnostic you want to run.__
 
 \> git clone git@github.com:Priority-on-African-Diagnostics/LaunchPAD.git
 
