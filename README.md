@@ -15,3 +15,17 @@ All of the diagnostics use the same set of basic configuration files in files/CO
 * *config_functions.py* contains definitions that are used in diagnostic calculations
 
 In each diagnostic directory there is a *diagnostic*.py file which is where the diagnostic is calculated and plotted. This is the only python file you need to execute. There is also a *diagnostic*\_config.py where some diagnostic specific details are defined such as variable names and the list of observational datasets to use. __This is also where you need to specify where the LaunchPAD repository will be located on JASMIN or any computer you are using. Do this by altering the home_add field__ (for example: home_add ='/gws/nopw/j04/launchpad/users/edyer/LaunchPAD_config/').
+
+## Cloning and running diagnostics
+
+Once you have set up github on your computer (https://help.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh) you can clone the whole LaunchPAD repository. The directory you are in when you clone the repository needs to be added to the *diagnostic*\_config.py for each diagnostic you want to run in the home_add field as described above. 
+
+* git clone git@github.com:Priority-on-African-Diagnostics/LaunchPAD.git
+
+If you would rather only clone one or a selection of diagnostics you can. If you take this approach you must always clone the files/CONFIG area with your diagnostics of choice. Follow the steps below that show how to pull only the African Easterly Jet diagnostic:
+
+* git clone --filter=blob:none --no-checkout  https://github.com/Priority-on-African-Diagnostics/LaunchPAD.git
+* cd LaunchPAD/
+* git sparse-checkout set DIAGNOSTICS/Central_African_Easterlies/ files/CONFIG
+* git checkout master
+
