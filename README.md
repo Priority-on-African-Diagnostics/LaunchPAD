@@ -4,7 +4,7 @@ LaunchPAD is the first phase of the Climate Model Evaluation Hub for Africa. The
 
 To learn more about LaunchPAD, the fellows, and their diagnositcs take a look at our project website: https://launchpad6.home.blog 
 
-Each of the diagnostics have an folder within DIAGNOSTICS. Here you will also find a README for each diagnostic that details the rational for the diagnostic, a step by step method, and some sample plots. These also contain the contact information of the fellow responsible for each diagnostic and their contact information. Not all of these diagnostic methods have been published and permission to cite requires permission from the authors of the diagnostic. 
+Each of the diagnostics have an folder within DIAGNOSTICS. Here you will also find a README for each diagnostic that details the rational for the diagnostic, a step by step method, and some sample plots. These also contain the contact information of the fellow responsible for each diagnostic and their contact information. __Not all of these diagnostic methods have been published and permission to cite requires permission from the authors of the diagnostic.__ 
 
 This repository of diagnostics has been designed to run on the JASMIN data analysis facility (https://www.jasmin.ac.uk) and with the CEDA archive of CMIP6 model output (https://help.ceda.ac.uk/article/4801-cmip6-data). However, if you download the required data from the CEDA archive you can modify configuration files in the files/CONFIG directory to run diagnostics over a different system. 
 
