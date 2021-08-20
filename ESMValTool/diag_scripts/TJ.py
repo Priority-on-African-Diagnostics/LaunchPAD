@@ -1,5 +1,5 @@
 """
-Diagnostic script for LaunchPAD LLWs.
+Diagnostic script for LaunchPAD Turkana Jet.
 """
 
 # to manipulate iris cubes
