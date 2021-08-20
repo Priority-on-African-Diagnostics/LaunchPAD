@@ -211,6 +211,7 @@ seasons: &season
 
 preprocessors:
   ua:
+    custom_order: true
     extract_region: &region_main
       start_longitude: 0
       end_longitude: 45
@@ -221,33 +222,55 @@ preprocessors:
       scheme: nearest
     extract_season:
       <<: *season
+    regrid:
+      target_grid:
+        <<: *region_main
+        step_longitude: 0.25
+        step_latitude: 0.25
+      scheme: linear
     climate_statistics:
       operator: mean
       period: month
 
   caf:
+    custom_order: true
     extract_region: &region_ua
       start_longitude: 15
       end_longitude: 34
       start_latitude: -8
       end_latitude: 2
-    climate_statistics:
-      operator: mean
-      period: month
-    area_statistics:
-      operator: mean
     extract_levels:
       levels: 70000
       scheme: nearest
     extract_season:
       <<: *season
+    regrid:
+      target_grid:
+        <<: *region_ua
+        step_longitude: 0.25
+        step_latitude: 0.25
+      scheme: linear
+    climate_statistics:
+      operator: mean
+      period: month
+    area_statistics:
+      operator: mean
 
   pr:
+    custom_order: true
     extract_region: &region_pr
       start_longitude: 33
       end_longitude: 42
       start_latitude: -4
       end_latitude: 4
+    extract_season:
+      <<: *season
+    regrid:
+      target_grid:
+        <<: *region_pr
+        step_longitude: 0.25
+        step_latitude: 0.25
+      scheme: linear
     climate_statistics:
       operator: mean
       period: month
@@ -255,8 +278,6 @@ preprocessors:
       operator: mean
     convert_units:
       units: kg m-2 day-1
-    extract_season:
-      <<: *season
 
 time: &time
   start_year: 1980

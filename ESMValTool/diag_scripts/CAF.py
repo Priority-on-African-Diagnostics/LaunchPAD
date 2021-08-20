@@ -19,7 +19,6 @@ import calendar
 
 # import internal esmvaltool modules here
 from esmvaltool.diag_scripts.shared import group_metadata, run_diagnostic
-from esmvalcore.preprocessor import regrid
 
 
 def prep_data(cfg):
@@ -55,7 +54,6 @@ def prep_data(cfg):
 
 
 def calc_bias(dataset, obs):
-    dataset = regrid(dataset, obs, "linear")
     bias = dataset - obs
 
     return bias
