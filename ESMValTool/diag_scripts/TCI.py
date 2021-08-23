@@ -45,8 +45,8 @@ def prep_data(cfg):
             data = data.intersection(longitude=(-180, 180))
 
             # fix for minor rounding issue with coords in some models
-            data.coord("latitude").points = data.coord("latitude").points.round(4)
-            data.coord("longitude").points = data.coord("longitude").points.round(4)
+            data.coord("latitude").points = data.coord("latitude").points.round(2)
+            data.coord("longitude").points = data.coord("longitude").points.round(2)
 
             # bounds aren't needed so just remove to avoid any potential issue.
             data.coord("latitude").bounds = None

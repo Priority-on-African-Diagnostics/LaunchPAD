@@ -114,27 +114,27 @@ datasets:
       ensemble: r1i1p1f1,
       grid: gn,
     }
-  - {
-      dataset: CAMS-CSM1-0,
-      project: CMIP6,
-      exp: historical,
-      ensemble: r1i1p1f1,
-      grid: gn,
-    }
-  - {
-      dataset: FGOALS-f3-L,
-      project: CMIP6,
-      exp: historical,
-      ensemble: r1i1p1f1,
-      grid: gr,
-    }
-  - {
-      dataset: FGOALS-g3,
-      project: CMIP6,
-      exp: historical,
-      ensemble: r1i1p1f1,
-      grid: gn,
-    }
+  # - {
+  #     dataset: CAMS-CSM1-0,
+  #     project: CMIP6,
+  #     exp: historical,
+  #     ensemble: r1i1p1f1,
+  #     grid: gn,
+  #   }
+  # - {
+  #     dataset: FGOALS-f3-L,
+  #     project: CMIP6,
+  #     exp: historical,
+  #     ensemble: r1i1p1f1,
+  #     grid: gr,
+  #   }
+  # - {
+  #     dataset: FGOALS-g3,
+  #     project: CMIP6,
+  #     exp: historical,
+  #     ensemble: r1i1p1f1,
+  #     grid: gn,
+  #   }
   - {
       dataset: CanESM5,
       project: CMIP6,
@@ -156,34 +156,34 @@ datasets:
       ensemble: r1i1p1f1,
       grid: gn,
     }
-  - {
-      dataset: INM-CM4-8,
-      project: CMIP6,
-      exp: historical,
-      ensemble: r1i1p1f1,
-      grid: gr1,
-    }
-  - {
-      dataset: INM-CM5-0,
-      project: CMIP6,
-      exp: historical,
-      ensemble: r1i1p1f1,
-      grid: gr1,
-    }
-  - {
-      dataset: HadGEM3-GC31-MM,
-      project: CMIP6,
-      exp: historical,
-      ensemble: r1i1p1f3,
-      grid: gn,
-    }
-  - {
-      dataset: CESM2,
-      project: CMIP6,
-      exp: historical,
-      ensemble: r1i1p1f1,
-      grid: gn,
-    }
+  # - {
+  #     dataset: INM-CM4-8,
+  #     project: CMIP6,
+  #     exp: historical,
+  #     ensemble: r1i1p1f1,
+  #     grid: gr1,
+  #   }
+  # - {
+  #     dataset: INM-CM5-0,
+  #     project: CMIP6,
+  #     exp: historical,
+  #     ensemble: r1i1p1f1,
+  #     grid: gr1,
+  #   }
+  # - {
+  #     dataset: HadGEM3-GC31-MM,
+  #     project: CMIP6,
+  #     exp: historical,
+  #     ensemble: r1i1p1f3,
+  #     grid: gn,
+  #   }
+  # - {
+  #     dataset: CESM2,
+  #     project: CMIP6,
+  #     exp: historical,
+  #     ensemble: r1i1p1f1,
+  #     grid: gn,
+  #   }
   - {
       dataset: NorCPM1,
       project: CMIP6,
@@ -191,13 +191,13 @@ datasets:
       ensemble: r1i1p1f1,
       grid: gn,
     }
-  - {
-      dataset: NESM3,
-      project: CMIP6,
-      exp: historical,
-      ensemble: r1i1p1f1,
-      grid: gn,
-    }
+  # - {
+  #     dataset: NESM3,
+  #     project: CMIP6,
+  #     exp: historical,
+  #     ensemble: r1i1p1f1,
+  #     grid: gn,
+  #   }
   - {
       dataset: SAM0-UNICON,
       project: CMIP6,
