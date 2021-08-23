@@ -57,6 +57,11 @@ def prep_data(cfg):
                 if data.units == "kg m-2":
                     data.units = "m^3 m-3"
                     data.data = data.data / 100.0
+            elif v == "mrsol":
+                # alternate conversion for TCI_mrsol
+                if data.units == "kg m-2":
+                    data = data[:, 0, :, :] / (1000.0 * data.coord("depth").points[0])
+                    data.units = "m^3 m-3"
 
             prepped_data[d][v] = data
 
@@ -69,21 +74,24 @@ def calc_TCI(dataset):
     tci = {}
     for seas in seasons:
         sea_con = iris.Constraint(clim_season=seas)
-        mrsos = dataset["mrsos"].extract(sea_con)
+        if "mrsos" in dataset.keys():
+            soilvar = dataset["mrsos"].extract(sea_con)
+        else:
+            soilvar = dataset["mrsol"].extract(sea_con)
         hfls = dataset["hfls"].extract(sea_con)
 
         # calculate Pearson correlation
-        ccr = iris.analysis.stats.pearsonr(hfls, mrsos, corr_coords="time")
+        ccr = iris.analysis.stats.pearsonr(hfls, soilvar, corr_coords="time")
 
         # calculate standard deviation of mrsos
-        stdd = mrsos.collapsed("time", iris.analysis.STD_DEV)
+        stdd = soilvar.collapsed("time", iris.analysis.STD_DEV)
 
         tci[seas] = ccr * stdd
 
     return tci
 
 
-def plot_TCI(data, ds):
+def plot_TCI(data, ds, title):
 
     plt.figure(figsize=(7, 7))
 
@@ -104,7 +112,7 @@ def plot_TCI(data, ds):
 
     colorbar_axes = plt.gcf().add_axes([0.95, 0.3, 0.025, 0.4])
     colorbar = plt.colorbar(cf, colorbar_axes, orientation="vertical")
-    plt.suptitle(ds + " TCI (hfls,mrsos)")
+    plt.suptitle(title)
 
     plt.savefig(
         config["plot_dir"] + "/" + ds + "_TCI_plot.png", bbox_inches="tight", dpi=100
@@ -122,4 +130,8 @@ if __name__ == "__main__":
         for ds in input_data.keys():
             # calc TCI
             tci = calc_TCI(input_data[ds])
-            plot_TCI(tci, ds)
+            if "mrsos" in input_data[ds].keys():
+                title = f"{ds} TCI (hfls,mrsos)"
+            else:
+                title = f"{ds} TCI (hfls,mrsol)"
+            plot_TCI(tci, ds, title)
