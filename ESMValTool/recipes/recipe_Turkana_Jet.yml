@@ -247,4 +247,4 @@ diagnostics:
         preprocessor: preproc
     scripts:
       plot_TJ:
-        script: /home/users/tcrocker/code/LaunchPAD/ESMValTool/diag_scripts/TJ.py
+        script: ~/LaunchPAD/ESMValTool/diag_scripts/TJ.py

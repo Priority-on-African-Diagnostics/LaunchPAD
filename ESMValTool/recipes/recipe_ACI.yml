@@ -234,4 +234,4 @@ diagnostics:
         <<: *time
     scripts:
       plot_ACI:
-        script: /home/users/tcrocker/code/LaunchPAD/ESMValTool/diag_scripts/ACI.py
+        script: ~/LaunchPAD/ESMValTool/diag_scripts/ACI.py

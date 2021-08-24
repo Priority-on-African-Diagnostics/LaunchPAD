@@ -229,4 +229,4 @@ diagnostics:
         preprocessor: preproc
     scripts:
       plot_WARB:
-        script: /home/users/tcrocker/code/LaunchPAD/ESMValTool/diag_scripts/WARB.py
+        script: ~/LaunchPAD/ESMValTool/diag_scripts/WARB.py

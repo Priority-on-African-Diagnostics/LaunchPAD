@@ -252,4 +252,4 @@ diagnostics:
         <<: *time
     scripts:
       plot_TCI:
-        script: /home/users/tcrocker/code/LaunchPAD/ESMValTool/diag_scripts/TCI.py
+        script: ~/LaunchPAD/ESMValTool/diag_scripts/TCI.py

@@ -320,4 +320,4 @@ diagnostics:
         preprocessor: psl
     scripts:
       plot_LLW:
-        script: /home/users/tcrocker/code/LaunchPAD/ESMValTool/diag_scripts/LLWs.py
+        script: ~/LaunchPAD/ESMValTool/diag_scripts/LLWs.py

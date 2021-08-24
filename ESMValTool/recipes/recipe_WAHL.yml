@@ -240,4 +240,4 @@ diagnostics:
         preprocessor: preproc
     scripts:
       plot_WAHL:
-        script: /home/users/tcrocker/code/LaunchPAD/ESMValTool/diag_scripts/WAHL.py
+        script: ~/LaunchPAD/ESMValTool/diag_scripts/WAHL.py

@@ -302,7 +302,7 @@ diagnostics:
         preprocessor: ua
     scripts:
       plot_CAF:
-        script: /home/users/tcrocker/code/LaunchPAD/ESMValTool/diag_scripts/CAF.py
+        script: ~/LaunchPAD/ESMValTool/diag_scripts/CAF.py
         region_extent: *region_main
         region_caf: *region_ua
         region_pr: *region_pr

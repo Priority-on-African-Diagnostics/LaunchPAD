@@ -280,4 +280,4 @@ diagnostics:
         preprocessor: south_u
     scripts:
       plot_AEJ:
-        script: /home/users/tcrocker/code/LaunchPAD/ESMValTool/diag_scripts/AEJ.py
+        script: ~/LaunchPAD/ESMValTool/diag_scripts/AEJ.py
