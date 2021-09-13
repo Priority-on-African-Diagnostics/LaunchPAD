@@ -3,7 +3,7 @@
 ---
 documentation:
   description: |
-    Atmospheric Coupling Index recipt
+    Atmospheric Coupling Index recipe
   # When recipe is made part of ESMValTool will get
   # appropriate authors etc. added to config-references.yml
   authors:
