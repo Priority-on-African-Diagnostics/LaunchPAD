@@ -25,8 +25,28 @@ To run the recipes on JASMIN, the ESMValTool module should first be activated.
 
 Recipes should then be run using the command:
 
-`esmvaltool run <recipe filename>`
+    esmvaltool run <recipe filename>
 
 If the LaunchPAD repository has not been cloned into your home folder (i.e. `~/LaunchPAD/`), then the value of the `script:` key at the bottom of the recipe will need changing to point to the full path of the `LaunchPAD/ESMValTool/diag_scripts/` folder.
 
 Output will appear under a folder `esmvaltool_output/` in whatever directory the `esmvaltool` command was run from. (This can be changed in the `config-user.yml` settings file if desired.) A subfolder `<recipe name>_<YYYYMMDD_HHMMSS>/`, with the time and datestamp corresponding to the time the recipe was run, will be created for each execution of `esmvaltool`. Plots will be contained in a `plots/` subfolder under this folder, with pre processed netCDF files from the recipe stored under `preproc/`. Log files produced while running the recipe and diagnostic are stored under the `run/` subfolder and are very useful for diagnosing any problems that may occur.
+
+## Status of LaunchPad diagnostics
+
+N.B. MERRA2 observations are not currently supported.
+
+Diagnostic | Status
+---------- | ------
+African Easterly Jet | `recipe_African_Easterly_Jet.yml`
+Atmospheric Coupling Index | `recipe_ACI.yml` CMIP6 models work fine. The ERA5 hfls data in the workspace needs it's units attribute setting to be used.
+Central African Easterlies | `recipe_CAF.yml`
+Low Level Westerlies | `recipe_LLW.yml`
+Mozambique Channel Trough | Not supported as Windspharm module is not currently part of the ESMValTool conda environment on JASMIN.
+Sea Surface Temperature Bias | `recipe_SST_bias.yml`
+Storm Tracks | Not supported as Windspharm module is not currently part of the ESMValTool conda environment on JASMIN.
+Terrestrial Coupling Index | `recipe_TCI.yml` Some CMIP6 models do not work due to unavailability of data.<br>The ERA5 hfls data in the workspace needs it's units attribute setting to be used.<br> FGOALS-g3 currently does not work, but a fix has been added to ESMValTool that will support it in the next release. (See https://github.com/ESMValGroup/ESMValCore/issues/1288).<br> CESM2 does not work due to a missing depth co-ordinate in the mrsos data.
+Terrecstrial Coupling Index mrsol | `recipe_TCI.yml` The only model that works in this recipe is UKESM1-0-LL (due to availability of data). All other models should be commented out.<br>Line 248 in the recipe (`<<: *mrsos`) should be changed to (`<<: *mrsol`) to switch the recipe processing from mrsos to mrsol.
+Tropical Cyclone Tracking | Not supported as Windspharm module is not currently part of the ESMValTool conda environment on JASMIN.
+Turkana Jet | `recipe_Turkana_Jet.yml`
+West African Heat Low, Rain Band and Heat Band | `recipe_WAHL.yml` - Requires ESMValCore issue 333 to be resolved. https://github.com/ESMValGroup/ESMValCore/issues/333.<br>`recipe_WARB.yml`<br>`recipe_WAHB.yml`
+West African Westerly Jet | Requires ESMValCore issue 333 to be resolved. https://github.com/ESMValGroup/ESMValCore/issues/333
