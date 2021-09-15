@@ -4,7 +4,7 @@
 
 Ellen Dyer, Thomas Webb
 
-<sup>*</sup> Department of Meteorology, University of Nairobi
+<sup>*</sup> Department of Earth and Climate Sciences , University of Nairobi
  
  mmwanthi@gmail.com 
 or anthony.mwanthi@students.uonbi.ac.ke 
