@@ -33,7 +33,7 @@ Step 5: The correlation between hfls and tas is obtained as well as the standard
 
 ACI = correlation (hfls,tas) x standard_devation (hfls) 
 
-whereby _hfls_ is latent heat flux (+ve) in W/m<sup>2</sup> and tas is 2 metre temperature (°C) 
+whereby _hfls_ is latent heat flux in W/m<sup>2</sup> and tas is 2 metre temperature (°C) 
 
 ## Diagnostic Summary: what is output?
 The spatial map presents the ACI patterns over Africa for ERA5 and CMIP6 models. 
@@ -46,7 +46,7 @@ Figure 1. Atmospheric Coupling Index over Africa based on ERA5 for the four seas
 
 In Figure 2, the results are presented based on the HadGEM-G31-MM model. Similar to the ERA5, there is a strong signal in Southern Africa during DJF and MAM seasons and weak signals for JJA and SON. Coupling strengths over the Sahel and East Africa are much weaker. In the majority of the rest of the continent, the relationship is very weak due to the low variability of latent heat flux. This shows that the model does not capture the variability latent heat in most of Africa except the southern regions during DJF and MAM. 
 
-![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/Atmospheric_Coupling_index/plots/HadGEM-G31-MM_ACI_plot.png)
+![](https://github.com/Priority-on-African-Diagnostics/LaunchPAD/blob/master/DIAGNOSTICS/Atmospheric_Coupling_index/plots/HadGEM3-GC31-MM_ACI_plot.png)
 
 Figure 2. Atmospheric Coupling Index over Africa based on HadGEM-GC31-MM model for the four seasons.
 
