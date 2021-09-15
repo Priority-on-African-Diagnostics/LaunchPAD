@@ -50,4 +50,4 @@ Figure 2. CAF zonal wind metric (m/s) vs Kenyan rainfall metric (mm/day) for Apr
 This work uses the CMIP6 ensemble, accessed using CEDA, and ERA5, ERA-Interim and MERRA2 reanalysis data. This diagnostic was created by Dr Ellen Dyer (ellen.dyer@ouce.ox.ac.uk) and integrated into AutoAssess by Dr Tom Webb (thomas.webb@ouce.ox.ac.uk). 
 
 # References
-Submitted and in review: Dyer, E., Washington, R. Kenyan long rains: a sub-seasonal approach to process-based diagnostics.
+Dyer, E., & Washington, R. (2021). Kenyan Long Rains: A Subseasonal Approach to Process-Based Diagnostics, Journal of Climate, 34(9), 3311-3326.  https://journals.ametsoc.org/view/journals/clim/34/9/JCLI-D-19-0914.1.xml
