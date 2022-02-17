@@ -1,10 +1,16 @@
 # LaunchPAD: Priority on African Diagnostics
 
-LaunchPAD is the first phase of the __Climate Model Evaluation Hub for Africa__. The aim of this project is to create diagnostics that can be used in model evaluations for Africa. 10 early career researchers and LaunchPAD fellows created the diagnostics shared in this repository. 
+LaunchPAD is the first phase of the __Climate Model Evaluation Hub for Africa__. The aim of this project is to improve understanding of how climate models represent African regions. During LaunchPAD we developed diagnostics to evaluate key African climate processes. 10 early career researchers, LaunchPAD fellows, created the diagnostics.
+
+We ran the diagnositics on CMIP6 models, with the goal that they could also be run on other climate models, including future generations of CMIP models.
+
+In this repository, you can find the diagnostics, which you are welcome to use. The diagnostics are also being added to ESMValTool. You can also find the description of the diagnostics, including scientific rationale, as well as plots showing the results for CMIP6.
 
 To learn more about LaunchPAD, the fellows, and their diagnositcs take a look at our project website: https://launchpad6.home.blog 
 
-Each of the diagnostics have an folder within DIAGNOSTICS. Here you will also find a README for each diagnostic that details the rationale for the diagnostic, a step by step method, and some sample plots. These also contain the contact information of the fellow responsible for each diagnostic and their contact information. __Not all of these diagnostic methods have been published and permission to cite requires permission from the authors of the diagnostic.__ 
+Each of the diagnostics have an folder within DIAGNOSTICS. If you would like to find out more about the diagnostics, and the results for CMIP6, you can click through to the README and the "plots" directories. If you would like to run the diagnostics, you can find information on how to run them below. 
+
+The README for each diagnostic details the rationale for the diagnostic, a step by step method, and some sample plots. These also contain the contact information of the fellow responsible for each diagnostic and their contact information. __Not all of these diagnostic methods have been published and permission to cite requires permission from the authors of the diagnostic.__ 
 
 This repository of diagnostics has been designed to run on the JASMIN data analysis facility (https://www.jasmin.ac.uk) and with the CEDA archive of CMIP6 model output (https://help.ceda.ac.uk/article/4801-cmip6-data). However, if you download the required data from the CEDA archive you can modify configuration files in the files/CONFIG directory to run diagnostics over a different system. 
 
