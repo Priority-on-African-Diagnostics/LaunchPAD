@@ -6,9 +6,9 @@ We ran the diagnositics on CMIP6 models, with the goal that they could also be r
 
 In this repository, you can find the diagnostics, which you are welcome to use. The diagnostics are also being added to ESMValTool. You can also find the description of the diagnostics, including scientific rationale, as well as plots showing the results for CMIP6.
 
-To learn more about LaunchPAD, the fellows, and their diagnositcs take a look at our project website: https://launchpad6.home.blog 
+To learn more about LaunchPAD, the fellows, and their diagnostics take a look at our project website: https://launchpad6.home.blog 
 
-Each of the diagnostics have an folder within DIAGNOSTICS. If you would like to find out more about the diagnostics, and the results for CMIP6, you can click through to the README and the "plots" directories. If you would like to run the diagnostics, you can find information on how to run them below. 
+Each of the diagnostics have an folder within DIAGNOSTICS. **If you would like to find out more about the diagnostics, and the results for CMIP6**, you can click through to the README and the "plots" directories. **If you would like to run the diagnostics,** you can find information on how to run them below. 
 
 The README for each diagnostic details the rationale for the diagnostic, a step by step method, and some sample plots. These also contain the contact information of the fellow responsible for each diagnostic and their contact information. __Not all of these diagnostic methods have been published and permission to cite requires permission from the authors of the diagnostic.__ 
 
