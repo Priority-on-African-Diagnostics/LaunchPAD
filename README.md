@@ -8,7 +8,11 @@ In this repository, you can find the diagnostics, which you are welcome to use. 
 
 To learn more about LaunchPAD, the fellows, and their diagnostics take a look at our project website: https://launchpad6.home.blog 
 
-Each of the diagnostics have an folder within DIAGNOSTICS. **If you would like to find out more about the diagnostics, and the results for CMIP6**, you can click through to the README and the "plots" directories. **If you would like to run the diagnostics,** you can find information on how to run them below. 
+Each of the diagnostics have an folder within DIAGNOSTICS.
+
+**If you would like to find out more about the diagnostics, and the results for CMIP6**, you can click through to the README and the "plots" directories.
+
+**If you would like to run the diagnostics,** you can find information on how to run them below. 
 
 The README for each diagnostic details the rationale for the diagnostic, a step by step method, and some sample plots. These also contain the contact information of the fellow responsible for each diagnostic and their contact information. __Not all of these diagnostic methods have been published and permission to cite requires permission from the authors of the diagnostic.__ 
 
