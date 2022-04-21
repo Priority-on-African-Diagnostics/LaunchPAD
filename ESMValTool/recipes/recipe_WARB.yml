@@ -1,0 +1,232 @@
+# ESMValTool
+# recipe_WARB.yml
+---
+documentation:
+  description: |
+    West African Rain Band recipe
+  # When recipe is made part of ESMValTool will get
+  # appropriate authors etc. added to config-references.yml
+  authors:
+    - andela_bouwe
+    #- thomas_crocker
+  # maintainer:
+  # references:
+  # projects:
+
+datasets:
+  - { dataset: GPCP-SG, project: obs4mips, level: L3, version: v2.3, tier: 1 }
+  - {
+      dataset: CNRM-CM6-1,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f2,
+      grid: gr,
+    }
+  - {
+      dataset: MRI-ESM2-0,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: GISS-E2-1-G,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: MPI-ESM-1-2-HAM,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: IPSL-CM6A-LR,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gr,
+    }
+  - {
+      dataset: MIROC6,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: MPI-ESM1-2-HR,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: MPI-ESM1-2-LR,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: NorESM2-LM,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: TaiESM1,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: CNRM-ESM2-1,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f2,
+      grid: gr,
+    }
+  - {
+      dataset: NorESM2-MM,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: BCC-CSM2-MR,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: BCC-ESM1,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: CAMS-CSM1-0,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: FGOALS-f3-L,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gr,
+    }
+  - {
+      dataset: FGOALS-g3,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: CanESM5,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: ACCESS-ESM1-5,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: ACCESS-CM2,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: INM-CM4-8,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gr1,
+    }
+  - {
+      dataset: INM-CM5-0,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gr1,
+    }
+  - {
+      dataset: HadGEM3-GC31-MM,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f3,
+      grid: gn,
+    }
+  - {
+      dataset: CESM2,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: NorCPM1,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: NESM3,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: SAM0-UNICON,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+
+preprocessors:
+  preproc:
+    extract_region:
+      start_longitude: -25
+      end_longitude: 30
+      start_latitude: -10
+      end_latitude: 40
+    climate_statistics:
+      operator: sum
+      period: month
+    convert_units:
+      units: kg m-2 day-1
+
+diagnostics:
+  WARB:
+    description: WARB diagnostic
+    variables:
+      pr:
+        start_year: 1983
+        end_year: 2012
+        mip: Amon
+        preprocessor: preproc
+    scripts:
+      plot_WARB:
+        script: ~/LaunchPAD/ESMValTool/diag_scripts/WARB.py

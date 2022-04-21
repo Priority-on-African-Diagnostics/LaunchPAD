@@ -1,0 +1,308 @@
+# ESMValTool
+# recipe_CAF
+---
+documentation:
+  description: |
+    Central African Easterlies recipe
+  # When recipe is made part of ESMValTool will get
+  # appropriate authors etc. added to config-references.yml
+  authors:
+    - andela_bouwe
+    #- thomas_crocker
+  # maintainer:
+  # references:
+  # projects:
+
+datasets:
+  - { dataset: ERA5, type: reanalysis, project: native6, version: 1, freq: mon }
+  #- { dataset: MERRA2, type: reanalysis, project: OBS, version: 1, freq: mon }
+  - {
+      dataset: CNRM-CM6-1,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f2,
+      grid: gr,
+    }
+  - {
+      dataset: MRI-ESM2-0,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: GISS-E2-1-G,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: MPI-ESM-1-2-HAM,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: IPSL-CM6A-LR,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gr,
+    }
+  - {
+      dataset: MIROC6,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: MPI-ESM1-2-HR,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: MPI-ESM1-2-LR,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: NorESM2-LM,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: TaiESM1,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: CNRM-ESM2-1,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f2,
+      grid: gr,
+    }
+  - {
+      dataset: NorESM2-MM,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: BCC-CSM2-MR,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: BCC-ESM1,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: CAMS-CSM1-0,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: FGOALS-f3-L,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gr,
+    }
+  - {
+      dataset: FGOALS-g3,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: CanESM5,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: ACCESS-ESM1-5,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: ACCESS-CM2,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: INM-CM4-8,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gr1,
+    }
+  - {
+      dataset: INM-CM5-0,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gr1,
+    }
+  - {
+      dataset: HadGEM3-GC31-MM,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f3,
+      grid: gn,
+    }
+  - {
+      dataset: CESM2,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: NorCPM1,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: NESM3,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+  - {
+      dataset: SAM0-UNICON,
+      project: CMIP6,
+      exp: historical,
+      ensemble: r1i1p1f1,
+      grid: gn,
+    }
+
+seasons: &season
+  season: mam
+
+preprocessors:
+  ua:
+    custom_order: true
+    extract_region: &region_main
+      start_longitude: 0
+      end_longitude: 45
+      start_latitude: -15
+      end_latitude: 10
+    extract_levels:
+      levels: 70000
+      scheme: nearest
+    extract_season:
+      <<: *season
+    regrid:
+      target_grid:
+        <<: *region_main
+        step_longitude: 0.25
+        step_latitude: 0.25
+      scheme: linear
+    climate_statistics:
+      operator: mean
+      period: month
+
+  caf:
+    custom_order: true
+    extract_region: &region_ua
+      start_longitude: 15
+      end_longitude: 34
+      start_latitude: -8
+      end_latitude: 2
+    extract_levels:
+      levels: 70000
+      scheme: nearest
+    extract_season:
+      <<: *season
+    regrid:
+      target_grid:
+        <<: *region_ua
+        step_longitude: 0.25
+        step_latitude: 0.25
+      scheme: linear
+    climate_statistics:
+      operator: mean
+      period: month
+    area_statistics:
+      operator: mean
+
+  pr:
+    custom_order: true
+    extract_region: &region_pr
+      start_longitude: 33
+      end_longitude: 42
+      start_latitude: -4
+      end_latitude: 4
+    extract_season:
+      <<: *season
+    regrid:
+      target_grid:
+        <<: *region_pr
+        step_longitude: 0.25
+        step_latitude: 0.25
+      scheme: linear
+    climate_statistics:
+      operator: mean
+      period: month
+    area_statistics:
+      operator: mean
+    convert_units:
+      units: kg m-2 day-1
+
+time: &time
+  start_year: 1980
+  end_year: 2014
+
+diagnostics:
+  CAF:
+    description: Plot of Central African Easterlies
+    variables:
+      pr:
+        <<: *time
+        mip: Amon
+        preprocessor: pr
+      caf:
+        <<: *time
+        short_name: ua
+        mip: Amon
+        preprocessor: caf
+      ua:
+        <<: *time
+        mip: Amon
+        preprocessor: ua
+    scripts:
+      plot_CAF:
+        script: ~/LaunchPAD/ESMValTool/diag_scripts/CAF.py
+        region_extent: *region_main
+        region_caf: *region_ua
+        region_pr: *region_pr

@@ -1,2 +1,4 @@
 *.nc
 *.p
+esmvaltool_output
+.vscode
