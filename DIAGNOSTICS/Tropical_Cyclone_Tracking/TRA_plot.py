@@ -59,8 +59,10 @@ def read_data(expt):
   if pickle_or_txt == 2:
     #For text files:
     data=np.loadtxt(starterp+expt+'_tracking_output.txt',
-           dtype={'names': ('date','time','mslp', 'lon','lat','max_wind','vort','tc_event','tc_number'),
-                  'formats': ('U10', 'U10', np.float, np.float, np.float, np.float, np.float, 'U4', np.float)})
+           #dtype={'names': ('date','time','mslp', 'lon','lat','max_wind','vort','tc_event','tc_number'),
+           #       'formats': ('U10', 'U10', np.float, np.float, np.float, np.float, np.float, 'U4', np.float)})
+           dtype={'names': ('date','time','mslp', 'lon','lat','max_wind','tc_event','tc_number'),
+                  'formats': ('U10', 'U10', np.float, np.float, np.float, np.float, 'U4', np.float)})
 
     mod_pd = collections.OrderedDict()
     mod_pd['mslp'] = data['mslp']
@@ -71,6 +73,7 @@ def read_data(expt):
     mod_pd['tc_number'] = data['tc_number']
     mod_pd = pd.DataFrame(data=mod_pd)
 
+  print(mod_pd)
   return mod_pd
 
 

@@ -4,21 +4,20 @@
 ###-----Import Modules-----###
 ##############################
 
-import numpy as np
 from windspharm.iris import VectorWind
-#from scipy.io import netcdf
 from numpy import *
-from math import radians,cos,sin,sqrt,exp
+from numpy import radians,cos,sin,sqrt,exp
 from decimal import *
-#import metpy.calc as mpcalc
-#from metpy.units import units
 import matplotlib.pyplot as plt
-#from datetime import datetime, timedelta
+from datetime import datetime, timedelta
 from netCDF4 import num2date, Dataset
 
 import os
 import iris
+import iris.cube
+from iris.cube import Cube
 import iris.coords
+from iris.coords import DimCoord
 import iris.analysis
 import iris.analysis.cartography
 import iris.plot as iplt
@@ -37,13 +36,14 @@ import cartopy
 import cartopy.crs as crs
 import cartopy.feature as cfeature
 import cloudpickle as pickle
+
+from TRA_config import *
 import pandas as pd
 import xarray as xr
 import operator
 import warnings
 from itertools import islice
 
-from TRA_config import *
 sys.path.insert(1,home_add+'LaunchPAD/files/CONFIG')
 from find_files import *
 from config import *
@@ -65,72 +65,84 @@ def unpickle_cubes(path):
 
 def load_expt_t(expt):
 
-    cube_list = iris.load(sixhr_file_location(expt, 'ta'))# & 
-    cube=cube_concatenator(cube_list)
-    cube = cube.extract(year_bounds(1990, 1991))
-    
-    #iris.coord_categorisation.add_month_number(cube, 'time', name='month_number') 
-    #cube = cube.extract(iris.Constraint(month_number=3))
-    
-    cube = cube.extract(lat_bounds(-40, 0))
-    cube = cube.extract(lon_bounds(30, 90))
-    cube = unit_converter_k_to_C(cube)
-    result250 = cube.extract(pressure_level(expt,25000))
-    result500 = cube.extract(pressure_level(expt,50000))
+    print(hr_sixhr_file_location(expt, 'ta'))
+    cube_list_ta = xr.open_mfdataset(hr_sixhr_file_location(expt, 'ta'))
+    if expt in ['ERA5']:
+      cube_list_ta = cube_list_ta.rename({'latitude':'lat','longitude':'lon','level':'plev'})
+      cube_list_ta = cube_list_ta.assign_coords(plev=cube_list_ta.plev*100.)
+      cube_list_ta = cube_list_ta.reindex(lat=cube_list_ta.lat[::-1])['t']
+    else:
+      cube_list_ta = cube_list_ta['ta']
+    cube_list_250 = cube_list_ta.sel(lat=slice(-40,0), lon=slice(30,90), plev=25000, time=slice(str(years[0])+'-01',str(years[1])+'-12'))
+    cube_list_500 = cube_list_ta.sel(lat=slice(-40,0), lon=slice(30,90), plev=50000, time=slice(str(years[0])+'-01',str(years[1])+'-12'))
+    cube_250 = xr.DataArray.to_iris(cube_list_250)
+    cube_500 = xr.DataArray.to_iris(cube_list_500) 
+
+    result250 = unit_converter_k_to_C(cube_250)
+    result500 = unit_converter_k_to_C(cube_500)
     
     return result250, result500
     
 def load_expt_slp(expt):
 
-    cube_list = iris.load(sixhr_file_location(expt, 'psl'))#[0] 
-    cube=cube_concatenator(cube_list) 
-    cube = cube.extract(year_bounds(1990, 1991))
-    #iris.coord_categorisation.add_month_number(cube, 'time', name='month_number') 
-    #cube = cube.extract(iris.Constraint(month_number=3))
-    
-    cube = cube.extract(lat_bounds(-40, 0))
-    cube = cube.extract(lon_bounds(30, 90))
-    
+    cube_list_psl = xr.open_mfdataset(hr_sixhr_file_location(expt, 'psl'))
+    if expt in ['ERA5']:
+      cube_list_psl = cube_list_psl.rename({'latitude':'lat','longitude':'lon'})
+      cube_list_psl = cube_list_psl.reindex(lat=cube_list_psl.lat[::-1])['msl']
+    else:
+      cube_list_psl = cube_list_psl['psl']
+    cube_list_psl = cube_list_psl.sel(lat=slice(-40,0), lon=slice(30,90), time=slice(str(years[0])+'-01',str(years[1])+'-12'))
+    cube = xr.DataArray.to_iris(cube_list_psl)
     return cube
     
 def load_expt_wd(expt):
-    cubeL1 = iris.load(sixhr_file_location(expt, 'ua'), year_bounds(1990, 1991)) 
-    cubeL2 = iris.load(sixhr_file_location(expt, 'va'), year_bounds(1990, 1991)) 
 
-    cube1=cube_concatenator(cubeL1)
-    cube2=cube_concatenator(cubeL2)
-    
-    #iris.coord_categorisation.add_month_number(cube1, 'time', name='month_number') 
-    #cube1 = cube1.extract(iris.Constraint(month_number=3))
-    #iris.coord_categorisation.add_month_number(cube2, 'time', name='month_number') 
-    #cube2 = cube2.extract(iris.Constraint(month_number=3))
-    
-    cube10_uL = iris.load(sixhr_file_location(expt, 'uas'), year_bounds(1990, 1991))
-    cube10_vL = iris.load(sixhr_file_location(expt, 'uas'), year_bounds(1990, 1991))
-    cube10_u = cube_concatenator(cube10_uL)
-    cube10_v = cube_concatenator(cube10_vL)
-    
-   # iris.coord_categorisation.add_month_number(cube10_u, 'time', name='month_number') 
-   # cube10_u = cube10_u.extract(iris.Constraint(month_number=3))
-   # iris.coord_categorisation.add_month_number(cube10_v, 'time', name='month_number') 
-   # cube10_v = cube10_v.extract(iris.Constraint(month_number=3))
-   
-    result250 = calc_windspeed(cube1.extract(pressure_level(expt,25000)), cube2.extract(pressure_level(expt,25000)))
+    if expt in ['ERA5']:
+      cubeL1 = xr.open_mfdataset(hr_sixhr_file_location(expt, 'ua'))['u']
+      cubeL2 = xr.open_mfdataset(hr_sixhr_file_location(expt, 'va'))['v']
+      cube10_uL = xr.open_mfdataset(hr_sixhr_file_location(expt, 'uas'))['u10']
+      cube10_vL = xr.open_mfdataset(hr_sixhr_file_location(expt, 'vas'))['v10']
+
+      cubeL1 = cubeL1.rename({'latitude':'lat','longitude':'lon','level':'plev'})
+      cubeL1 = cubeL1.reindex(lat=cubeL1.lat[::-1])
+      cubeL1 = cubeL1.assign_coords(plev=cubeL1.plev*100.)
+      cubeL2 = cubeL2.rename({'latitude':'lat','longitude':'lon','level':'plev'})
+      cubeL2 = cubeL2.reindex(lat=cubeL2.lat[::-1])
+      cubeL2 = cubeL2.assign_coords(plev=cubeL2.plev*100.)
+      cube10_uL = cube10_uL.rename({'latitude':'lat','longitude':'lon'})
+      cube10_uL = cube10_uL.reindex(lat=cube10_uL.lat[::-1])
+      cube10_vL = cube10_vL.rename({'latitude':'lat','longitude':'lon'})
+      cube10_vL = cube10_vL.reindex(lat=cube10_vL.lat[::-1])
+    else:
+      cubeL1 = xr.open_mfdataset(hr_sixhr_file_location(expt, 'ua'))['ua']
+      cubeL2 = xr.open_mfdataset(hr_sixhr_file_location(expt, 'va'))['va']
+      cube10_uL = xr.open_mfdataset(hr_sixhr_file_location(expt, 'uas'))['uas']
+      cube10_vL = xr.open_mfdataset(hr_sixhr_file_location(expt, 'vas'))['vas']
+    cubeL3 = cubeL1
+    cubeL4 = cubeL2 
+
+    cubeL1 = cubeL1.sel(lat=slice(-40,0), lon=slice(30,90),plev=85000, time=slice(str(years[0])+'-01',str(years[1])+'-12'))
+    cubeL2 = cubeL2.sel(lat=slice(-40,0), lon=slice(30,90),plev=85000, time=slice(str(years[0])+'-01',str(years[1])+'-12'))
+    cubeL3 = cubeL3.sel(lat=slice(-40,0), lon=slice(30,90), plev=25000, time=slice(str(years[0])+'-01',str(years[1])+'-12'))
+    cubeL4 = cubeL4.sel(lat=slice(-40,0), lon=slice(30,90), plev=25000, time=slice(str(years[0])+'-01',str(years[1])+'-12'))
+    cube10_uL = cube10_uL.sel(lat=slice(-40,0), lon=slice(30,90), time=slice(str(years[0])+'-01',str(years[1])+'-12'))
+    cube10_vL = cube10_vL.sel(lat=slice(-40,0), lon=slice(30,90), time=slice(str(years[0])+'-01',str(years[1])+'-12'))
+    cube1 = xr.DataArray.to_iris(cubeL1)
+    cube2 = xr.DataArray.to_iris(cubeL2)
+    cube3 = xr.DataArray.to_iris(cubeL3)
+    cube4 = xr.DataArray.to_iris(cubeL4)
+    cube10_u = xr.DataArray.to_iris(cube10_uL)
+    cube10_v = xr.DataArray.to_iris(cube10_vL)
+
+    result250 = calc_windspeed(cube3,cube4)
     result1000 = calc_windspeed(cube10_u, cube10_v)
-    result850 = calc_windspeed(cube1.extract(pressure_level(expt,85000)), cube2.extract(pressure_level(expt,85000)))
+    result850 = calc_windspeed(cube1,cube2)
    
-    u850 = cube1.extract(pressure_level(expt,85000))
-    v850 = cube2.extract(pressure_level(expt,85000)) 
+    u850 = cube1
+    v850 = cube2 
     pickle.dump(u850, open(starterp+expt+'_u850_'+p_file, "wb" ))
     pickle.dump(v850, open(starterp+expt+'_v850_'+p_file, "wb" ))
-    
-    result250 = result250.extract(lat_bounds(-40, 0))
-    result250 = result250.extract(lon_bounds(30, 90))
-    result850 = result850.extract(lat_bounds(-40, 0))
-    result850 = result850.extract(lon_bounds(30, 90))
-    result1000 = result1000.extract(lat_bounds(-40, 0))
-    result1000 = result1000.extract(lon_bounds(30, 90))
-                  
+                      
     return result250, result850, result1000
     
 def calc_windspeed(ua, va):
@@ -176,20 +188,17 @@ def calc_mslp1(counter, value, expt, tc_id):
 
   slp = unpickle_cubes(starterp+expt+'_slp_'+p_file)[counter]
   
-  thresh = 1013.25
-  
-  if expt in ['ERA5']:
-      thresh = thresh * 100
+  thresh=101325.00
            
   da = xr.DataArray.from_iris(slp)
   mslp = da.min().values
   coords = da.where(da==mslp, drop=True).squeeze()
-  mslp_lat = coords.latitude.values
-  mslp_lon = coords.longitude.values
+  mslp_lat = coords.lat.values
+  mslp_lon = coords.lon.values
   if size(mslp_lon) > 1:
-      mslp_lon=mslp_lon[0] #if 2+ identical minima take first value 
+      mslp_lon=mslp_lon[-1] #if 2+ identical minima take first value 
   if size(mslp_lat) > 1:
-      mslp_lat=mslp_lat[0] 
+      mslp_lat=mslp_lat[-1] 
 
   return mslp, mslp_lon, mslp_lat
       
@@ -197,10 +206,7 @@ def calc_mslp2(counter, value, expt, tc_id, mslp, mslp_lon, mslp_lat):
 
   slp = unpickle_cubes(starterp+expt+'_slp_'+p_file)[counter]
   
-  thresh = 1013.25
-  
-  if expt in ['ERA5']:
-      thresh = thresh * 100
+  thresh=101325.00
     
   track_radius=4
   max_lat = mslp_lat + track_radius
@@ -213,8 +219,8 @@ def calc_mslp2(counter, value, expt, tc_id, mslp, mslp_lon, mslp_lat):
   da = xr.DataArray.from_iris(domain_slp)
   mslp = da.min().values
   coords = da.where(da==mslp, drop=True).squeeze()
-  mslp_lat = coords.latitude.values
-  mslp_lon = coords.longitude.values
+  mslp_lat = coords.lat.values
+  mslp_lon = coords.lon.values
   if size(mslp_lon) > 1:
       mslp_lon=mslp_lon[0] #if 2+ identical minima take first value 
   if size(mslp_lat) > 1:
@@ -263,7 +269,7 @@ def calc_maxwind(counter, mslp_lon, mslp_lat):
   return max_wspd
   
 def calc_vort(counter, mslp_lon, mslp_lat):
-
+  R=6371000
   with warnings.catch_warnings():
       warnings.simplefilter('ignore', UserWarning)
       u850 = unpickle_cubes(starterp+expt+'_u850_'+p_file)
@@ -272,28 +278,48 @@ def calc_vort(counter, mslp_lon, mslp_lat):
       ua=u850[counter]
       va=v850[counter]
 
-      delta_latitude = 180/180.0
-     
-      sample_points = [('longitude', ua.coord('longitude').points),('latitude',  np.linspace(90 - 0.5 * delta_latitude,-90 + 0.5 * delta_latitude,180))]
-      ua_r = ua.interpolate(sample_points, iris.analysis.Linear())
-      va_r = va.interpolate(sample_points, iris.analysis.Linear())
-  
-  w = VectorWind(ua_r, va_r)
-  
-  vort = w.vorticity()
-  
-
+  uaxr=xr.DataArray.from_iris(ua)
+  vaxr=xr.DataArray.from_iris(va)
+  lats=uaxr.lat.values
+  lons=uaxr.lon.values
+   
+  vort_min=0
   vort_radius=4
+  ni=len(lons)
+  nj=len(lats)
+  vort=np.zeros((nj,ni))
+    
+  i1 = 1
+  i2 = -2
+  j1 = 2
+  j2 = -1
+  k1 = 0
+  k2 = -3
+
+  lon_mesh, lat_mesh = np.meshgrid(lons,lats)
+  diff_lon = lon_mesh[i1:i2,j1:j2] - lon_mesh[i1:i2,k1:k2]
+  diff_lat = lat_mesh[j1:j2,i1:i2] - lat_mesh[k1:k2,i1:i2]
+  r_lat= R * cos(np.radians(lat_mesh[i1:i2,i1:i2]))    
+  dx = (diff_lon/360)*(2*pi*r_lat)
+  dy = (-diff_lat/360)*(2*pi*R)
+    
+  v_east=vaxr[i1:i2,j1:j2]
+  v_west=vaxr[i1:i2,k1:k2]
+  u_north=uaxr[k1:k2,i1:i2]
+  u_south=uaxr[j1:j2,i1:i2]   
   
+  vort[i1:i2,i1:i2]=((v_east.values-v_west.values)/dx)-((u_north.values-u_south.values)/dy) 
+
+  lat= DimCoord(lats,standard_name='latitude',units='degrees')
+  lon = DimCoord(lons,standard_name='longitude',units='degrees')
+  vort_cube = Cube(vort, dim_coords_and_dims=[(lat, 0),(lon, 1)])
+ 
   lat_lower = mslp_lat - vort_radius
   lat_upper = mslp_lat + vort_radius
   lon_lower = mslp_lon - vort_radius
   lon_upper = mslp_lon + vort_radius
 
-  vort_min=0
-  
-  vort=vort.extract(lat_bounds(lat_lower, lat_upper) & lon_bounds(lon_lower, lon_upper))
-  
+  vort=vort_cube.extract(lat_bounds(lat_lower, lat_upper) & lon_bounds(lon_lower, lon_upper))
   da = xr.DataArray.from_iris(vort)
   vort_min = da.min().values
 
@@ -329,112 +355,100 @@ def calc_warm_core(counter, mslp_lon, mslp_lat):
   return wc_temp, int_avg_temp_500_250
   
 def tstep_fail_allowance(counter, df):
-
-#"Goal: Allowing for a single timestep failure
-#"a) Loops through all points and identifies points with a tracking ID of 0, but where the previous and following timesteps have a tracking ID of 1.
-#"b) If a point meets this criterion, the latitude and longitude of this point is then assessed to determine if it is within 4.5 degrees of the latitude and longitude of both the previous and following timesteps.
-#"c) If this point meets the above criterion, the tracking ID is changed from a 0 to a 1.
-#"This step is necessary to reduce broken tracks associated with the weakening of the system during intermittent 6-hourly intervals.
-
   
   radius=4.5
-  
-  if df.loc[counter, 'tc_id'] == 0 and df.loc[counter-1, 'tc_id'] == 1 and df.loc[counter+1, 'tc_id'] ==1:
-      
-      lon1_min = df.loc[counter, 'mslp_lon'] - radius
-      lon1_max = df.loc[counter, 'mslp_lon'] + radius
-      lat1_min = df.loc[counter, 'mslp_lat'] - radius
-      lat1_max = df.loc[counter, 'mslp_lat'] + radius
-      lon2 = df.loc[counter, 'mslp_lon'] 
-      lat2 = df.loc[counter, 'mslp_lat'] 
+  if ((df.at[counter, 'tc_id'] == 0) and (df.at[counter-1, 'tc_id'] == 1) and (df.at[counter+1, 'tc_id'] == 1)):
+    if (((df.at[counter,'mslp_lat'] <= (df.at[counter-1,'mslp_lat']+radius)) and (df.at[counter,'mslp_lat'] >= df.at[counter-1,'mslp_lat'])) or \
+    ((df.at[counter,'mslp_lat'] >= (df.at[counter-1,'mslp_lat']-radius)) and (df.at[counter,'mslp_lat'] <= df.at[counter-1,'mslp_lat']))):
+      if (((df.at[counter,'mslp_lon'] <= (df.at[counter-1,'mslp_lon']+radius)) and (df.at[counter,'mslp_lon'] >= df.at[counter-1,'mslp_lon'])) or \
+      ((df.at[counter,'mslp_lon'] >= (df.at[counter-1,'mslp_lon']-radius)) and (df.at[counter,'mslp_lon'] <= df.at[counter-1,'mslp_lon']))):
+        if (((df.at[counter,'mslp_lat'] <= (df.at[counter+1,'mslp_lat']+radius)) and (df.at[counter,'mslp_lat'] >= df.at[counter+1,'mslp_lat'])) or \
+	((df.at[counter,'mslp_lat'] >= (df.at[counter+1,'mslp_lat']-radius)) and (df.at[counter,'mslp_lat'] <= df.at[counter+1,'mslp_lat']))):
+          if (((df.at[counter,'mslp_lon'] <= (df.at[counter+1,'mslp_lon']+radius)) and (df.at[counter,'mslp_lon'] >= df.at[counter+1,'mslp_lon'])) or \
+	  ((df.at[counter,'mslp_lon'] >= (df.at[counter+1,'mslp_lon']-radius)) and (df.at[counter,'mslp_lon'] <= df.at[counter+1,'mslp_lon']))):
+            df.at[counter,'tc_id'] = 1
 
-      if lon1_min <= lon2 <= lon1_max and lat1_min <= lat2 <= lat1_max:
-          df.replace({'tc_id': counter}, 1)
-         
   return df
   
 def assign_filter(counter, df):
+  
+  radius=4.5
+  
+  if ((df.at[counter, 'tc_id'] == 1.0) and ((df.at[counter-1, 'tc_id'] == 0.0) or (counter == 0))):
+      df.at[counter,'tc_event'] = 'New'  
+ 
+  if ((df.at[counter,'tc_id'] == 1) and (df.at[counter-1,'tc_id'] == 1)):
+    if (((df.at[counter,'mslp_lat'] <= (df.at[counter-1,'mslp_lat']+radius)) and (df.at[counter,'mslp_lat'] >= df.at[counter-1,'mslp_lat'])) or \
+    ((df.at[counter,'mslp_lat'] >= (df.at[counter-1,'mslp_lat']-radius)) and (df.at[counter,'mslp_lat'] <= df.at[counter-1,'mslp_lat']))):
+      if (((df.at[counter,'mslp_lon'] <= (df.at[counter-1,'mslp_lon']+radius)) and (df.at[counter,'mslp_lon'] >= df.at[counter-1,'mslp_lon'])) or \
+      ((df.at[counter,'mslp_lon'] >= (df.at[counter-1,'mslp_lon']-radius)) and (df.at[counter,'mslp_lon'] <= df.at[counter-1,'mslp_lon']))):
+        df.at[counter,'tc_event']='Same'
+  else:
+    df.at[counter,'tc_event']='New'
 
-#"Goal: Grouping events
-#"a) Each point is then assigned a character string - ‘New’, ‘Same’ or ‘-’ based on different criteria - this is necessary for further filtering and numbering of events.
-#"b) Loops through all timesteps and assigns these characters based on the following criteria:
-#"  i) If the current timestep (it) has a tracking ID of ‘1’, and the previous timestep (it-1) has a tracking ID of ‘0’, this indicates the start of a new event, and the timestep is assigned the string ‘New’.
-#"  ii) If the current timestep (it) has a tracking ID of ‘1’, and the previous timestep (it-1) has a tracking ID of ‘1’, this indicates the continuation of an event, and the timestep is assigned the string ‘Same’.
-#"  iii) If the current timestep (it) has a tracking ID of ‘0’, it is not associated with a TC event and is assigned the string ‘-’.
-  
-  if df.at[counter, 'tc_id'] == 1 and df.at[counter-1, 'tc_id'] == 0:
-      df.replace({'tc_event': counter}, 'New')  
-  elif df.at[counter, 'tc_id'] == 1 and df.at[counter-1, 'tc_id'] == 1:
-      df.replace({'tc_event': counter}, 'Same')   
-  elif df.at[counter, 'tc_id'] == 0:
-      df.replace({'tc_event': counter}, '-')
-      
-  
+  if (df.at[counter, 'tc_id'] == 0):
+    df.at[counter,'tc_event'] = '-'
   
   return df
   
 def time_threshold1(counter,df):
 
-#"Goal: Applying minimum lifetime criterion
-#"This step eliminates events that do not last for 2 days.
-#"a) First, we loop through all timesteps.
-#"  i) If the current timestep (it) has been assigned the string ‘New’, we consider the following 7 timesteps (it+1, it+2,....it+7).#
-#"  ii) If any of the following 7 timesteps contain a ‘-’ character, this indicates that the event has not spanned 2 days (8 timesteps) and the character string of the current timestep (it) is changed from ‘New’ to ‘-’.
-
-  df = unpickle_cubes(starterp+expt+'_df_'+p_file)
-  if df.at[counter, 'tc_event'] == 'New':
-      if df.at[counter+1, 'tc_event'] == '-' or df.at[counter+2, 'tc_event'] == '-' or df.at[counter+3, 'tc_event'] == '-' or df.at[counter+4, 'tc_event'] == '-' or df.at[counter+5, 'tc_event'] == '-' or df.at[counter+6, 'tc_event'] == '-' or df.at[counter+7, 'tc_event'] == '-':  
-           df.replace({'tc_event': counter}, '-') 
-	   
-  
-    
+  #df = unpickle_cubes(starterp+expt+'_df_'+p_file)
+  if (df.at[counter, 'tc_event'] == 'New'):
+      if ((df.at[counter+1, 'tc_event'] != 'Same') or (df.at[counter+2, 'tc_event'] != 'Same') or (df.at[counter+3, 'tc_event'] != 'Same') or (df.at[counter+4, 'tc_event'] != 'Same') or (df.at[counter+5, 'tc_event'] != 'Same') or (df.at[counter+6, 'tc_event'] != 'Same') or (df.at[counter+7, 'tc_event'] != 'Same')):  
+           df.at[counter,'tc_event'] = '-'
+      
   return df 
   
 def time_threshold2(counter,df): 
-#"b) Next, we loop through all timesteps a second time.
-#"  i) If the current timestep (it) has been assigned the string ‘Same’ and the previous timestep (it-1) has been assigned the ‘-’ string, the current timestep (it) is changed from ‘Same’ to ‘-’. 
-#"  i) Such cases will only arise from the previous step, in which ‘New’ has been changed to ‘-’ since the event did not meet the minimum lifetime criteria.
 
-
-  if df.at[counter, 'tc_event'] == 'Same' and df.at[counter-1, 'tc_event'] == '-': 
-       df.replace({'tc_event': counter}, '-') 
-
-  
-  
+  if ((df.at[counter, 'tc_event'] == 'Same') and (df.at[counter-1, 'tc_event'] == '-')):  
+       df.at[counter,'tc_event'] = '-'
+    
   return df
-  
-def number_events1(counter, event_number,df):
 
-#"Goal: Numbering events
-#"This is the final step which numbers all events.
-#"a) First, we set the event_tracker to 0.
-#"b) Next, we loop through all timesteps.
-#"  i) If the current timestep (it) has the character string ‘New’, the event tracker is updated (event_tracker = event_tracker+1), and this new value then becomes the event number (event_number=event_tracker).
-#"  ii) If the current timestep (it) does not have the character string ‘New’, the timestep is assigned an event number of 999.
-
-
+def number_events1(counter,event_number,df):
 
   if df.at[counter, 'tc_event'] == 'New':
-      event_number = event_number+1
-      df.replace({'tc_number': counter}, event_number)
+      event_number = event_number + 1
+      df.at[counter,'tc_number'] = event_number
   else:
-      df.replace({'tc_number': counter}, 999)
-       
-  
-  
-  return df
+      df.at[counter,'tc_number'] = 999
+
+  return df,event_number
   
 def number_events2(counter,df): 
-#"c) We then loop through all timesteps for a second time.
-#"  i) If the current timestep (it) has the character string ‘Same’, the event number is equal to the event number of the previous timestep (it-1). i.e. event_number(it) = event_number(it-1)
-
 
   if df.at[counter, 'tc_event'] == 'Same':
-      df.replace({'tc_number': counter}, df.at[counter-1, 'tc_number'])
-
-  
+      df.at[counter,'tc_number'] = df.at[counter-1,'tc_number']
   
   return df	  
+
+def remove_td(counter, df):
+ 
+  group=df.groupby(['tc_number']).max()
+  ml_wspd=group['max_wspd']
+
+  rem_tcs=[]
+  for x,i in zip(ml_wspd,range(0,len(ml_wspd))):
+    if((x <= 17.5) or (math.isnan(x) == True)): rem_tcs.append(group.index[i])
+
+  for x in rem_tcs:
+    for index, row in df.iterrows():
+      if df.loc[index, 'tc_number'] == x:
+        df.drop(index, inplace=True)
+
+  return df 
+
+def number_events3(counter,event_number,df):
+
+  if df.at[counter, 'tc_event'] == 'New':
+      event_number = event_number + 1
+      df.at[counter,'tc_number'] = event_number
+  elif df.at[counter,'tc_event'] == 'Same':
+      df.at[counter,'tc_number'] = event_number 
+
+  return df,event_number
 
 ###############################
 #Execution function(s)
@@ -442,21 +456,18 @@ def number_events2(counter,df):
 
 if pre_processor_experiments:
     print('entering pre-processor routine')
-   
-    #green_list = create_greenlist(vari_list)
-    green_list =obs_list#+green_list
+    green_list =obs_list+tra_mod_list
     
     pickle.dump(green_list, open(starterp+'green_list'+p_file, "wb" ))
     print('new mod list', green_list)
 
     for expt in green_list: 
-
         t250,t500 = load_expt_t(expt)
         pickle.dump(t250, open(starterp+expt+'_t250_'+p_file, "wb" ))
         pickle.dump(t500, open(starterp+expt+'_t500_'+p_file, "wb" ))
 
         ws250,ws850,ws1000 = load_expt_wd(expt)
-
+        
         pickle.dump(ws250, open(starterp+expt+'_ws250_'+p_file, "wb" ))
         pickle.dump(ws850, open(starterp+expt+'_ws850_'+p_file, "wb" ))
         pickle.dump(ws1000, open(starterp+expt+'_ws1000_'+p_file, "wb" ))
@@ -468,8 +479,8 @@ if pre_processor_experiments:
 	
 if processor_calculations1:
 
-    df = pd.DataFrame(columns=['mslp','mslp_lon','mslp_lat','max_wspd','vort_min','wc_temp','tc_id','tc_event','tc_number'])
-    df = df.astype({"mslp": float, "mslp_lon": float, "mslp_lat": float, "max_wspd": float, "vort_min": float, "wc_temp": float, "tc_id": int, "tc_event": str,"tc_number": int})
+    df = pd.DataFrame(columns=['date','mslp','mslp_lon','mslp_lat','max_wspd','vort_min','wc_temp','tc_id','tc_event','tc_number'])
+    df = df.astype({"date": float, "mslp": float, "mslp_lon": float, "mslp_lat": float, "max_wspd": float, "vort_min": float, "wc_temp": float, "tc_id": int, "tc_event": str,"tc_number": int})
 
     green_list = unpickle_cubes(starterp+'green_list'+p_file)
     for expt in green_list:
@@ -478,9 +489,11 @@ if processor_calculations1:
        	
         nl=ws250.coord('time').points #time coords
         tc_id = 0
-
         for counter, value in enumerate(nl):
-            
+                        
+            #units and calendar below will be model-dependent
+            date=num2date(value,units='hours since 1980-01-01 00:00:00',calendar='gregorian') 
+
             with warnings.catch_warnings():
                 warnings.simplefilter('ignore', UserWarning)
 
@@ -490,14 +503,20 @@ if processor_calculations1:
                     mslp, mslp_lon, mslp_lat = calc_mslp2(counter,value, expt, tc_id, mslp, mslp_lon, mslp_lat) 
 		    	 	    
                 max_wspd = calc_maxwind(counter, mslp_lon, mslp_lat) 	    
-                wspd_threshold = ws_thresh(abs(ws250.coord('longitude').points[2]-ws250.coord('longitude').points[1])*111) 	    
-                vort_min = calc_vort(counter, mslp_lon, mslp_lat)     
+                wspd_threshold = ws_thresh(abs(ws250.coord('longitude').points[2]-ws250.coord('longitude').points[1])*111) 	               
                 wc_temp, avg_temp_500_250 = calc_warm_core(counter, mslp_lon, mslp_lat) 
                 avg_wspd_250, avg_wspd_850 = calc_windregion(counter, mslp_lon, mslp_lat)
-           	                      
-                if max_wspd >= wspd_threshold and vort_min <= -0.000035 and wc_temp >= (avg_temp_500_250 + 1.) and avg_wspd_250 < avg_wspd_850:    
+
+                if ((max_wspd >= wspd_threshold) and (wc_temp >= (avg_temp_500_250 + 1.)) and (avg_wspd_250 < avg_wspd_850)):
+                    vort_min = calc_vort(counter, mslp_lon, mslp_lat)
+                else:
+                    vort_min=0
+                     
+                if ((max_wspd >= wspd_threshold) and (vort_min <= -0.000035) and (wc_temp >= (avg_temp_500_250 + 1.)) and (avg_wspd_250 < avg_wspd_850)):    
                     tc_id=1
-				
+                else:
+                    tc_id=0
+		
             df.at[counter,'tc_id'] = tc_id
             df.at[counter,'vort_min'] = vort_min
             df.at[counter,'mslp'] = mslp
@@ -505,8 +524,8 @@ if processor_calculations1:
             df.at[counter,'mslp_lat'] = mslp_lat
             df.at[counter,'max_wspd'] = max_wspd
             df.at[counter,'wc_temp'] = wc_temp
-	    
-	    
+            df.at[counter,'date'] = date
+	    	    
             df.at[counter,'tc_event'] = "-"
             df.at[counter,'tc_number'] = 0
        
@@ -524,41 +543,51 @@ if processor_calculations2:
         end_count = len(df.index)
  
         for index, row in islice(df.iterrows(), 1, end_count):
-            print(df.loc[index, 'tc_number'])
-            print('ts')
             tstep_fail_allowance(index, df)
-		
+	
         for index, row in islice(df.iterrows(), 1, None):
   
-            assign_filter(index,df)
-		
+            assign_filter(index,df)		
+
         for index, row in islice(df.iterrows(), None, end_count-7):
        
             time_threshold1(index,df)
-		
+	
         for index, row in islice(df.iterrows(), 1, None):
       
- 
             time_threshold2(index,df)
-
-        event_number = 0		
+        
+        event_number=0		
         for index, row in df.iterrows():
  
-            number_events1(index, event_number,df)
-	
+            df,event_number = number_events1(index,event_number,df)
+
         for index, row in islice(df.iterrows(), 1, None):
 
             number_events2(index,df)
 	
+        pickle.dump(df, open(starterp+expt+'_df_post-filter_'+p_file, "wb" ))
+
         for index, row in df.iterrows():
 
             if df.loc[index, 'tc_number'] == 999:
-                df.drop(index)
-		
-        pickle.dump(df, open(starterp+expt+'_df_'+p_file, "wb" ))	
-  		            
+                df.drop(index, inplace=True)	
+        
+        remove_td(index,df)
+
+        event_number=0
+
+        for index, row in df.iterrows():
+
+            df,event_number = number_events3(index,event_number,df)
+
+        #Remove vorticity, warm core & tc_id columns as these need not be printed
+
+        del df['vort_min']
+        del df['wc_temp']
+        del df['tc_id']
+
         #Write output to text file
-        np.savetxt(r'MODEL_output.txt', df, fmt='%s')
+        np.savetxt(starterp+expt+'_tracking_output.txt', df, fmt='%s')
 	
     print('Tracking complete for '+expt)
-
