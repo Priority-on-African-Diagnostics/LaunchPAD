@@ -271,6 +271,28 @@ def sixhr_file_location(expt, vari):
 
     return location
 
+def hr_sixhr_file_location(expt, vari):
+    CMIP6_extn = '*.nc'
+    ERAI_extn = '/nc/'
+ 
+    if expt=='GPCP':
+        location = '/gws/nopw/j04/launchpad/observations/GPCP/precip.mon.mean.nc'
+        print(location)
+ 
+    elif expt =='MERRA2' or expt =='ERA-Interim':
+        location = level1_obs_6hr(expt)+'/'+vari+'/'+CMIP6_extn
+        print(location)
+ 
+    elif expt =='ERA5':
+        location = level1_obs_6hr(expt)+'/'+vari+'/'+CMIP6_extn
+ 
+    else:
+        location = level1_hr_6hr(expt,vari)+CMIP6_extn
+        #print(location)
+    
+    return location
+
+
 def monthly_file_location(expt, vari):
 
      CMIP6_extn = '*.nc'

@@ -24,6 +24,17 @@ def level1_6hr(mod,vari):
 
     return mod_dir
 
+def level1_hr_6hr(mod,vari):
+    
+    group = group_list[mod]
+    var = var_list[mod]
+    g = g_list[mod]
+    
+    mod_dir = CMIP6_hr_base+group+dash+mod+CMIP6_hr_type+var+CMIP6_time_6+vari+dash+g+CMIP6_file
+    #mod_dir = CMIP6_base+group+dash+mod+CMIP6_type+var+CMIP6_time_6+vari+dash+g+CMIP6_file
+    return mod_dir
+
+
 #Level 1 monthly data
 #in: mod - model, e.g. CNRM-CM6-1, vari - variable in CMIP notation, e.g. zg
 #out: mod_dir - listing of all files of mod and vari as absolute paths    
